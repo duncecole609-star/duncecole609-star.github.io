@@ -1,0 +1,406 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>你是真的适合创业，还是只是厌倦上班？</title>
+  <style>
+    :root {
+      --bg: #101216;
+      --panel: #171b22;
+      --panel-2: #202631;
+      --text: #f4f1e8;
+      --muted: #9da3ad;
+      --gold: #d6ad48;
+      --line: rgba(214, 173, 72, 0.24);
+      --danger: #8f3131;
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      min-height: 100vh;
+      background: radial-gradient(circle at top, #20242c 0, #101216 52%, #0a0b0e 100%);
+      color: var(--text);
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Microsoft YaHei", sans-serif;
+      letter-spacing: 0;
+    }
+    .app {
+      width: min(520px, 100%);
+      min-height: 100vh;
+      margin: 0 auto;
+      padding: 22px 18px 34px;
+    }
+    .topline {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      color: var(--gold);
+      font-size: 13px;
+      font-weight: 700;
+      border-bottom: 1px solid var(--line);
+      padding-bottom: 14px;
+    }
+    .report-label { color: #737985; font-size: 11px; letter-spacing: 2px; }
+    .hero { padding: 34px 0 22px; text-align: center; }
+    .pill {
+      display: inline-flex;
+      padding: 7px 14px;
+      border-radius: 999px;
+      background: rgba(214, 173, 72, 0.12);
+      color: var(--gold);
+      font-size: 13px;
+      font-weight: 700;
+      margin-bottom: 16px;
+    }
+    h1 {
+      margin: 0;
+      font-size: 32px;
+      line-height: 1.18;
+      font-weight: 800;
+    }
+    .subtitle {
+      margin: 14px auto 0;
+      color: var(--muted);
+      font-size: 15px;
+      line-height: 1.65;
+      max-width: 360px;
+    }
+    .card {
+      background: linear-gradient(180deg, rgba(32, 38, 49, 0.96), rgba(21, 25, 33, 0.96));
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      border-radius: 18px;
+      box-shadow: 0 18px 60px rgba(0,0,0,0.26);
+      padding: 20px;
+      margin: 18px 0;
+    }
+    .progress {
+      height: 8px;
+      background: #252b35;
+      border-radius: 999px;
+      overflow: hidden;
+      margin-bottom: 18px;
+    }
+    .bar { height: 100%; width: 0; background: linear-gradient(90deg, #b88b2b, #f3d37a); transition: width .25s ease; }
+    .q-num { color: var(--gold); font-size: 13px; font-weight: 800; margin-bottom: 8px; }
+    .question { font-size: 21px; font-weight: 800; line-height: 1.42; margin-bottom: 18px; }
+    .option {
+      width: 100%;
+      display: grid;
+      grid-template-columns: 34px 1fr;
+      gap: 12px;
+      align-items: center;
+      padding: 14px 12px;
+      margin: 10px 0;
+      border-radius: 14px;
+      border: 1px solid rgba(255,255,255,0.08);
+      background: #11151b;
+      color: var(--text);
+      text-align: left;
+      font-size: 15px;
+      line-height: 1.45;
+      cursor: pointer;
+    }
+    .option:hover, .option.selected {
+      border-color: rgba(214, 173, 72, 0.66);
+      background: rgba(214, 173, 72, 0.10);
+    }
+    .letter {
+      width: 30px;
+      height: 30px;
+      display: grid;
+      place-items: center;
+      border-radius: 50%;
+      background: #252b35;
+      color: var(--gold);
+      font-weight: 800;
+    }
+    .actions { display: flex; gap: 12px; margin-top: 18px; }
+    button.primary, button.secondary {
+      border: none;
+      border-radius: 14px;
+      padding: 14px 16px;
+      font-size: 16px;
+      font-weight: 800;
+      cursor: pointer;
+    }
+    button.primary { flex: 1; background: linear-gradient(135deg, #c99c37, #f0d27a); color: #14100a; }
+    button.secondary { background: #242a34; color: var(--text); }
+    .result { display: none; }
+    .score {
+      margin: 14px auto 8px;
+      color: var(--gold);
+      font-size: 42px;
+      line-height: 1;
+      font-weight: 900;
+    }
+    .score-label { color: var(--muted); font-size: 13px; }
+    .summary {
+      margin-top: 18px;
+      background: #151a22;
+      border: 1px solid rgba(255,255,255,0.08);
+      border-radius: 14px;
+      padding: 16px;
+      color: #e8e4d8;
+      line-height: 1.75;
+      text-align: left;
+      font-size: 15px;
+    }
+    .report-section {
+      margin-top: 16px;
+      background: rgba(255,255,255,0.045);
+      border: 1px solid rgba(255,255,255,0.08);
+      border-radius: 14px;
+      padding: 16px;
+      text-align: left;
+    }
+    .report-section h3 {
+      margin: 0 0 10px;
+      color: var(--gold);
+      font-size: 15px;
+    }
+    .report-section p {
+      margin: 0;
+      color: #e5e8ee;
+      line-height: 1.75;
+      font-size: 14px;
+    }
+    .quote-card {
+      margin-top: 18px;
+      padding: 16px;
+      border-radius: 14px;
+      background: rgba(214, 173, 72, 0.1);
+      color: #f2d47e;
+      line-height: 1.65;
+      font-size: 15px;
+      font-weight: 800;
+      text-align: left;
+    }
+    .mini-grid {
+      display: grid;
+      gap: 10px;
+      margin-top: 10px;
+    }
+    .mini-grid div {
+      padding: 12px;
+      border-radius: 12px;
+      background: #11151b;
+      color: #d5d9df;
+      line-height: 1.55;
+      font-size: 14px;
+    }
+    .section-title {
+      margin: 24px 0 10px;
+      color: var(--gold);
+      font-size: 15px;
+      font-weight: 800;
+    }
+    .list {
+      display: grid;
+      gap: 10px;
+      color: #d5d9df;
+      text-align: left;
+      line-height: 1.55;
+      font-size: 14px;
+    }
+    .list div {
+      padding: 12px;
+      border-radius: 12px;
+      background: rgba(255,255,255,0.045);
+    }
+    .footer-note {
+      margin-top: 22px;
+      color: #7f8793;
+      font-size: 12px;
+      line-height: 1.6;
+      text-align: center;
+    }
+  </style>
+</head>
+<body>
+  <main class="app">
+    <div class="topline">
+      <span>你的专属创业适配报告</span>
+      <span class="report-label">CAREER · REPORT</span>
+    </div>
+
+    <section id="intro" class="hero">
+      <span class="pill">12 题完整版</span>
+      <h1>你是真的适合创业，<br>还是只是厌倦上班？</h1>
+      <p class="subtitle">按第一反应选择。这个测试会帮你区分：你是适合低成本试错，还是只是被上班消耗到想逃离。</p>
+      <div class="card">
+        <div class="section-title">测试完成后你将看到</div>
+        <div class="list">
+          <div>你的创业适配类型与核心倾向</div>
+          <div>你适合先做副业，还是直接创业</div>
+          <div>你当前最容易踩的风险点</div>
+          <div>未来 30 天更稳的行动建议</div>
+        </div>
+        <div class="actions">
+          <button class="primary" onclick="startTest()">开始测试</button>
+        </div>
+      </div>
+    </section>
+
+    <section id="quiz" class="card" style="display:none">
+      <div class="progress"><div id="bar" class="bar"></div></div>
+      <div id="qnum" class="q-num"></div>
+      <div id="qtext" class="question"></div>
+      <div id="options"></div>
+      <div class="actions">
+        <button class="secondary" onclick="prevQuestion()">上一题</button>
+      </div>
+    </section>
+
+    <section id="result" class="result hero">
+      <span class="pill">你的类型</span>
+      <h1 id="resultName"></h1>
+      <p id="resultTagline" class="subtitle"></p>
+      <div class="score" id="score"></div>
+      <div class="score-label">创业适配指数</div>
+      <div class="summary" id="summary"></div>
+      <div class="quote-card" id="quote"></div>
+
+      <div class="report-section">
+        <h3>一、你真正想离开的不是工作本身</h3>
+        <p id="motivation"></p>
+      </div>
+
+      <div class="report-section">
+        <h3>二、更适合你的开始方式</h3>
+        <p id="path"></p>
+      </div>
+
+      <div class="report-section">
+        <h3>三、你最容易踩的坑</h3>
+        <p id="risk"></p>
+      </div>
+
+      <div class="section-title">你的 30 天行动建议</div>
+      <div class="mini-grid" id="actions"></div>
+
+      <div class="section-title">你的关键提醒</div>
+      <div class="list" id="advice"></div>
+      <p class="footer-note">本测试为自我探索参考，不构成职业诊断、投资建议或创业承诺。请结合自身现实情况判断。</p>
+    </section>
+  </main>
+
+  <script>
+    const config = {
+      resultTypes: {
+        A: {
+          name: "机会捕手型",
+          tagline: "你不是不稳定，你只是太早看见了机会。",
+          summary: "你的答案显示，你对机会、项目和自主性非常敏感。你不是单纯讨厌上班，而是很难长期忍受“只能执行、不能验证自己判断”的状态。你适合创业，但更适合轻启动、快验证，而不是一上来就把全部生活押进去。",
+          quote: "你不是不稳定，你是需要一个能让你快速试错、快速看见反馈的战场。",
+          motivation: "你真正想离开的，是被安排、被消耗、看不到成长回报的状态。只要一个项目能让你感到“我做的动作会带来真实反馈”，你的行动力会明显变强。",
+          path: "最适合你的不是直接辞职，而是先做一个低成本副业模型：内容、咨询、资料包、测试链接、小服务都可以。第一阶段只验证三件事：有没有人感兴趣、有没有人愿意付费、你能不能连续做 14 天。",
+          risk: "你最大的风险是兴奋来得快，投入也容易太快。如果一开始就囤货、买课、租场地、重做品牌，很容易把试错变成负担。你需要用小成本换反馈，而不是用大投入证明决心。",
+          actions: ["第 1 周：只选一个小方向，不再同时研究十个赛道。", "第 2 周：做出一个最小产品，比如一篇笔记、一个表单、一个 9.9 元小服务。", "第 3 周：找 20 个真实用户反馈，不用猜需求。", "第 4 周：只根据成交和咨询来决定是否加码。"],
+          advice: ["适合先副业验证，不建议立刻裸辞。", "不要把热情当商业模式，要看真实反馈。", "你需要设置止损线：时间、预算、情绪都要有上限。", "如果连续 30 天没人问、没人买，就先改选题和表达。"]
+        },
+        B: {
+          name: "稳定修复型",
+          tagline: "你不是不想改变，你只是需要先恢复状态。",
+          summary: "你的答案显示，你现在的创业念头里，有一部分来自疲惫、压抑和长期没有掌控感。你并不是不能创业，但现在最重要的不是马上冲出去，而是先把能量、现金流和生活节奏修回来。",
+          quote: "你不是没有野心，你只是不能在最累的时候做最大的决定。",
+          motivation: "你想离开的，可能不是这份工作，而是长期透支后那种“每天都在撑”的状态。人在很累的时候，会把任何远处的东西都看成出口，但真正的出口需要可持续。",
+          path: "最适合你的方式，是保住主业现金流，同时开一个固定的小窗口做副业。比如每周 2-3 次、每次 1 小时，只做一个轻任务：写一篇内容、整理一个资料、测试一个需求。先恢复主动感，再决定要不要加大。",
+          risk: "你最大的风险是把疲惫误判成方向，把逃离误判成创业。如果没有先恢复状态，创业很可能变成另一份更焦虑、更没有边界的工作。",
+          actions: ["第 1 周：不要做辞职决定，先记录自己最消耗的 3 个来源。", "第 2 周：固定每周 3 小时副业时间，不追求立刻赚钱。", "第 3 周：只做一个可以复用的小成果，比如模板、清单、笔记。", "第 4 周：用你的体力和心态变化，判断是否适合继续加码。"],
+          advice: ["先保现金流，再谈创业节奏。", "你适合慢启动，不适合突然切断退路。", "不要用创业惩罚现在的自己。", "当你恢复精力后，判断会比现在准确很多。"]
+        },
+        C: {
+          name: "资源突围型",
+          tagline: "你不是没能力，你只是被当前环境压住了。",
+          summary: "你的答案显示，你不缺想法，也不缺观察机会的能力。你更适合做资源整合型、内容表达型、项目协作型的轻创业，而不是一个人闷头从零硬扛所有细节。",
+          quote: "你真正的优势不是单点苦干，而是看见机会、连接资源、把人和事组织起来。",
+          motivation: "你想离开当前状态，是因为你觉得自己的能力没有被放大。你可能明明看得见问题，也知道哪里有机会，但在原来的环境里只能按流程走，不能真正发挥判断力。",
+          path: "最适合你的开始方式，是从你已有资源里找切口：你认识的人、懂的行业、擅长表达的内容、能帮别人解决的小问题。先做可以借力的项目，不要一开始就把自己放进孤军奋战的位置。",
+          risk: "你最大的风险是想得太大、铺得太开，最后每件事都只做了一半。你需要把资源优势落到一个具体成交场景里，比如帮谁、解决什么、对方为什么现在愿意付费。",
+          actions: ["第 1 周：列出你能调动的 10 个资源，包括人、经验、渠道、技能。", "第 2 周：选一个你最容易接触到的人群，写清他们的一个痛点。", "第 3 周：做一个可展示的小方案，先给身边 5 个人看。", "第 4 周：找一个可合作的人或渠道，不要完全闭门造车。"],
+          advice: ["你适合轻创业和协作型项目。", "不要只做想法收藏，要把想法变成一个可购买的东西。", "你的第一单可能来自熟人、社群或内容，而不是陌生流量。", "先收窄人群，再扩大项目。"]
+        },
+        D: {
+          name: "情绪逃离型",
+          tagline: "你不是适合创业，你可能只是太想逃离了。",
+          summary: "你的答案显示，你现在的创业冲动里，情绪逃离的成分比较高。你不是没有能力，也不是不能改变，但现在不适合马上做高风险决定。先把自己从消耗里拉出来，会比立刻创业更重要。",
+          quote: "你现在最需要的不是一个新赛道，而是先确认自己不是在用创业逃离痛苦。",
+          motivation: "你真正想离开的，可能是压力、否定、疲惫、失控感，而不是工作这件事本身。当一个人长期被消耗时，会很容易把“换一种生活”想象成答案，但答案需要在状态稳定时再判断。",
+          path: "最适合你的不是马上创业，而是先做低压力的自我恢复和轻测试。可以先用内容、记录、学习、咨询小单来恢复掌控感，但不建议立刻辞职、借钱、囤货或签长期投入。",
+          risk: "你最大的风险是为了摆脱焦虑而做决定，结果进入一个更焦虑的环境。创业没有老板，但会有客户、收入、交付、售后和不确定性。如果没有准备好边界，它可能比上班更累。",
+          actions: ["第 1 周：先不要辞职，写下你最想逃离的 5 件具体事情。", "第 2 周：恢复基础节奏，睡眠、饮食、运动至少先稳住一个。", "第 3 周：用 0 成本方式做一次小测试，比如发一篇内容或问 10 个人需求。", "第 4 周：如果状态变好再做决定，如果状态更差，先停止加码。"],
+          advice: ["不建议在情绪最重的时候裸辞。", "先修复状态，再判断方向。", "你可以做副业测试，但不要做高投入动作。", "创业不是逃生门，它更像放大器，会放大你的状态和问题。"]
+        }
+      },
+      questions: [
+        ["你最想逃离上班的原因是？", ["每天被安排，感觉自己像个工具人", "做了很多事，但看不到真正的回报", "明明有想法，却总被流程和领导压住", "不是讨厌工作，是已经累到不想面对"]],
+        ["如果突然有 3 个月自由时间，你第一反应是？", ["终于可以试试一直想做的项目", "先休息，把状态养回来再说", "研究怎么变现，看看别人怎么赚钱", "有点慌，不知道没人管我会不会废掉"]],
+        ["看到别人靠副业/创业赚钱，你心里最真实的声音是？", ["我也想试试，只是还没找到入口", "他能成，可能是资源比我好", "我不服，我觉得自己也不差", "羡慕，但一想到风险就退回去了"]],
+        ["你最害怕创业里的哪件事？", ["没有稳定收入，心里没底", "做了很久没人买，证明自己不行", "一个人扛所有事，没人兜底", "方向选错，浪费时间还更焦虑"]],
+        ["如果一年后你的收入和生活都没变化，你最不能接受的是？", ["还是每天重复消耗，没有一点主动权", "明明想改变，却一直停在原地", "眼看别人往上走，自己还在原地打转", "不是没赚到钱，而是越来越不相信自己"]],
+        ["如果要你今天开始做一个小副业，你最先卡在哪里？", ["我能想到方向，但不知道从哪一步开始", "我怕影响主业，心里总是不踏实", "我缺的是资源、人脉和第一个客户", "我一想到要持续做，就已经开始累了"]],
+        ["你更相信哪一种赚钱方式？", ["先试小项目，跑通了再加码", "稳定积累，别轻易打乱基本盘", "找到合适的人和资源，速度会快很多", "我现在只想先摆脱被工作压着的感觉"]],
+        ["如果一个项目连续 30 天没结果，你会怎么想？", ["复盘哪里错了，再换方法试一次", "先停下来，不想继续亏时间和精力", "看看是不是没有找到对的人或渠道", "我会怀疑自己是不是根本不适合"]],
+        ["你最不适合哪种创业状态？", ["想法很多，但一直没人帮我落地", "收入忽高忽低，每天都没安全感", "所有事情都要我一个人从零扛", "没有边界，反而比上班更累"]],
+        ["如果有人劝你别折腾，你最真实的反应是？", ["我会听，但心里还是想试一次", "我会重新算风险，不想让自己太被动", "我想找到能一起做的人，而不是一个人硬撑", "我会更纠结，怕自己只是冲动"]],
+        ["你觉得自己最可能靠什么突围？", ["行动快，愿意不断试错", "稳定、细致、能长期坚持", "会观察人和机会，能整合资源", "先脱离消耗，重新找回状态"]],
+        ["你现在最需要的不是答案，而是？", ["一个低成本开始的入口", "一个不会把生活打翻的计划", "一套把资源变成结果的方法", "先确认自己不是在逃避"]]
+      ]
+    };
+    const letters = ["A", "B", "C", "D"];
+    let index = 0;
+    const answers = [];
+    function startTest() {
+      document.getElementById("intro").style.display = "none";
+      document.getElementById("quiz").style.display = "block";
+      renderQuestion();
+    }
+    function renderQuestion() {
+      const q = config.questions[index];
+      document.getElementById("bar").style.width = ((index) / config.questions.length * 100) + "%";
+      document.getElementById("qnum").textContent = `第 ${index + 1} / ${config.questions.length} 题`;
+      document.getElementById("qtext").textContent = q[0];
+      document.getElementById("options").innerHTML = q[1].map((text, i) => {
+        const letter = letters[i];
+        const selected = answers[index] === letter ? " selected" : "";
+        return `<button class="option${selected}" onclick="choose('${letter}')"><span class="letter">${letter}</span><span>${text}</span></button>`;
+      }).join("");
+    }
+    function choose(letter) {
+      answers[index] = letter;
+      if (index < config.questions.length - 1) {
+        index += 1;
+        renderQuestion();
+      } else {
+        showResult();
+      }
+    }
+    function prevQuestion() {
+      if (index > 0) {
+        index -= 1;
+        renderQuestion();
+      }
+    }
+    function showResult() {
+      const counts = { A: 0, B: 0, C: 0, D: 0 };
+      answers.forEach(a => counts[a] += 1);
+      const winner = [...letters].sort((a,b) => counts[b] - counts[a])[0];
+      const result = config.resultTypes[winner];
+      const score = 72 + counts[winner] * 4 + (winner === "A" || winner === "C" ? 3 : 0);
+      document.getElementById("quiz").style.display = "none";
+      document.getElementById("result").style.display = "block";
+      document.getElementById("resultName").textContent = result.name;
+      document.getElementById("resultTagline").textContent = result.tagline;
+      document.getElementById("score").textContent = score;
+      document.getElementById("summary").textContent = result.summary;
+      document.getElementById("quote").textContent = result.quote;
+      document.getElementById("motivation").textContent = result.motivation;
+      document.getElementById("path").textContent = result.path;
+      document.getElementById("risk").textContent = result.risk;
+      document.getElementById("actions").innerHTML = result.actions.map(item => `<div>${item}</div>`).join("");
+      document.getElementById("advice").innerHTML = result.advice.map(item => `<div>${item}</div>`).join("");
+      window.scrollTo({ top: 0, behavior: "smooth" });
+    }
+  </script>
+</body>
+</html>
