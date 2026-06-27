@@ -1,11 +1,220 @@
-<!doctype html><html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>每天上班前都想辞职，是累了，还是这份工作真的不适合你？</title>
-<style>
-*{box-sizing:border-box}body{margin:0;min-height:100vh;background:#f7efe4;color:#201b16;font-family:-apple-system,BlinkMacSystemFont,'Microsoft YaHei',sans-serif}.app{max-width:520px;margin:0 auto;min-height:100vh;padding:22px 18px 34px}.top{display:flex;justify-content:space-between;border-bottom:1px solid #dac7ad;padding-bottom:14px;color:#a04435;font-weight:800;font-size:14px}.hero{padding:34px 0;text-align:left}.pill{display:inline-flex;padding:7px 14px;border-radius:999px;background:#fff6d5;color:#a04435;font-weight:800;font-size:13px;margin-bottom:16px}h1{font-size:31px;line-height:1.22;margin:0;font-weight:900}.sub{font-size:15px;line-height:1.7;color:#655b51;margin-top:14px}.card{background:#fffdf8;border:1px solid #e0d0ba;border-radius:18px;padding:20px;margin-top:18px;box-shadow:0 16px 40px rgba(70,46,22,.08)}.list div{padding:12px;border-radius:12px;background:#f6efe5;margin:10px 0;font-size:14px;line-height:1.55}button{border:none;border-radius:14px;padding:14px 16px;font-size:16px;font-weight:850;cursor:pointer}.primary{width:100%;background:#26211d;color:#fff;margin-top:14px}.secondary{background:#eee2d3;color:#201b16}.quiz,.result{display:none}.progress{height:8px;background:#eadcca;border-radius:99px;overflow:hidden;margin-bottom:18px}.bar{height:100%;background:#a04435;width:0;transition:.2s}.qnum{color:#a04435;font-size:13px;font-weight:850;margin-bottom:8px}.qtext{font-size:21px;line-height:1.4;font-weight:900;margin-bottom:18px}.option{width:100%;display:grid;grid-template-columns:34px 1fr;gap:12px;align-items:start;background:#fff;border:1px solid #e1d1bb;border-radius:14px;margin:10px 0;padding:13px 12px;text-align:left;font-size:15px;line-height:1.5;color:#211c18}.option:hover{border-color:#a04435}.letter{width:30px;height:30px;border-radius:50%;display:grid;place-items:center;background:#fff0c2;color:#a04435;font-weight:900}.actions{display:flex;gap:10px;margin-top:16px}.result{text-align:center}.score{font-size:48px;color:#a04435;font-weight:950;margin:14px 0 4px}.summary,.quote,.section{text-align:left;border-radius:16px;padding:16px;margin-top:14px;line-height:1.7}.summary{background:#fff;border:1px solid #e1d1bb}.quote{background:#27231f;color:#fff1d0;font-weight:850}.section{background:#fffdf8;border:1px solid #e1d1bb}.section h3{margin:0 0 10px;color:#a04435;font-size:15px}.tags{display:flex;flex-wrap:wrap;gap:8px;justify-content:center;margin:14px 0}.tag{padding:8px 12px;border-radius:999px;background:#fff0c2;color:#7a3b2f;font-size:13px;font-weight:800}.footer{font-size:12px;color:#766c62;line-height:1.6;margin-top:18px}
-</style></head><body><main class="app"><div class="top"><span>离职冲动指数</span><span>SELF CHECK</span></div><section id="intro" class="hero"><span class="pill">12 题自我探索</span><h1>每天上班前都想辞职，是累了，还是这份工作真的不适合你？</h1><p class="sub">按第一反应选择。它不会替你做决定，只帮你看清：你现在更需要休息、调整，还是开始准备下一步。</p><div class="card"><div class="list"><div>你的离职冲动阶段</div><div>你最容易误判自己的地方</div><div>适合你的下一步处理方式</div></div><button class="primary" onclick="startTest()">开始测试</button></div></section><section id="quiz" class="card quiz"><div class="progress"><div id="bar" class="bar"></div></div><div id="qnum" class="qnum"></div><div id="qtext" class="qtext"></div><div id="options"></div><div class="actions"><button class="secondary" onclick="prevQuestion()">上一题</button></div></section><section id="result" class="result hero"><span class="pill">你的阶段</span><h1 id="rname"></h1><p id="rsub" class="sub"></p><div id="score" class="score"></div><div class="tags" id="tags"></div><div id="summary" class="summary"></div><div id="quote" class="quote"></div><div class="section"><h3>下一步建议</h3><div id="advice" class="list"></div></div><p class="footer">本测试为自我探索参考，不构成职业建议或承诺。请结合现实情况判断。</p></section></main><script>
-const data={"title": "每天上班前都想辞职，是累了，还是这份工作真的不适合你？", "questions": [["闹钟响了，你想到今天要上班，第一反应是？", ["只是想多睡十分钟。到了公司以后通常还能进入状态，心里知道自己主要是累。", "会叹一口气，但还是能把自己拖起来。你不是真的不想干，只是不想再重复昨天那种消耗。", "一想到要见那些人和处理那些事，身体先开始抗拒。不是困，是整个人发沉。", "会认真想今天能不能请假，甚至打开招聘软件。你已经不只是累，而是在本能地想逃离。"]], ["领导临时又加了一个活，你更像哪种反应？", ["先接下来，判断一下优先级。虽然烦，但还在可控范围内。", "表面说好，心里开始冒火。你能完成，但越来越不想再当那个兜底的人。", "会觉得特别委屈：为什么每次都是我？你开始怀疑这份工作是不是一直在透支你。", "直接开始想退路。不是这个任务有多难，而是你已经不想继续证明自己能扛了。"]], ["周日晚上想到明天上班，你通常会？", ["有点不想面对，但做点准备会安心。情绪来得快，过去也快。", "开始拖延睡觉，刷手机到很晚。像是在用熬夜抵抗明天的到来。", "胸口发紧，脑子里反复预演明天会发生什么。你已经很难真正休息。", "会冒出一个很清晰的念头：不能再这样下去了。你想要的不是假期，是换一种生活。"]], ["如果现在给你一周假期，你觉得回来后会怎样？", ["大概率会好很多。你需要的是休息，不一定是离开。", "前两天会好，后面一想到回去又开始烦。问题可能不只是假期不够。", "回来第一天就会被打回原形。你知道真正耗你的东西还在那里。", "你甚至不想回来。假期只会让你更确定，自己不想继续待在原来的轨道里。"]], ["你最常对自己说哪句话？", ["再坚持一下，可能只是最近太累了。", "我是不是该把边界立起来，不要什么都接。", "这份工作好像不适合我，但我还没准备好走。", "我不能再这样消耗自己了，必须开始找下一步。"]], ["别人劝你别冲动辞职时，你心里会？", ["觉得有道理，自己也怕只是情绪上头。", "知道不能冲动，但也希望有人承认我真的很累。", "会有点烦，因为他们没经历我的处境。", "会更想证明自己不是冲动，而是已经想了很久。"]], ["你对现在工作的最大不满是？", ["阶段性太忙，休息恢复后还能接受。", "边界不清，经常被额外任务挤占。", "价值感越来越低，做了也没什么反馈。", "方向不对，继续待下去像是在浪费自己。"]], ["如果明天换个领导/同事，你会留下吗？", ["可能会，说明问题主要在人和管理方式。", "会观察一阵，但不敢太乐观。", "不一定，因为我对这类工作本身也开始厌倦。", "不会，哪怕环境变好，我也想换一条路。"]], ["你现在最缺的是什么？", ["睡眠和恢复。先把身体状态拉回来。", "边界和节奏。别再什么都硬扛。", "选择感。至少知道自己还有别的可能。", "行动计划。不是想想，而是真的开始准备。"]], ["看到同龄人换工作/转行，你会？", ["羡慕一下，但也知道每个人节奏不同。", "有点心动，同时担心自己是不是太保守。", "会认真研究他们怎么做到的。", "会被刺激到，觉得自己不能再停在原地。"]], ["如果继续待半年，你最担心的是？", ["只是累一阵，还能缓过来。", "越来越麻木，边界越来越低。", "能力没长，情绪也被耗坏。", "错过真正该走的时间点。"]], ["现在让你做一个小动作，你更愿意？", ["先休息两天，观察情绪有没有恢复。", "列出最消耗自己的 3 件事。", "更新简历，看看市场反馈。", "定一个离开时间表，开始具体准备。"]]], "results": {"A": {"name": "短暂耗电型", "sub": "你不是不适合这份工作，你更像是电量被暂时用空了", "score": "28.3%", "summary": "你现在的离职冲动更像阶段性疲惫。你会厌烦、会抗拒，但当休息足够、节奏恢复时，仍然有机会重新进入状态。", "quote": "你不一定要立刻离开，先把自己从过载里捞出来。", "tags": ["恢复优先", "节奏修复", "短期疲惫", "先别裸辞"], "advice": ["先补睡眠和休息", "暂停做重大决定", "观察两周后的真实感受"]}, "B": {"name": "边界透支型", "sub": "工作未必完全错了，但你的边界已经被压得太薄", "score": "52.7%", "summary": "你不是单纯想逃，而是长期在兜底、配合、忍耐里把自己消耗掉了。真正的问题可能不是岗位，而是边界、节奏和话语权。", "quote": "你需要的不是再忍一忍，而是重新拿回一点边界。", "tags": ["边界过薄", "长期兜底", "情绪透支", "需要调整"], "advice": ["列出最消耗你的任务", "尝试拒绝一次不合理加活", "给自己设一个观察期限"]}, "C": {"name": "离开蓄力型", "sub": "你不是一时冲动，而是已经在心里准备离开很久了", "score": "78.4%", "summary": "你的抗拒不只是疲惫，而是对当前工作模式、成长空间或生活状态的长期不适配。此时最重要的不是立刻裸辞，而是开始认真准备下一步。", "quote": "真正成熟的离开，不是逃跑，而是有计划地把自己带走。", "tags": ["长期不适配", "需要后路", "离开准备", "重启节奏"], "advice": ["更新简历和作品", "测试外部机会", "制定 30 天离开准备表"]}}};const letters=['A','B','C','D'];let index=0;const answers=[];
-function startTest(){document.getElementById('intro').style.display='none';document.getElementById('quiz').style.display='block';renderQuestion();}
-function renderQuestion(){const q=data.questions[index];document.getElementById('bar').style.width=(index/data.questions.length*100)+'%';document.getElementById('qnum').textContent=`第 ${index+1} / ${data.questions.length} 题`;document.getElementById('qtext').textContent=q[0];document.getElementById('options').innerHTML=q[1].map((x,i)=>`<button class="option" onclick="choose(${i})"><span class="letter">${letters[i]}</span><span>${x}</span></button>`).join('');}
-function choose(i){answers[index]=i;if(index<data.questions.length-1){index++;renderQuestion();}else showResult();}
-function prevQuestion(){if(index>0){index--;renderQuestion();}}
-function showResult(){const sum=answers.reduce((a,b)=>a+b,0);const key=sum<=12?'A':(sum<=24?'B':'C');const r=data.results[key];document.getElementById('quiz').style.display='none';document.getElementById('result').style.display='block';document.getElementById('rname').textContent=r.name;document.getElementById('rsub').textContent=r.sub;document.getElementById('score').textContent=r.score;document.getElementById('tags').innerHTML=r.tags.map(x=>`<span class="tag">${x}</span>`).join('');document.getElementById('summary').textContent=r.summary;document.getElementById('quote').textContent=r.quote;document.getElementById('advice').innerHTML=r.advice.map(x=>`<div>${x}</div>`).join('');window.scrollTo({top:0,behavior:'smooth'});}
-</script></body></html>
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>每天上班前都想辞职，是累了，还是这份工作真的不适合你？</title>
+  <style>
+    *{box-sizing:border-box}
+    body{margin:0;min-height:100vh;background:#f7efe4;color:#201b16;font-family:-apple-system,BlinkMacSystemFont,"Microsoft YaHei",sans-serif;letter-spacing:0}
+    .app{max-width:520px;margin:0 auto;min-height:100vh;padding:22px 18px 34px}
+    .top{display:flex;justify-content:space-between;border-bottom:1px solid #dac7ad;padding-bottom:14px;color:#a04435;font-weight:800;font-size:14px}
+    .hero{padding:34px 0;text-align:left}
+    .pill{display:inline-flex;padding:7px 14px;border-radius:999px;background:#fff6d5;color:#a04435;font-weight:800;font-size:13px;margin-bottom:16px}
+    h1{font-size:31px;line-height:1.22;margin:0;font-weight:900}
+    .sub{font-size:15px;line-height:1.7;color:#655b51;margin-top:14px}
+    .card{background:#fffdf8;border:1px solid #e0d0ba;border-radius:18px;padding:20px;margin-top:18px;box-shadow:0 16px 40px rgba(70,46,22,.08)}
+    .list div,.grid div{padding:12px;border-radius:12px;background:#f6efe5;margin:10px 0;font-size:14px;line-height:1.55}
+    button{border:none;border-radius:14px;padding:14px 16px;font-size:16px;font-weight:850;cursor:pointer}
+    .primary{width:100%;background:#26211d;color:#fff;margin-top:14px}
+    .secondary{background:#eee2d3;color:#201b16}
+    .quiz,.result{display:none}
+    .progress{height:8px;background:#eadcca;border-radius:99px;overflow:hidden;margin-bottom:18px}
+    .bar{height:100%;background:#a04435;width:0;transition:.2s}
+    .qnum{color:#a04435;font-size:13px;font-weight:850;margin-bottom:8px}
+    .qtext{font-size:21px;line-height:1.4;font-weight:900;margin-bottom:18px}
+    .option{width:100%;display:grid;grid-template-columns:34px 1fr;gap:12px;align-items:start;background:#fff;border:1px solid #e1d1bb;border-radius:14px;margin:10px 0;padding:13px 12px;text-align:left;font-size:15px;line-height:1.5;color:#211c18}
+    .option:hover{border-color:#a04435}
+    .letter{width:30px;height:30px;border-radius:50%;display:grid;place-items:center;background:#fff0c2;color:#a04435;font-weight:900}
+    .actions{display:flex;gap:10px;margin-top:16px}
+    .result{text-align:center}
+    .score{font-size:48px;color:#a04435;font-weight:950;margin:14px 0 4px}
+    .score-label{font-size:12px;color:#766c62;font-weight:800}
+    .summary,.quote,.section{text-align:left;border-radius:16px;padding:16px;margin-top:14px;line-height:1.7}
+    .summary{background:#fff;border:1px solid #e1d1bb;font-size:15px}
+    .quote{background:#27231f;color:#fff1d0;font-weight:850;font-size:15px}
+    .section{background:#fffdf8;border:1px solid #e1d1bb}
+    .section h3{margin:0 0 10px;color:#a04435;font-size:15px}
+    .section p{margin:0;color:#3b332c;font-size:14px;line-height:1.75}
+    .section-title{margin:24px 0 10px;color:#a04435;font-size:15px;font-weight:900;text-align:left}
+    .tags{display:flex;flex-wrap:wrap;gap:8px;justify-content:center;margin:14px 0}
+    .tag{padding:8px 12px;border-radius:999px;background:#fff0c2;color:#7a3b2f;font-size:13px;font-weight:800}
+    .footer{font-size:12px;color:#766c62;line-height:1.6;margin-top:18px;text-align:center}
+  </style>
+</head>
+<body>
+  <main class="app">
+    <div class="top"><span>离职冲动指数</span><span>WORK EXIT REPORT</span></div>
+
+    <section id="intro" class="hero">
+      <span class="pill">12 题完整报告</span>
+      <h1>每天上班前都想辞职，是累了，还是这份工作真的不适合你？</h1>
+      <p class="sub">按第一反应选择。它不会替你做决定，只帮你看清：你现在更需要休息、调整，还是开始准备下一步。</p>
+      <div class="card">
+        <div class="list">
+          <div>你的离职冲动阶段</div>
+          <div>你最容易误判自己的地方</div>
+          <div>真正消耗你的核心原因</div>
+          <div>未来 30 天更稳的处理方式</div>
+        </div>
+        <button class="primary" onclick="startTest()">开始测试</button>
+      </div>
+    </section>
+
+    <section id="quiz" class="card quiz">
+      <div class="progress"><div id="bar" class="bar"></div></div>
+      <div id="qnum" class="qnum"></div>
+      <div id="qtext" class="qtext"></div>
+      <div id="options"></div>
+      <div class="actions"><button class="secondary" onclick="prevQuestion()">上一题</button></div>
+    </section>
+
+    <section id="result" class="result hero">
+      <span class="pill">你的完整报告</span>
+      <h1 id="rname"></h1>
+      <p id="rsub" class="sub"></p>
+      <div id="score" class="score"></div>
+      <div class="score-label">离职冲动参考指数</div>
+      <div class="tags" id="tags"></div>
+      <div id="summary" class="summary"></div>
+      <div id="quote" class="quote"></div>
+
+      <div class="section"><h3>一、你现在最明显的信号</h3><p id="signal"></p></div>
+      <div class="section"><h3>二、真正消耗你的不一定是工作量</h3><p id="root"></p></div>
+      <div class="section"><h3>三、你最容易误判自己的地方</h3><p id="mistake"></p></div>
+      <div class="section"><h3>四、更适合你的处理方式</h3><p id="path"></p></div>
+      <div class="section"><h3>五、接下来最需要避开的坑</h3><p id="risk"></p></div>
+
+      <div class="section-title">你的 30 天行动建议</div>
+      <div class="grid" id="actions"></div>
+
+      <div class="section-title">你的关键提醒</div>
+      <div class="list" id="checks"></div>
+      <p class="footer">本测试为自我探索参考，不构成职业建议、诊断或承诺。请结合现实情况判断，重大决定建议留出冷静期。</p>
+    </section>
+  </main>
+
+  <script>
+    const data = {
+      questions: [
+        ["闹钟响了，你想到今天要上班，第一反应是？", ["只是想多睡十分钟。到了公司以后通常还能进入状态，心里知道自己主要是累。", "会叹一口气，但还是能把自己拖起来。你不是真的不想干，只是不想再重复昨天那种消耗。", "一想到要见那些人和处理那些事，身体先开始抗拒。不是困，是整个人发沉。", "会认真想今天能不能请假，甚至打开招聘软件。你已经不只是累，而是在本能地想逃离。"]],
+        ["领导临时又加了一个活，你更像哪种反应？", ["先接下来，判断一下优先级。虽然烦，但还在可控范围内。", "表面说好，心里开始冒火。你能完成，但越来越不想再当那个兜底的人。", "会觉得特别委屈：为什么每次都是我？你开始怀疑这份工作是不是一直在透支你。", "直接开始想退路。不是这个任务有多难，而是你已经不想继续证明自己能扛了。"]],
+        ["周日晚上想到明天上班，你通常会？", ["有点不想面对，但做点准备会安心。情绪来得快，过去也快。", "开始拖延睡觉，刷手机到很晚。像是在用熬夜抵抗明天的到来。", "胸口发紧，脑子里反复预演明天会发生什么。你已经很难真正休息。", "会冒出一个很清晰的念头：不能再这样下去了。你想要的不是假期，是换一种生活。"]],
+        ["如果现在给你一周假期，你觉得回来后会怎样？", ["大概率会好很多。你需要的是休息，不一定是离开。", "前两天会好，后面一想到回去又开始烦。问题可能不只是假期不够。", "回来第一天就会被打回原形。你知道真正耗你的东西还在那里。", "你甚至不想回来。假期只会让你更确定，自己不想继续待在原来的轨道里。"]],
+        ["你最常对自己说哪句话？", ["再坚持一下，可能只是最近太累了。", "我是不是该把边界立起来，不要什么都接。", "这份工作好像不适合我，但我还没准备好走。", "我不能再这样消耗自己了，必须开始找下一步。"]],
+        ["别人劝你别冲动辞职时，你心里会？", ["觉得有道理，自己也怕只是情绪上头。", "知道不能冲动，但也希望有人承认我真的很累。", "会有点烦，因为他们没经历我的处境。", "会更想证明自己不是冲动，而是已经想了很久。"]],
+        ["你对现在工作的最大不满是？", ["阶段性太忙，休息恢复后还能接受。", "边界不清，经常被额外任务挤占。", "价值感越来越低，做了也没什么反馈。", "方向不对，继续待下去像是在浪费自己。"]],
+        ["如果明天换个领导/同事，你会留下吗？", ["可能会，说明问题主要在人和管理方式。", "会观察一阵，但不敢太乐观。", "不一定，因为我对这类工作本身也开始厌倦。", "不会，哪怕环境变好，我也想换一条路。"]],
+        ["你现在最缺的是什么？", ["睡眠和恢复。先把身体状态拉回来。", "边界和节奏。别再什么都硬扛。", "选择感。至少知道自己还有别的可能。", "行动计划。不是想想，而是真的开始准备。"]],
+        ["看到同龄人换工作/转行，你会？", ["羡慕一下，但也知道每个人节奏不同。", "有点心动，同时担心自己是不是太保守。", "会认真研究他们怎么做到的。", "会被刺激到，觉得自己不能再停在原地。"]],
+        ["如果继续待半年，你最担心的是？", ["只是累一阵，还能缓过来。", "越来越麻木，边界越来越低。", "能力没长，情绪也被耗坏。", "错过真正该走的时间点。"]],
+        ["现在让你做一个小动作，你更愿意？", ["先休息两天，观察情绪有没有恢复。", "列出最消耗自己的 3 件事。", "更新简历，看看市场反馈。", "定一个离开时间表，开始具体准备。"]]
+      ],
+      results: {
+        A: {
+          name: "短暂耗电型",
+          sub: "你不是不适合这份工作，你更像是电量被暂时用空了。",
+          score: "28.3%",
+          summary: "你的答案显示，当前的离职冲动更像阶段性疲惫。你会厌烦、会抗拒，也会在上班前产生逃离感，但这些感受并不稳定：当睡眠、节奏和任务压力恢复到可承受范围内，你仍然可能重新进入状态。",
+          quote: "你现在不一定需要马上离开，更需要先把自己从过载里捞出来。",
+          tags: ["恢复优先", "短期疲惫", "先别裸辞", "节奏修复"],
+          signal: "你的抗拒多半出现在早上、周日晚上、连续忙碌之后。它更像身体和情绪在提醒你：最近消耗太高，而不是在明确告诉你这条路完全错了。",
+          root: "真正消耗你的可能不是岗位本身，而是休息不足、任务堆叠、长期没有恢复窗口。你不是没有责任感，而是一直在用意志力硬撑。",
+          mistake: "你容易把“我现在很累”误判成“我彻底不适合”。人在疲惫时会放大所有负面感受，所以不适合在最累的几天做重大决定。",
+          path: "先做恢复型处理：把睡眠、饮食、运动、独处时间拉回基本线。等状态稳定后，再判断工作本身是否真的不适合。",
+          risk: "最需要避开的是情绪性裸辞。你现在如果直接离开，短期会轻松，但如果没有恢复和规划，很容易把同样的问题带到下一份工作里。",
+          actions: ["第 1 周：先不做辞职决定，连续 3 天保证睡眠。", "第 2 周：记录每天最累的 1 个具体来源。", "第 3 周：和上级或同事调整一个可调整的小任务。", "第 4 周：看情绪是否明显回落，再判断是否需要下一步。"],
+          checks: ["先恢复，再判断。", "不要在最累的一天决定去留。", "如果休息后明显变好，说明问题至少有一部分来自过载。", "如果恢复后依然强烈抗拒，再进入调整或准备阶段。"]
+        },
+        B: {
+          name: "边界透支型",
+          sub: "工作未必完全错了，但你的边界已经被压得太薄。",
+          score: "52.7%",
+          summary: "你的答案显示，你不是单纯想逃，而是长期在兜底、配合、忍耐里把自己消耗掉了。真正的问题可能不是岗位本身，而是边界、节奏和话语权：你做了太多不该默认由你承担的事情。",
+          quote: "你需要的不是再忍一忍，而是重新拿回一点边界。",
+          tags: ["边界过薄", "长期兜底", "情绪透支", "需要调整"],
+          signal: "你最明显的信号是：事情未必都很难，但你越来越讨厌被临时安排、被默认配合、被反复打断。你不是不会做，而是不想再用自己填所有空。",
+          root: "真正消耗你的不是某一个任务，而是长期缺少拒绝权。你可能已经习惯了把别人的紧急、别人的情绪、别人的烂摊子先接住，最后才发现自己的精力被挤没了。",
+          mistake: "你容易把边界问题误判成能力问题。你会觉得是不是自己抗压不够、情绪太大，其实更可能是你承受了超出岗位边界的责任。",
+          path: "你现在更适合做调整测试，而不是立刻离开。先挑一个最消耗你的环节下手：减少临时加活、明确优先级、延迟回复、把口头任务落成文字。",
+          risk: "最需要避开的坑，是一边继续无限兜底，一边期待自己突然不累。边界如果不改变，换一个环境也可能复制同样的模式。",
+          actions: ["第 1 周：列出最消耗你的 3 类任务或人。", "第 2 周：对一个不合理加活说“我需要先确认优先级”。", "第 3 周：把临时需求改成文字确认，减少反复背锅。", "第 4 周：观察调整后是否还有强烈离开冲动。"],
+          checks: ["你的问题不一定是不能干，而是干得太满。", "先拿回一点边界，再判断要不要离开。", "如果边界调整后仍然没有改善，说明环境本身可能也有问题。", "不要用继续忍耐证明自己靠谱。"]
+        },
+        C: {
+          name: "离开蓄力型",
+          sub: "你不是一时冲动，而是已经在心里准备离开很久了。",
+          score: "78.4%",
+          summary: "你的答案显示，你的抗拒不只是疲惫，而是对当前工作模式、成长空间或生活状态的长期不适配。你并不是突然想逃，而是已经在很多细节里反复确认：继续待下去，会越来越不像自己。",
+          quote: "真正成熟的离开，不是逃跑，而是有计划地把自己带走。",
+          tags: ["长期不适配", "需要后路", "离开准备", "重启节奏"],
+          signal: "你的明显信号是：即使休息、换人、换任务，也很难真正让你重新有动力。你想要的不只是少加班或少一点压力，而是换一种轨道。",
+          root: "真正消耗你的可能是方向不匹配、成长停滞、价值感降低，或者长期觉得自己被困在不想继续的生活结构里。这类问题靠忍耐通常很难自动消失。",
+          mistake: "你容易在“该走了”和“我还没准备好”之间反复拉扯。最大的误判不是想离开，而是以为只要再忍一段时间就会自然变好。",
+          path: "你更适合进入准备阶段：更新简历、测试市场反馈、盘点现金流、整理作品和经历。重点不是马上裸辞，而是让自己有选择权。",
+          risk: "最需要避开的坑，是把长期不适配拖到彻底崩溃再离开。那时你会更急、更被动，也更容易接受一个并不合适的新机会。",
+          actions: ["第 1 周：更新简历和作品，整理可迁移能力。", "第 2 周：投递或沟通 3 个外部机会，测试市场反馈。", "第 3 周：算清现金流，确定最低安全缓冲。", "第 4 周：定一个观察期限和离开条件，不再无限拖延。"],
+          checks: ["离开不等于失败，没准备地离开才容易被动。", "如果你已经反复想了很久，就把想法变成计划。", "先让自己有选择权，再决定要不要走。", "不要等到完全耗尽才开始准备。"]
+        }
+      }
+    };
+
+    const letters = ["A","B","C","D"];
+    let index = 0;
+    const answers = [];
+
+    function startTest(){
+      document.getElementById("intro").style.display = "none";
+      document.getElementById("quiz").style.display = "block";
+      renderQuestion();
+    }
+
+    function renderQuestion(){
+      const q = data.questions[index];
+      document.getElementById("bar").style.width = (index / data.questions.length * 100) + "%";
+      document.getElementById("qnum").textContent = `第 ${index + 1} / ${data.questions.length} 题`;
+      document.getElementById("qtext").textContent = q[0];
+      document.getElementById("options").innerHTML = q[1].map((text, i) => `<button class="option" onclick="choose(${i})"><span class="letter">${letters[i]}</span><span>${text}</span></button>`).join("");
+    }
+
+    function choose(i){
+      answers[index] = i;
+      if(index < data.questions.length - 1){
+        index++;
+        renderQuestion();
+      } else {
+        showResult();
+      }
+    }
+
+    function prevQuestion(){
+      if(index > 0){
+        index--;
+        renderQuestion();
+      }
+    }
+
+    function showResult(){
+      const sum = answers.reduce((a,b) => a + b, 0);
+      const key = sum <= 12 ? "A" : (sum <= 24 ? "B" : "C");
+      const r = data.results[key];
+      document.getElementById("quiz").style.display = "none";
+      document.getElementById("result").style.display = "block";
+      document.getElementById("rname").textContent = r.name;
+      document.getElementById("rsub").textContent = r.sub;
+      document.getElementById("score").textContent = r.score;
+      document.getElementById("tags").innerHTML = r.tags.map(x => `<span class="tag">${x}</span>`).join("");
+      document.getElementById("summary").textContent = r.summary;
+      document.getElementById("quote").textContent = r.quote;
+      document.getElementById("signal").textContent = r.signal;
+      document.getElementById("root").textContent = r.root;
+      document.getElementById("mistake").textContent = r.mistake;
+      document.getElementById("path").textContent = r.path;
+      document.getElementById("risk").textContent = r.risk;
+      document.getElementById("actions").innerHTML = r.actions.map(x => `<div>${x}</div>`).join("");
+      document.getElementById("checks").innerHTML = r.checks.map(x => `<div>${x}</div>`).join("");
+      window.scrollTo({top:0,behavior:"smooth"});
+    }
+  </script>
+</body>
+</html>
