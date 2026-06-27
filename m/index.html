@@ -1,0 +1,247 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>你现在的卡点，是不会赚钱，还是不敢卖自己？</title>
+  <style>
+    :root {
+      --bg: #101216;
+      --panel: #171b22;
+      --panel-2: #202631;
+      --text: #f4f1e8;
+      --muted: #9da3ad;
+      --gold: #d6ad48;
+      --line: rgba(214, 173, 72, 0.24);
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      min-height: 100vh;
+      background: radial-gradient(circle at top, #2a241d 0, #101216 52%, #090a0c 100%);
+      color: var(--text);
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Microsoft YaHei", sans-serif;
+      letter-spacing: 0;
+    }
+    .app { width: min(520px, 100%); min-height: 100vh; margin: 0 auto; padding: 22px 18px 34px; }
+    .topline { display: flex; justify-content: space-between; align-items: center; color: var(--gold); font-size: 13px; font-weight: 700; border-bottom: 1px solid var(--line); padding-bottom: 14px; }
+    .report-label { color: #737985; font-size: 11px; letter-spacing: 2px; }
+    .hero { padding: 34px 0 22px; text-align: center; }
+    .pill { display: inline-flex; padding: 7px 14px; border-radius: 999px; background: rgba(214, 173, 72, 0.12); color: var(--gold); font-size: 13px; font-weight: 700; margin-bottom: 16px; }
+    h1 { margin: 0; font-size: 31px; line-height: 1.2; font-weight: 850; }
+    .subtitle { margin: 14px auto 0; color: var(--muted); font-size: 15px; line-height: 1.65; max-width: 360px; }
+    .card { background: linear-gradient(180deg, rgba(32, 38, 49, 0.96), rgba(21, 25, 33, 0.96)); border: 1px solid rgba(255,255,255,0.08); border-radius: 18px; box-shadow: 0 18px 60px rgba(0,0,0,0.26); padding: 20px; margin: 18px 0; }
+    .progress { height: 8px; background: #252b35; border-radius: 999px; overflow: hidden; margin-bottom: 18px; }
+    .bar { height: 100%; width: 0; background: linear-gradient(90deg, #b88b2b, #f3d37a); transition: width .25s ease; }
+    .q-num { color: var(--gold); font-size: 13px; font-weight: 800; margin-bottom: 8px; }
+    .question { font-size: 21px; font-weight: 800; line-height: 1.42; margin-bottom: 18px; }
+    .option { width: 100%; display: grid; grid-template-columns: 34px 1fr; gap: 12px; align-items: center; padding: 14px 12px; margin: 10px 0; border-radius: 14px; border: 1px solid rgba(255,255,255,0.08); background: #11151b; color: var(--text); text-align: left; font-size: 15px; line-height: 1.45; cursor: pointer; }
+    .option:hover, .option.selected { border-color: rgba(214, 173, 72, 0.66); background: rgba(214, 173, 72, 0.10); }
+    .letter { width: 30px; height: 30px; display: grid; place-items: center; border-radius: 50%; background: #252b35; color: var(--gold); font-weight: 800; }
+    .actions { display: flex; gap: 12px; margin-top: 18px; }
+    button.primary, button.secondary { border: none; border-radius: 14px; padding: 14px 16px; font-size: 16px; font-weight: 800; cursor: pointer; }
+    button.primary { flex: 1; background: linear-gradient(135deg, #c99c37, #f0d27a); color: #14100a; }
+    button.secondary { background: #242a34; color: var(--text); }
+    .result { display: none; }
+    .score { margin: 14px auto 8px; color: var(--gold); font-size: 42px; line-height: 1; font-weight: 900; }
+    .score-label { color: var(--muted); font-size: 13px; }
+    .summary, .report-section, .quote-card { text-align: left; border-radius: 14px; }
+    .summary { margin-top: 18px; background: #151a22; border: 1px solid rgba(255,255,255,0.08); padding: 16px; color: #e8e4d8; line-height: 1.75; font-size: 15px; }
+    .report-section { margin-top: 16px; background: rgba(255,255,255,0.045); border: 1px solid rgba(255,255,255,0.08); padding: 16px; }
+    .report-section h3 { margin: 0 0 10px; color: var(--gold); font-size: 15px; }
+    .report-section p { margin: 0; color: #e5e8ee; line-height: 1.75; font-size: 14px; }
+    .quote-card { margin-top: 18px; padding: 16px; background: rgba(214, 173, 72, 0.1); color: #f2d47e; line-height: 1.65; font-size: 15px; font-weight: 800; }
+    .mini-grid, .list { display: grid; gap: 10px; margin-top: 10px; text-align: left; }
+    .mini-grid div, .list div { padding: 12px; border-radius: 12px; background: #11151b; color: #d5d9df; line-height: 1.55; font-size: 14px; }
+    .section-title { margin: 24px 0 10px; color: var(--gold); font-size: 15px; font-weight: 800; text-align: left; }
+    .footer-note { margin-top: 22px; color: #7f8793; font-size: 12px; line-height: 1.6; text-align: center; }
+  </style>
+</head>
+<body>
+  <main class="app">
+    <div class="topline">
+      <span>你的专属赚钱卡点报告</span>
+      <span class="report-label">MONEY · REPORT</span>
+    </div>
+
+    <section id="intro" class="hero">
+      <span class="pill">赚钱卡点测试</span>
+      <h1>你现在的卡点，<br>是不会赚钱，还是不敢卖自己？</h1>
+      <p class="subtitle">按第一反应选择。这个测试会帮你看清：你到底是能力没包装好，还是表达、定价、行动某一环卡住了。</p>
+      <div class="card">
+        <div class="section-title">测试完成后你将看到</div>
+        <div class="list">
+          <div>你的赚钱卡点类型与核心倾向</div>
+          <div>你为什么迟迟没有开始成交</div>
+          <div>你适合先卖技能、经验、服务，还是内容</div>
+          <div>未来 30 天更稳的破局建议</div>
+        </div>
+        <div class="actions">
+          <button class="primary" onclick="startTest()">开始测试</button>
+        </div>
+      </div>
+    </section>
+
+    <section id="quiz" class="card" style="display:none">
+      <div class="progress"><div id="bar" class="bar"></div></div>
+      <div id="qnum" class="q-num"></div>
+      <div id="qtext" class="question"></div>
+      <div id="options"></div>
+      <div class="actions">
+        <button class="secondary" onclick="prevQuestion()">上一题</button>
+      </div>
+    </section>
+
+    <section id="result" class="result hero">
+      <span class="pill">你的类型</span>
+      <h1 id="resultName"></h1>
+      <p id="resultTagline" class="subtitle"></p>
+      <div class="score" id="score"></div>
+      <div class="score-label">变现启动指数</div>
+      <div class="summary" id="summary"></div>
+      <div class="quote-card" id="quote"></div>
+
+      <div class="report-section">
+        <h3>一、你真正卡住的不是赚钱本身</h3>
+        <p id="root"></p>
+      </div>
+
+      <div class="report-section">
+        <h3>二、你适合先卖什么</h3>
+        <p id="sell"></p>
+      </div>
+
+      <div class="report-section">
+        <h3>三、你最容易浪费时间的地方</h3>
+        <p id="risk"></p>
+      </div>
+
+      <div class="section-title">你的 30 天破局建议</div>
+      <div class="mini-grid" id="actions"></div>
+
+      <div class="section-title">你的关键提醒</div>
+      <div class="list" id="advice"></div>
+      <p class="footer-note">本测试为自我探索参考，不构成投资建议，也不承诺任何收益。请结合自身现实情况判断。</p>
+    </section>
+  </main>
+
+  <script>
+    const config = {
+      resultTypes: {
+        A: {
+          name: "能力包装卡住型",
+          tagline: "你不一定不会赚钱，你只是还没把能力变成别人想买的结果。",
+          summary: "你的答案显示，你习惯先怀疑自己的能力够不够。你可能会不断学习、收藏、补课，但真正的问题不是你完全不会，而是你还没有把已有能力包装成清晰、具体、可购买的东西。",
+          quote: "你不是没有价值，你是还没把价值翻译成别人听得懂的结果。",
+          root: "你真正卡住的地方，是总觉得“再学一点才配卖”。但赚钱不是等你完美之后才开始，而是在真实反馈里慢慢调整。只要你能解决一个具体小问题，就已经具备最小变现的起点。",
+          sell: "你适合先卖小而具体的技能结果，比如整理模板、陪跑检查、资料包、小咨询、一次性代做服务。不要一开始就做大课、大项目、大承诺，先让别人用很低的决策成本买到一个明确结果。",
+          risk: "你最容易浪费时间的地方，是继续学习但不发布，继续完善但不测试。你会把“准备”误认为“进步”，结果越准备越不敢开始。",
+          actions: ["第 1 周：列出你能帮别人解决的 10 个小问题。", "第 2 周：选其中一个，写成一句可购买的话。", "第 3 周：做一个最小样品，发给 5 个可能需要的人看。", "第 4 周：只根据反馈改产品，不再凭空想象。"],
+          advice: ["先卖一个小结果，不要卖一个大愿景。", "不要等专业到满分，先做能交付的 60 分。", "你的第一单更可能来自具体问题，而不是抽象能力。", "每次交付后都记录用户原话，这是你下一次包装的素材。"]
+        },
+        B: {
+          name: "表达曝光卡住型",
+          tagline: "你不是没能力，你是还没习惯让别人知道你能提供价值。",
+          summary: "你的答案显示，你对“展示自己”“主动表达”“告诉别人我在卖”这几件事比较敏感。你可能不是不会做，而是把被看见、被评价、被拒绝看得太重，所以一直藏在准备阶段。",
+          quote: "你不是不值得被购买，你只是还没把价值说清楚。",
+          root: "你真正卡住的地方，是害怕被看见之后没人回应，或者被熟人评价。于是你宁愿继续完善，也不愿意真正发出去。但没有曝光，就没有反馈；没有反馈，就很难成交。",
+          sell: "你适合先卖低压力、低露脸、低社交负担的东西，比如匿名内容、图文笔记、资料整理、清单模板、轻咨询。先练习“让陌生人知道你能帮什么”，再慢慢提高表达强度。",
+          risk: "你最容易浪费时间的地方，是把表达当成自我审判。每次要发之前，你都会想太多：别人会不会笑、会不会觉得我装、会不会没人理。结果内容还没发，自己先消耗完了。",
+          actions: ["第 1 周：连续发 3 条只讲问题、不推销的内容。", "第 2 周：把一个用户痛点写成“我可以帮你解决...”的句子。", "第 3 周：找一个低价小服务试着公开一次。", "第 4 周：复盘哪些表达带来了咨询，而不是纠结谁点赞。"],
+          advice: ["先练习被看见，再练习被购买。", "不要用熟人眼光判断陌生市场。", "你可以不强势，但必须清楚说出你能帮什么。", "真正的成交不是讨好别人，而是让需要的人看见你。"]
+        },
+        C: {
+          name: "定价成交卡住型",
+          tagline: "你不是不能提供价值，你是到收钱这一步就开始心虚。",
+          summary: "你的答案显示，你最容易卡在报价、成交、收款、应对质疑这些环节。你可能已经有能卖的东西，也愿意表达，但一涉及价格，你就开始怀疑自己值不值。",
+          quote: "你卡住的不是赚钱能力，而是允许自己收钱的底气。",
+          root: "你真正卡住的地方，是把价格等同于自我价值。一旦别人犹豫、砍价、追问细节，你就容易退让。可成交不是证明你完美，而是把双方的需求和边界说清楚。",
+          sell: "你适合先卖边界清晰的小服务：交付内容、次数、时间、结果都写明白。比如一次诊断、一份报告、一套模板、一次陪跑。边界越清楚，你越不容易在成交时心虚。",
+          risk: "你最容易浪费时间的地方，是用降价换安全感。短期看好像更容易成交，长期会让你越来越不敢报价，也越来越容易过度交付。",
+          actions: ["第 1 周：写出一个 19-99 元的小报价，不再临时开价。", "第 2 周：准备 3 句回应砍价和犹豫的话术。", "第 3 周：明确交付边界，哪些做、哪些不做。", "第 4 周：记录每一次被问价，不管成交与否都算有效反馈。"],
+          advice: ["价格不是人格审判，只是一次交易条件。", "不要用过度赠送弥补心虚。", "成交前先说清边界，比成交后硬撑更重要。", "你需要练的是报价肌肉，不是无限降价。"]
+        },
+        D: {
+          name: "行动持续卡住型",
+          tagline: "你不是没有想法，你是启动和持续这两步最消耗你。",
+          summary: "你的答案显示，你并不缺方向感，也不缺赚钱欲望。真正拖住你的，是很容易被新方法、新赛道、新信息带走，导致一直在开始，但很少跑完一个完整闭环。",
+          quote: "你不是没机会，你是还没有让一个机会完整跑完。",
+          root: "你真正卡住的地方，是把“寻找更好方法”当成了行动。你可能看了很多教程，收藏了很多案例，但一旦进入重复执行、持续发布、持续跟进，就容易失速。",
+          sell: "你适合先卖流程简单、重复成本低的东西，比如固定模板、固定咨询、固定资料包、固定小服务。不要一开始做需要大量定制、强沟通、长周期交付的项目。",
+          risk: "你最容易浪费时间的地方，是不停换方向。只要一个方法 3 天没反馈，你就怀疑它不适合自己。这样很难积累数据，也很难知道问题到底出在产品、表达还是渠道。",
+          actions: ["第 1 周：只选一个方向，冻结其他想法。", "第 2 周：每天只做一个固定动作，比如发一条内容或联系 3 个人。", "第 3 周：不换方向，只改标题、表达和报价。", "第 4 周：用 30 天数据决定是否调整，而不是用当天情绪决定。"],
+          advice: ["先跑完一个闭环，再判断适不适合。", "不要每天换赛道，你需要的是稳定样本。", "把行动拆小，小到不用靠热情也能完成。", "你真正要练的不是爆发力，是复利节奏。"]
+        }
+      },
+      questions: [
+        ["你最常卡在哪一步？", ["不知道自己到底能卖什么", "明明会一点东西，但不敢说出来", "一到报价就心虚，怕别人嫌贵", "想法很多，但开始两天就停"]],
+        ["如果有人问你“多少钱”，你第一反应是？", ["先想：我真的值这个价吗？", "怕对方觉得我太功利、太刻意", "想先降价，怕对方转身就走", "想先拖一拖，等我准备好再说"]],
+        ["看到别人靠类似能力赚钱，你心里最真实的声音是？", ["他是不是比我专业很多？", "我也能做，但我不敢发出来", "他怎么敢卖这么贵？", "我收藏了很多方法，但就是没开始"]],
+        ["如果现在让你卖一个小产品/小服务，你最怕什么？", ["不知道怎么包装成别人想买的东西", "发出去没人理，会很尴尬", "被问细节、被砍价时不知道怎么接", "要持续更新和交付，我怕自己坚持不住"]],
+        ["如果一个月后还没赚到第一笔钱，你最可能怪哪里？", ["我能力还不够，应该再学一学", "我不适合露脸，也不适合主动表达", "我不会成交，不知道怎么让别人付款", "我执行力太差，总是半途而废"]],
+        ["当你想开始赚钱时，最常做的第一件事是？", ["再去学一个教程，怕自己不够专业", "默默完善内容，但迟迟不公开", "到处看别人怎么定价，越看越没底", "列计划很起劲，执行两天就断了"]],
+        ["如果朋友说“你这个可以收费”，你心里会怎么想？", ["真的吗？我水平还没到吧", "别说出来，我怕被熟人看见", "收费可以，但我不知道收多少合适", "我也想，但我怕坚持不了多久"]],
+        ["你最羡慕哪种赚钱的人？", ["能把普通技能包装成产品的人", "大方展示自己、敢发敢讲的人", "敢报价、敢成交、不怕被拒绝的人", "每天稳定更新，慢慢做出结果的人"]],
+        ["一个小项目做了 7 天没结果，你最可能怎么做？", ["继续学习，觉得自己还没搞懂", "先不发了，感觉没人理很尴尬", "怀疑价格和话术是不是有问题", "换个方向，感觉这个不适合我"]],
+        ["你最不适合哪种赚钱方式？", ["一上来就要求很强专业背书", "必须频繁露脸、强社交表达", "需要强销售、强逼单、快速成交", "每天大量重复，很考验长期稳定"]],
+        ["如果要你赚到第一笔小钱，你最需要的是？", ["明确自己到底能卖什么", "敢把自己正在提供的东西发出去", "有一个不心虚的报价和成交话术", "有一套每天照着做的简单流程"]],
+        ["你现在最该补的不是答案，而是？", ["把能力产品化的能力", "公开表达自己的勇气", "报价和成交的底气", "持续行动的节奏"]]
+      ]
+    };
+    const letters = ["A", "B", "C", "D"];
+    let index = 0;
+    const answers = [];
+    function startTest() {
+      document.getElementById("intro").style.display = "none";
+      document.getElementById("quiz").style.display = "block";
+      renderQuestion();
+    }
+    function renderQuestion() {
+      const q = config.questions[index];
+      document.getElementById("bar").style.width = ((index) / config.questions.length * 100) + "%";
+      document.getElementById("qnum").textContent = `第 ${index + 1} / ${config.questions.length} 题`;
+      document.getElementById("qtext").textContent = q[0];
+      document.getElementById("options").innerHTML = q[1].map((text, i) => {
+        const letter = letters[i];
+        const selected = answers[index] === letter ? " selected" : "";
+        return `<button class="option${selected}" onclick="choose('${letter}')"><span class="letter">${letter}</span><span>${text}</span></button>`;
+      }).join("");
+    }
+    function choose(letter) {
+      answers[index] = letter;
+      if (index < config.questions.length - 1) {
+        index += 1;
+        renderQuestion();
+      } else {
+        showResult();
+      }
+    }
+    function prevQuestion() {
+      if (index > 0) {
+        index -= 1;
+        renderQuestion();
+      }
+    }
+    function showResult() {
+      const counts = { A: 0, B: 0, C: 0, D: 0 };
+      answers.forEach(a => counts[a] += 1);
+      const winner = [...letters].sort((a,b) => counts[b] - counts[a])[0];
+      const result = config.resultTypes[winner];
+      const score = 68 + counts[winner] * 5 + (winner === "B" || winner === "C" ? 2 : 0);
+      document.getElementById("quiz").style.display = "none";
+      document.getElementById("result").style.display = "block";
+      document.getElementById("resultName").textContent = result.name;
+      document.getElementById("resultTagline").textContent = result.tagline;
+      document.getElementById("score").textContent = score;
+      document.getElementById("summary").textContent = result.summary;
+      document.getElementById("quote").textContent = result.quote;
+      document.getElementById("root").textContent = result.root;
+      document.getElementById("sell").textContent = result.sell;
+      document.getElementById("risk").textContent = result.risk;
+      document.getElementById("actions").innerHTML = result.actions.map(item => `<div>${item}</div>`).join("");
+      document.getElementById("advice").innerHTML = result.advice.map(item => `<div>${item}</div>`).join("");
+      window.scrollTo({ top: 0, behavior: "smooth" });
+    }
+  </script>
+</body>
+</html>
