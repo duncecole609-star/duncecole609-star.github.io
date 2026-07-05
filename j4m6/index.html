@@ -1,0 +1,318 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
+<title>消费心理测试</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:"PingFang SC","Microsoft YaHei",sans-serif;background:#0f0f1a;color:#e8e0d0;min-height:100vh;display:flex;justify-content:center}
+.app{width:100%;max-width:500px;min-height:100vh;position:relative;overflow:hidden}
+.screen{display:none;flex-direction:column;min-height:100vh;padding:28px 22px 40px}
+.screen.active{display:flex}
+
+.cover{justify-content:center;align-items:center;text-align:center;gap:20px}
+.cover .icon{font-size:52px}
+.cover h1{font-size:29px;font-weight:900;line-height:1.4;letter-spacing:1.5px;padding:0 6px}
+.cover h1 .hl{color:#c9a96e}
+.cover .sub{font-size:15px;color:#8a8070;line-height:1.7;max-width:300px}
+.cover .btn-start{margin-top:10px;padding:15px 50px;font-size:18px;font-weight:700;background:linear-gradient(135deg,#c9a96e,#a6844d);color:#0f0f1a;border:none;border-radius:40px;cursor:pointer;letter-spacing:2px}
+.cover .btn-start:active{transform:scale(.96)}
+.cover .trust{font-size:12px;color:#4a4538;margin-top:6px}
+
+.progress-wrap{padding:4px 0 14px}
+.progress-bar{height:3px;background:#1e1e2e;border-radius:2px;overflow:hidden}
+.progress-fill{height:100%;background:linear-gradient(90deg,#c9a96e,#d4b87a);border-radius:2px;transition:width .3s}
+.progress-label{font-size:13px;color:#5a5548;margin-top:6px;text-align:right}
+
+.q-area{flex:1;display:flex;flex-direction:column;gap:16px}
+.q-area .q-num{font-size:13px;color:#6a6558;letter-spacing:2px}
+.q-area .q-text{font-size:23px;font-weight:700;line-height:1.5}
+.options{display:flex;flex-direction:column;gap:10px}
+.opt{padding:18px 16px;border-radius:14px;background:#16162a;border:1.5px solid #252540;cursor:pointer;transition:all .2s;display:flex;align-items:flex-start;gap:13px}
+.opt:active{transform:scale(.98);border-color:#c9a96e;background:#1e1e34}
+.opt .letter{width:33px;height:33px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:15px;font-weight:700;flex-shrink:0;background:rgba(201,169,110,.12);color:#c9a96e}
+.opt .txt{font-size:15px;line-height:1.55;color:#c8c0b0;flex:1}
+
+.gate-screen{justify-content:center;align-items:center;text-align:center;gap:24px}
+.gate-screen .lock-icon{font-size:48px}
+.gate-screen h2{font-size:26px;font-weight:800;line-height:1.4}
+.gate-screen .gate-desc{font-size:15px;color:#a09880;line-height:1.7;max-width:300px}
+.gate-screen .unlock-list{text-align:left;background:#16162a;border-radius:16px;padding:20px 24px;width:100%;max-width:320px}
+.gate-screen .unlock-list li{font-size:14px;color:#b8b0a0;line-height:2;list-style:none}
+.gate-screen .unlock-list li::before{content:"✓ ";color:#c9a96e;font-weight:700}
+.gate-screen .btn-gate{margin-top:8px;padding:14px 44px;font-size:18px;font-weight:700;background:linear-gradient(135deg,#c9a96e,#a6844d);color:#0f0f1a;border:none;border-radius:40px;cursor:pointer;letter-spacing:2px}
+.gate-screen .btn-gate:active{transform:scale(.96)}
+.gate-screen .price{font-size:14px;color:#6a6558;margin-top:4px}
+
+.loading{justify-content:center;align-items:center;text-align:center;gap:24px}
+.loading .spinner{width:52px;height:52px;border:3px solid #1e1e2e;border-top-color:#c9a96e;border-radius:50%;animation:spin .8s linear infinite}
+@keyframes spin{to{transform:rotate(360deg)}}
+.loading .msg{font-size:16px;color:#a09880;letter-spacing:1px}
+
+.result{padding:28px 22px 48px}
+.result .badge{display:inline-block;padding:7px 16px;border:1px solid rgba(201,169,110,.25);border-radius:16px;font-size:13px;color:#c9a96e;letter-spacing:2px;margin-bottom:14px}
+.result .type-name{font-size:36px;font-weight:900;margin-bottom:6px;line-height:1.2}
+.result .type-sub{font-size:18px;color:#d4b87a;margin-bottom:20px;line-height:1.4}
+
+.evidence-box{background:#16162a;border-radius:16px;padding:20px;margin-bottom:22px;border-left:3px solid #c9a96e}
+.evidence-box h3{font-size:14px;color:#c9a96e;letter-spacing:2px;margin-bottom:10px}
+.evidence-box p{font-size:14px;color:#b8b0a0;line-height:1.7}
+
+.module{margin-bottom:20px}
+.module h3{font-size:16px;color:#a09880;letter-spacing:1.5px;margin-bottom:10px;padding-bottom:8px;border-bottom:1px solid #1e1e2e}
+.module p{font-size:14px;color:#b8b0a0;line-height:1.75;margin-bottom:6px}
+
+.summary-box{background:linear-gradient(135deg,#1a1a2e,#1f1f34);border-radius:16px;padding:24px;margin:24px 0;text-align:center;border:1px solid rgba(201,169,110,.15)}
+.summary-box .q-mark{font-size:28px;color:#c9a96e;margin-bottom:8px}
+.summary-box p{font-size:17px;color:#d4b87a;line-height:1.7;letter-spacing:.5px}
+
+.advice-box{margin-bottom:24px}
+.advice-box h3{font-size:16px;color:#a09880;letter-spacing:2px;margin-bottom:12px}
+.advice-box .advice-item{padding:12px 14px;margin-bottom:8px;background:#16162a;border-radius:12px;font-size:14px;color:#b8b0a0;line-height:1.6;display:flex;gap:10px}
+.advice-box .advice-item .n{color:#c9a96e;font-weight:700;flex-shrink:0}
+
+.reminder-box{background:#16162a;border-radius:16px;padding:20px;margin-bottom:28px;border:1px solid #2a2a40}
+.reminder-box h3{font-size:15px;color:#c9a96e;letter-spacing:2px;margin-bottom:8px}
+.reminder-box p{font-size:14px;color:#a09880;line-height:1.7}
+
+.footer{text-align:center;padding:16px;font-size:11px;color:#3a3a48;border-top:1px solid #16162a;margin-top:auto}
+</style>
+</head>
+<body>
+<div class="app" id="app"></div>
+<script>
+// ========== 内容数据 ==========
+const DATA = {
+  title:"你花钱时<br>最怕被说什么？<br><span class='hl'>一个测试拆开消费不安</span>",
+  subtitle:"不是算你花了多少钱——<br>是看每一笔消费背后藏着的那个声音",
+
+  questions:[
+    {scene:"看到喜欢的但价格不低的东西，你脑子里冒出的第一句话通常是？",A:"先搜一下有没有平替——花冤枉钱的感觉比花钱本身更让我难受，宁愿不买也不能买错",B:"先别急，比比三家再说——万一买完发现别家更便宜，我会气自己好几天，买东西不能冲动",C:"买回去别人会怎么看我——会不会觉得我花这么多钱买这个有点好笑，想象那个画面已经有点紧张",D:"先算一下大概能用几次——如果算下来每次的单价太高我就冷静了，不值的东西不配进购物车"},
+    {scene:"你在付款页面犹豫了超过十秒，最可能是因为心里冒出了什么？",A:"脑子里突然闪过我妈说'省着点花'的声音——明明花的是自己的钱，却像在做一件需要报备的事",B:"最后再确认一遍有没有隐藏优惠券——不是差那几块钱，是被商家多赚了的感觉让我浑身不舒服",C:"万一朋友说'你居然买这个'——不是怕被说，是怕她们觉得我不是会用这种东西的人",D:"再想一遍它到底会不会被闲置——买回来用两次就落灰的东西太多了，我不想再为自己的判断失误买单"},
+    {scene:"身边人给你的消费习惯贴过什么标签？",A:"他们说我'冲动消费'——但其实每一笔大额支出我都翻来覆去想了好几天，只是不会跟他们解释",B:"他们说我'太计较价格'——不是计较，是不想用比别人贵的价格买一样的东西，那是智商被侮辱",C:"他们说我'买东西还要看别人脸色'——但我不是讨好谁，是有些消费在朋友圈里真的需要被理解",D:"他们说我'买个东西跟写论文一样'——是啊，不用自己的标准论证清楚，怎么能确定这笔钱花得对"},
+    {scene:"你把一个东西放进了购物车但最后没有付款，最真实的原因是？",A:"觉得花了这笔钱会有愧疚感——不是买不起，是好像自己还没做出什么成绩，不配给自己买太好的东西",B:"觉得价格里还有水分——等大促再说，不信它不掉价，商家休想从我这里多赚一块钱",C:"想象了一下别人看到这个东西的反应——有些消费一旦被围观，快乐就打了折，不如不买",D:"突然觉得好像也不是非要不可——'不划算'的念头一旦冒出来就收不住，买了也会一直想'值不值'"},
+    {scene:"买完一个不便宜的东西之后，你最可能做的第一件事是什么？",A:"把吊牌和包装盒藏起来，不想让室友或同事注意到我买了新东西——被问价格的时候会莫名心虚",B:"回去立刻全网比价——如果不小心买贵了哪怕只差几十块，我也会认真考虑要不要退了重新买",C:"先收起来几天再用——不想让身边的人一下子发现我又买了新东西，慢慢出现比较没有负担",D:"开始疯狂找使用场景，哪怕本来不需要也硬用——至少用回本才安心，不然总觉得这笔钱白花了"},
+    {scene:"别人真心夸你买的东西不错时，你下意识说的第一句话是什么？",A:"'不贵不贵'——急着解释价格，好像不先说这句对方就会默认我在乱花钱，需要在被审判前先自证清白",B:"'真的吗？我没买贵吧？'——别人夸我买得好，我第一反应是确认自己有没有被商家坑，好话也先打个折",C:"嘴上说'谢谢'，心里在想她是不是其实在说'你真舍得'——别人夸我买的东西时，我总能听出没说完的下半句",D:"开始解释这个东西有多实用、能用多少次——怕对方觉得我只是在满足物欲，需要证明我的消费是有道理的"},
+    {scene:"花钱后你最怕听到的一句话是什么？",A:"'你又买了？'——不是管我，是那种'你怎么又没控制住自己'的语气，让我立刻觉得自己做错了什么",B:"'花了多少钱？'——问完价格之后那个停顿太可怕了，不管贵还是便宜，那个停顿都是审判",C:"'你买这个干嘛？'——不是真的想知道用途，是在质疑我的生活方式，好像我花自己的钱还需要一个合理理由",D:"'这个能用几次？'——好像只有高频使用才配被买，快乐本身不算理由，瞬间让消费失去了所有浪漫感"},
+    {scene:"花钱后感到'不该买'的后悔情绪，最常来源于哪里？",A:"脑子里自动播放我妈知道了会怎么说的画面——她的消费观已经长成了我的一部分，比我自己的判断还响",B:"发现别家便宜了五十块——不是差这笔钱，是'当冤大头'的感觉太差了，觉得自己不够聪明才会多花钱",C:"朋友一句不经意的'你也买这个啊'——那句话里有多少没说出来的东西我不敢细想，越想越觉得买错了",D:"用了一两次就吃灰了——不是心疼钱，是心疼那个做决定时信誓旦旦的自己，觉得自己判断失误了"},
+    {scene:"你在消费时最容易被哪种话术打动？",A:"'对自己好一点'——这句话总能让我短暂地原谅自己，好像花钱不是放纵，是一种迟到的自我补偿",B:"'全年最低价，买贵退差价'——不是贪便宜，是用更低价格买到同样品质的东西会让我觉得自己很聪明",C:"'用了它，你就是另一种人了'——明知道是营销话术，但'变成更好的自己'的想象太诱人了，我愿意为这个可能买单",D:"'最后三件，卖完不补'——稀缺感会让我暂时忘记性价比计算，回过神来的时候订单已经下了"},
+    {scene:"你更愿意在哪一类消费上花钱？",A:"实用的、日常的、能用很久的东西——至少花完不会被人问'买这个干嘛'，安全感比惊喜更重要",B:"稍微贵一点但品质明显更好的——多花的钱是投资不是浪费，用得久算下来反而更省钱，这笔账我算得清",C:"能让自己变得更好看或者看起来不一样的东西——那是花钱买一个新的可能性，比买一个物件更值",D:"买了能让别人觉得我判断力不错的东西——不是炫耀，是被认可'会花钱'比被认可'有钱'更让我满足"},
+    {scene:"朋友买了一个你觉得完全不值的东西，你的第一反应是什么？",A:"替TA心疼钱但绝对不会说出来——花钱让自己开心也是一种价值，只是我自己还不太敢那么理直气壮",B:"默默帮TA算一下能用几次——觉得不值但也能理解，毕竟不是每个人都像我一样把性价比当信仰",C:"注意到TA买完之后整个人的状态都不一样了——如果这个东西让TA变得更自信了，那它就是值的",D:"嘴上说'喜欢就好'，心里有个小计算器在自动算账——还好不是我花的钱，不然我会睡不着"},
+    {scene:"如果花钱可以替你说一句憋了很久的话，你最想让它喊什么？",A:"'我没有乱花——每一笔钱都是我努力工作之后给自己的一个交代，请别用轻飘飘的三个字否定它'",B:"'我不傻——我花的每一分钱都算过，只是计算方法和你不一样，请别用价格来判断我的判断力'",C:"'我不是在装——我只是在花自己的钱把自己变成更想成为的那个人，这个目标不需要向谁解释'",D:"'我没浪费——你不理解这个东西对我的意义，不代表它没有意义，快乐本身就是一种值得'"}
+  ],
+
+  types:{
+    A:{name:"怕被说「乱花钱」",tag:"你的消费不安来自愧疚——你不是真的乱花，你只是还没学会心安理得地对自己好",icon:"💸",
+       score:"消费愧疚感 倾向 85%",
+       conclusion:"你花钱时最怕听到的三个字是「乱花钱」。不是因为你真的乱花——恰恰相反，每一笔你觉得「有点贵」的消费，都在你心里翻来覆去地自我辩护了好几轮。但那个从小被种下的「省着点」的声音，比你自己的判断更有力。你花了钱之后的第一反应不是享受，是心虚——好像自己做了什么不该做的事，需要给某个看不见的考官写一份检讨。",
+       evidence_note:"你在Q1里先想到的是找平替（省钱是第一本能，不是第一选择），Q2里被记忆中「省着点花」的声音按住了付款键（愧疚感的来源有迹可循），Q3里别人说你冲动但你每笔都想了很久（被误读的消费态度），Q4里愧疚感让你取消付款（不敢理直气壮地对自己好），Q5里你把消费痕迹藏起来（被审判的恐惧超过拥有的快乐）。这些选择画出一条清晰的线：你花钱时最大的对手不是价格——是你心里那个被内化的「省着点」的声音。",
+       quote:"你花出去的不是钱，是你对自己的一次小心翼翼的批准。批准完了还回头看——怕有人说「你太放纵了」。但那个努力了很久的你，值得一个不需要解释的心动。",
+       modules:[
+         {title:"你的消费安全感类型",content:"你是「愧疚型消费者」——花钱时的紧张感不是来自余额不够，而是来自一个更深层的信念：花钱给自己 = 不够自律。这个信念不是你天生的，它可能来自童年时反复听到的「省着点」、来自第一次被说「乱花钱」的那个瞬间、来自你对自己的高标准——把「不乱花钱」当成了一种品格证明。你以为自己在控制消费，其实是被愧疚感控制了消费。"},
+         {title:"你花钱时最深的恐惧来源",content:"你最怕的不是没钱，是花了钱之后被判定为「不自律的人」。「乱花钱」这三个字对你来说不是一个消费评价——它是一种人格否定。在你的潜意识里，会花钱=会生活，乱花钱=不会管理自己。所以你每一笔消费都在准备一份辩护词：买这个是有原因的、这个能用很久、这个已经很便宜了——你不是在说服别人，你是在说服住在你心里的那个「考官」。"},
+         {title:"别人评价对你消费决策的真实影响",content:"你比你以为的更在意别人的评价。你买东西时脑子里会自动模拟别人看到这个东西时的反应——这个声音比你自己的喜欢更大声。你会为了避免被说「乱花钱」而放弃一些自己真正想要的东西，然后用「其实也没那么喜欢」来自我说服。但问题在于：你说服了自己不买，却没有说服自己不想——那个没买到的东西会留在心里，变成一个没说出口的「我值得」。"},
+         {title:"最容易掉进的消费心理陷阱",content:"你最容易掉进「补偿式消费」和「愧疚式退款」的循环：压抑久了突然给自己买一个贵的东西（补偿），买完之后愧疚感上线，又退掉或者开始疯狂找平替证明自己没乱花（愧疚）。这个循环让你既没有省钱（时间成本、情绪成本远大于省下的钱），也没有享受到消费的快乐。另一个陷阱是：你把所有「非必需」的消费都归为「乱花」，忘了快乐本身也是一种合理的「必需」。"},
+         {title:"怎么建立更自在的消费自信",content:"建立消费自信的第一步，不是学会怎么花钱——是学会怎么回应心里那个「省着点」的声音。试着给自己设定一个月度「无需解释基金」：一笔你可以花在任何东西上且不需要向任何人（包括自己）解释的钱。从一个月100块开始——重点不是金额，是你第一次体验花钱之后没有愧疚感的感觉。那笔钱教会你的不是消费，是'我值得'。"}
+       ],
+       advice:["这周花一笔小钱在纯粹让自己开心的东西上——不用考虑实用性、不用比价、不用跟任何人解释。花完之后观察：愧疚感什么时候来了？它是怎么说服你「不该买」的？","给自己开一个「无需解释基金」账户，每个月存进一笔固定金额。这笔钱的规则是：花掉，且不解释。从200块开始，让这个金额慢慢变大——它不是消费训练，是自我允许训练。","下次被说「你又买了」的时候，试着不回嘴、不解释、不心虚。看着对方的眼睛说「嗯，我喜欢」——三个字就够了。对方有没有被说服不重要，你第一次不辩护自己的消费，才是重点。","整理过去一年里买过的最不后悔的三样东西，写下它们让你不后悔的原因——不是因为它们最便宜或最实用，是因为它们让你在某个时刻觉得'我值得被这样对待'。这个清单是你反驳愧疚感的最好证据。"],
+       reminder:"你不是乱花钱——你是在用「不乱花」证明自己是一个有自控力的人。但自控力不用证明给任何人看，包括你自己。那些为了快乐而花出去的钱，不是自律的污点——它是你对自己说「你是值得的」的另一种方式。"
+    },
+    B:{name:"怕被说「买贵了」",tag:"你的消费不安来自被坑的恐惧——你想证明的不是有钱，是聪明",icon:"🧾",
+       score:"价格敏感度 倾向 83%",
+       conclusion:"你花钱时最怕被说「买贵了」。这三个字对你的杀伤力不是金钱上的——是智商上的。在你的消费逻辑里，买到好东西不是本事，用合适的价格买到好东西才是。所以你每次付款前都在进行一场防坑演习：比价、查券、等降价、看历史价格曲线。你不是抠——你是在用「买得聪明」来证明自己的判断力。被说「买贵了」等于被说「你不够聪明」——这个你受不了。",
+       evidence_note:"你在Q1里先想到比价（价格不对会气自己好几天），Q2里你最后一秒还在确认有没有漏掉优惠券（被多赚的感觉让你浑身不舒服），Q3里别人说你太计较但你只是不想用比别人贵的价格买一样的东西（不是在乎钱是在乎公平），Q4里你觉得价格还有水分所以不急着买（对商家的不信任深植于消费习惯里），Q5里你买完立刻全网比价准备随时退货（买贵了=需要修正的错误）。你的消费逻辑不是省钱——是「不能被坑」。",
+       quote:"你不是在乎那几十块钱——你是在乎「我没那么容易被骗」。你的每一次比价，都是对世界说：我很清醒，别想从我这里多赚一分不该赚的。",
+       modules:[
+         {title:"你的消费安全感类型",content:"你是「防备型消费者」——你进入消费场景时的默认状态不是「我想买什么」，而是「这里面有没有坑」。你的消费安全感不来自买到好东西，来自确信自己没有多花一分冤枉钱。这种防备模式可能来源于某次买贵了的惨痛经历——那个瞬间你觉得自己被当成了傻子，那种感觉比多花的钱本身更让你难受。从那以后，每一次消费都变成了一场和商家之间的智力对决。"},
+         {title:"你花钱时最深的恐惧来源",content:"你最怕的不是东西不好，是「别人用更低的价格买到了同样的东西」。这在你心里不是价格差的问题——是你觉得自己被比下去了。在你的世界观里，消费也是一场信息战：掌握更多信息的人赢，信息落后的人输。你怕的不是输钱，是输在「不够聪明」上。所以你花大量时间做功课，不是因为你抠——是因为你需要用「我已经做足功课了」来给自己一个安全的花钱理由。"},
+         {title:"别人评价对你消费决策的真实影响",content:"你觉得自己不太在乎别人的评价——但实际上你在乎得很。你只是把「别人怎么看」换算成了「别人花多少钱买的」。如果有人用比你低的价格买到了同一件东西，你会立刻觉得自己花的钱不值了——不是因为东西变了，是因为你的「聪明消费」人设在那一刻崩塌了。你花钱后的满足感，有一半来自「我没买贵」的确认——这个确认有时候比东西本身用起来好不好更重要。"},
+         {title:"最容易掉进的消费心理陷阱",content:"你最容易掉进「比价陷阱」：为了省50块花了三个小时比价，但那三个小时的时间成本远超过50块。你还容易掉进「最低价偏执」：明明已经找到了一个合理的价格，但总觉得还有更低的，于是迟迟不下单，最后错过了真正需要这个东西的时间窗口。另一个陷阱是：你把「买得便宜」等同于「买得好」——但最便宜的不一定最适合你，性价比的「性」字排在「价」字前面。"},
+         {title:"怎么建立更自在的消费自信",content:"消费自信对你来说不是「敢花更多的钱」——是「敢在做了合理的比价之后就下单，不再继续找了」。给自己设一个「比价上限」：任何消费的比价时间不超过15分钟，超过15分钟还没找到更便宜的，就相信当前的选项已经够好了。这不是偷懒——是开始相信自己的判断力不需要用「全网最低价」来背书。"}
+       ],
+       advice:["下次消费前给自己设一个15分钟的比价闹钟。闹钟响了就下单，不管有没有找到更便宜的。做完之后记录你的感受：是没有买到最低价更难受，还是不用再搜来搜去更轻松？","找一个你信任的、消费习惯和你完全不同的人，让她帮你挑一件东西。你不用比价、不用做功课，只需要决定要不要。这是你练习「不用信息优势也可以安全消费」的第一步。","把自己过去半年里最满意的三笔消费列出来，然后诚实回答：它们让你满意的主要原因，是买得便宜，还是用得开心？如果答案是后者——你省下来的那些比价时间，可以换更多开心。","下次发现有更便宜的价格时，不要立刻后悔或退货。先问自己：这个东西我用了吗？用的时候开心吗？如果两个答案都是「是」——那几十块的差价买的是「及时使用」和「省心」，值了。"],
+       reminder:"你不是计较——你是太习惯把消费当成一场不能输的考试。但不是每一次消费都需要拿满分。有些钱多花了一点点，换来的是及时用到、不用再搜、心里踏实——这种溢价叫「省心费」，它值得买单。"
+    },
+    C:{name:"怕被说「装什么」",tag:"你的消费不安来自别人的眼光——你怕的不是花钱，是花了钱还要被审判",icon:"🎭",
+       score:"社交评价敏感度 倾向 81%",
+       conclusion:"你花钱时最怕听到的一句是「装什么」。这三个字打的不只是你的消费——打的是你想要变好的那股劲。你买一件贵的东西、尝试一种新的风格、升级一个生活细节——这些对你来说不只是消费，是你在试图靠近一个「更好的自己」。但这个过程最脆弱的地方在于：在还没变成那个更好的自己之前，你的每一次尝试都像是在「装」。你怕被人看出来你在努力——好像努力本身就说明了你还不够好。",
+       evidence_note:"你在Q1里先想到的是别人会怎么看你买这个东西（社会评价比价格更早进入决策），Q2里你被朋友可能的反应按住了付款键（社交围观的压力超过付款本身），Q3里别人说你买东西还要看别人脸色——但你知道有些消费在社交圈层里就是需要被理解（消费是你和群体的对话），Q4里你因为想象了别人的反应而取消付款（被围观的恐惧让你放弃了原本想要的东西），Q5里你把新东西藏几天再用（你不想让消费变成一个需要解释的事件）。你在意的不是钱——是你花了钱之后能不能被「正确地看见」。",
+       quote:"你花钱买的不是东西——是你想成为的那个人的一部分。这个过程不叫装，叫'正在生长'。那些说你在装的人，只是没见过一个人正在变成自己的样子。",
+       modules:[
+         {title:"你的消费安全感类型",content:"你是「社交凝视型消费者」——你在消费时脑子里永远有一个观众席。这个观众可能是你的朋友、同事、家人，也可能是你在社交媒体上看到的某个「活成了你想要的样子」的人。你每次花钱都在做一场隐形的汇报：这个东西值得我买吗？别人会怎么看待买了这个东西的我？这个「别人」的存在感比你愿意承认的更强——他们不在付款现场，但一直在你的决策现场。"},
+         {title:"你花钱时最深的恐惧来源",content:"你最怕的不是东西不好——是花了钱之后反而被看低了。「装什么」这三个字是你的消费噩梦，因为它否定了你最核心的动机：你不是在假装，你是在努力变好。但「变好」是个进行时——进行时的你天然比完成时的你更脆弱。你怕被别人看到这个「中间状态」：你已经不是原来的自己了，但还没有完全成为想成为的那个人。在这个阶段里，每一次消费都是一次暴露——暴露你在意什么、你想往哪个方向走。"},
+         {title:"别人评价对你消费决策的真实影响",content:"你比你愿意承认的更依赖外部反馈来确认消费的价值。如果你买了一件东西但没有人注意到、或者注意到的方向和你预期的不一样，那件东西带给你的快乐会大打折扣。这不是虚荣——是你把消费当成了和世界之间的信号传递：你在用买的每一样东西向世界发射信号，然后通过别人的反应来确认信号有没有被正确接收。当信号被误读（比如你觉得买了一件很有品味的东西但别人说「你装什么」），你的失望不是来自消费本身——是来自沟通的失败。"},
+         {title:"最容易掉进的消费心理陷阱",content:"你最容易掉进「身份跳跃消费」：买一件东西时，你买的不是物品本身，而是「使用这个东西的人设」。但人设和真实自我之间的差距，就是你会觉得「装了」的来源。当差距太大时，你会有穿帮感——好像偷穿了大人的衣服。另一个陷阱是「观众缺席型失望」：你精心准备了一个消费表达，但没有人注意到。这时候你会怀疑消费的价值——不是因为东西不好，是因为你需要的不是东西，是需要它被看见。"},
+         {title:"怎么建立更自在的消费自信",content:"试着把消费的观众从「别人」换成「未来的自己」。下次买东西前不问「别人会怎么看」，问「三个月后的我回头看今天的这个选择，会怎么评价」。三个月后的你不会在乎某个朋友当时是什么表情——她只会在乎这个东西有没有帮你离想成为的那个人更近一步。让未来的自己做裁判，而不是让路过的观众做裁判。"}
+       ],
+       advice:["做一次'隐身消费实验'：买一件让自己开心的东西——不拍照、不发朋友圈、不跟任何人说。享受它的时候只问自己：没有人知道的情况下，我还能不能一样享受？这个答案会让你更清楚你花钱到底是为了谁。","找出你衣柜或化妆台上三件买的时候最在意别人反应的东西，现在重新面对它们：如果今天才看到它们，不考虑任何人的评价，你还会买吗？分别写下会或不会的原因——这些原因是了解你自己的线索。","下一次有人说'你买这个干嘛'的时候，尝试不解释用途，只说一句：'因为买了开心。'然后不再补充。看看对方的反应——你可能会发现，当你不再试图辩护时，对方反而不再追问了。","找一个你认为已经活成了你想要的样子的人，问TA一个问题：'你在变成现在的自己之前，有没有一段不知道自己算不算在装的过程？'TA的答案会让你知道——所有人都在'中间状态'里待过，你并不孤单。"],
+       reminder:"你不是在装——你是在用消费探索'我想成为什么样的人'。这个过程本身就值得尊重。那些用'装什么'打断你探索的人，可能只是不敢开始自己的探索。你不需要等到完全准备好了才被看见——正在生长的你，已经很值得被认真对待。"
+    },
+    D:{name:"怕被说「不值得」",tag:"你的消费不安来自自我怀疑——你在用每一笔消费论证自己的人生判断力",icon:"⚖️",
+       score:"价值论证倾向 82%",
+       conclusion:"你花钱时最怕被说「不值得」。这三个字攻击的不只是你的消费选择——是攻击了你做判断的能力。你是一个习惯用理性审视一切的人，包括自己的欲望。每一笔消费在你这里都要先通过一场内部答辩：它值吗？能用几次？有没有更好的替代方案？如果答不上来——就不配被买。你不是不想对自己好——你是对自己的判断力要求太高了：如果连一笔消费都论证不清楚，你怎么相信自己能做出更重要的决定。",
+       evidence_note:"你在Q1里先开始计算性价比（值不值是你消费决策的入口），Q2里你在最后一次确认它不会被闲置（对自己判断力的不信任让你反复验证），Q3里别人说你买东西要写论文——你就是需要把每一步都论证清楚才能安心（逻辑是你的安全绳），Q4里你因为不确定值不值得而放弃（怀疑一旦开始就停不下来），Q5里你买了之后疯狂让它回本（你需要在事后再补一份价值证明）。你的消费逻辑是一个闭环：买前论证→买了验证→用回本才算完。",
+       quote:"你不是计较，是你太在乎花的每一笔钱都要对得起做决定的那个自己。但有些东西的价值不在可以用多少次——在于拥有的那一刻你觉得自己也是一个配得上好东西的人。",
+       modules:[
+         {title:"你的消费安全感类型",content:"你是「论证型消费者」——你花钱的逻辑不是「想要」，是「值得」。你的购物车里永远躺着一批通过了初筛但还没通过终审的商品，它们在等待你完成最后的价值核算。这种论证习惯可能来自你对自己的高标准：你希望在生活的每一个维度上都做出合理的决策，消费只是其中最容易被量化的一项。但问题在于——不是所有值得拥有的东西都经得起量化。快乐、灵感、被安慰的感觉、对自己的奖赏——这些在Excel里填不进任何一个格子。"},
+         {title:"你花钱时最深的恐惧来源",content:"你最怕的不是东西不好——是花了钱之后自己后悔。后悔对你来说不只是损失了一笔钱，是损失了对自己判断力的信心。你怕的不是钱的问题，是你怀疑自己做了一个不够好的决定。所以你把消费决策的标准提得非常高——高到大部分消费都不合格。这不是在筛选好东西，这是在用极高的门槛保护自己免于后悔。但门槛太高的时候，挡在外面的不只是可能会后悔的消费——还有一定会让你开心的消费。"},
+         {title:"别人评价对你消费决策的真实影响",content:"你看起来不太在意别人的评价——但别人说「不值得」的时候你是真的会往心里去。因为别人质疑的是你最在意的部分：你的判断。你花时间论证过的东西，被别人一句话否定——这种打击不是关于那个东西的，是关于你的论证能力被否定了。所以你会下意识地避免买那些「别人可能觉得不值」的东西——不是怕别人说，是怕别人说对了，而你没有提前算到。"},
+         {title:"最容易掉进的消费心理陷阱",content:"你最容易掉进「性价比黑洞」：用一个过于狭窄的维度（使用次数、单价、实用功能）去衡量所有消费，然后把大部分「没有明确功用」的东西判定为不值得。但你忘记了：一件让你心情变好的东西、一件让你在某个关键时刻更自信的东西、一件让你觉得「我在照顾自己」的东西——它们的价值不在使用频次里，在那些没有它们就不会发生的好时刻里。另一个陷阱是「回本焦虑」：你买了之后太执着于把它用回本，结果把好好享受的体验变成了KPI考核。"},
+         {title:"怎么建立更自在的消费自信",content:"在你的价值论证体系里增加一个新的维度：「情绪价值系数」。每次论证时除了算使用次数和单价，多问自己一个问题：这个东西有没有可能在未来某个我很低落或者很重要的时刻，让我觉得「还好当时买了它」？如果答案是「有可能」——给它加一分。这一分来自你对未来自己的信任：你相信有些价值现在算不出来，但未来会兑现。"}
+       ],
+       advice:["这周买一件你算不清「值不值」的小东西（不超过100块）——只因为它在某个瞬间让你心动了。买了之后不许算使用次数、不许算单价、不许在脑子里开论证会。让它就是它——一个让你快乐了一下的小东西。","在购物车里挑一件放了很久但一直没通过终审的东西，问自己：我到底在等什么？如果等的那个条件永远不出现，我能接受错过它吗？如果答案是「不能」——它就是值得的，只是在等你看清这一点。","下次你因为觉得不值而放弃一件东西后，记录一下：放弃之后的那几天里，你有没有想起过它？如果想起过——你的「不想买」可能是被论证系统拦截了，不是真正的「不需要」。","给你信任的一个人看看你的消费论证标准，问TA一个问题：你觉得这个标准对我来说是不是太严了？TA的视角可能让你看到：你对自己的标准远高于你对朋友的标准——你比你以为的更需要对自己宽容一点。"],
+       reminder:"你的判断力不需要用每一笔消费来证明。你可以允许自己偶尔买一件「没什么用但让人开心」的东西，这不是判断失误——这是在告诉自己：我不是一台需要永远算对的机器，我是一个有权利偶尔'不讲理'的人。"
+    }
+  },
+
+  productModules:[
+    "你的消费安全感类型",
+    "你花钱时最深的恐惧来源",
+    "别人评价对你消费决策的真实影响",
+    "最容易掉进的消费心理陷阱",
+    "怎么建立更自在的消费自信"
+  ],
+
+  disclaimer:"本测试仅为自我探索参考，不构成任何心理咨询、理财建议或效果承诺。消费习惯因人而异，请结合自己的实际情况判断。"
+};
+
+// ========== 引擎 ==========
+let answers=[],currentQ=0,paid=false;
+
+function $(id){return document.getElementById(id)}
+const app = document.getElementById('app');
+
+function cover(){
+  app.innerHTML=`
+    <div class="screen active cover">
+      <div class="icon">💳</div>
+      <h1>${DATA.title}</h1>
+      <div class="sub">${DATA.subtitle}</div>
+      <button class="btn-start" onclick="start(true)">开始测试</button>
+      <div class="trust">前5题免费 · 记下答案左滑查看报告预览</div>
+    </div>`;
+}
+
+function start(free){answers=[];currentQ=0;paid=!free;renderQ()}
+
+function renderQ(){
+  if(currentQ>=DATA.questions.length){showResult();return;}
+  if(currentQ===5 && !paid){showGate();return;}
+  const q=DATA.questions[currentQ];
+  const pct=Math.round((currentQ/DATA.questions.length)*100);
+  const letters=['A','B','C','D'];
+  app.innerHTML=`
+    <div class="screen active">
+      <div class="progress-wrap">
+        <div class="progress-bar"><div class="progress-fill" style="width:${pct}%"></div></div>
+        <div class="progress-label">第 ${currentQ+1}/${DATA.questions.length} 题</div>
+      </div>
+      <div class="q-area">
+        <div class="q-num">${currentQ<5?'免费测试 · 第'+(currentQ+1)+'题':'深度解锁 · 第'+(currentQ+1)+'题'}</div>
+        <div class="q-text">${q.scene}</div>
+        <div class="options">
+          ${letters.map(l=>`<div class="opt" onclick="pick('${l}')"><div class="letter">${l}</div><div class="txt">${q[l]}</div></div>`).join('')}
+        </div>
+      </div>
+      ${currentQ===4?'<div style="text-align:center;font-size:13px;color:#6a6558;padding:8px 0">记下5个答案，左滑查看报告预览 →</div>':''}
+    </div>`;
+}
+
+function pick(letter){
+  answers.push(letter);
+  currentQ++;
+  renderQ();
+  window.scrollTo(0,0);
+}
+
+function showGate(){
+  app.innerHTML=`
+    <div class="screen active gate-screen">
+      <div class="lock-icon">🔓</div>
+      <h2>前5题只是倾向<br>完整12题才能看清全貌</h2>
+      <div class="gate-desc">后7题继续拆解：你花钱时真正的恐惧来源、别人评价对你的真实影响、以及你最容易掉进的消费心理陷阱</div>
+      <ul class="unlock-list">
+        ${DATA.productModules.map(m=>`<li>${m}</li>`).join('')}
+      </ul>
+      <button class="btn-gate" onclick="unlock()">继续完成12题 · 解锁完整报告</button>
+      <div class="price">完整12题报告 · 做完自动解锁</div>
+    </div>`;
+}
+
+function unlock(){paid=true;renderQ()}
+
+function showResult(){
+  const counts={A:0,B:0,C:0,D:0};
+  for(let i=5;i<answers.length;i++){counts[answers[i]]++}
+  const sorted=Object.entries(counts).sort((a,b)=>b[1]-a[1]);
+  let typeKey=sorted[0][0];
+  if(sorted[0][1]===sorted[1][1]&&sorted[0][0]==='A'&&(sorted[1][0]==='C'||sorted[1][0]==='D'))typeKey=sorted[1][0];
+  if(sorted[0][1]===sorted[1][1]&&sorted[0][0]==='B'&&sorted[1][0]==='D')typeKey='D';
+  const type=DATA.types[typeKey];
+
+  const freeAnswers=answers.slice(0,5);
+  const freeLabels=['第一反应','付款犹豫来源','外界评价标签','放弃付款原因','买后第一行为'];
+  const freeDesc=[
+    ['你最先想到的是找平替——不乱花钱的警觉从第一秒就上线了','你最先想到的是比价——怕买贵的本能立刻拉响警报','你最先想到的是别人的眼光——社交评价比价格更早进入你的决策','你开始在心里算性价比——不是不想买，是需要一个说服自己的理由'],
+    ['你被记忆中的声音按住了付款键——愧疚感的源头有迹可循','你在确认没有被商家多收钱——被坑的感觉比花钱本身更让你难受','你被想象中的社交围观按住了付款键——消费一旦被围观，快乐就打了折','你在最后一次确认它不会被闲置——对自己的判断力不够信任让你反复验证'],
+    ['别人说你冲动消费，但你自己知道每一笔都翻来覆去想了很久——你只是不习惯解释','别人说你太计较价格，但你不是在乎钱——是在乎用一样的钱买到了更差的价格','别人说你买东西还要看别人脸色——但你知道有些消费在社交圈层里确实需要被理解','别人说你买东西要写论文——你确实需要用论证来给消费一个安全的理由'],
+    ['愧疚感让你按下了取消键——不是买不起，是觉得自己还不配对自己这么好','你觉得价格里还有水分——对商家的不信任让你宁可错过也不愿买贵','你想象了别人的反应然后放弃了——被围观的恐惧超过了拥有的欲望','你突然不确定值不值得——一旦怀疑上线，所有的喜欢都不够用了'],
+    ['你把消费痕迹藏了起来——不想让别人发现你又花钱了，被审判的恐惧大于拥有的快乐','你买完立刻全网比价——价格不对就退，买贵了对你来说是一个需要立刻修正的错误','你把新东西藏几天再用——慢慢出现比突然出现更安全，不需要跟任何人解释','你开始拼命让它回本——需要事后补一份价值证明，才算完成这笔消费的完整论证']
+  ];
+
+  let evidenceHTML='<h3>📋 答案证据</h3><p>';
+  for(let i=0;i<5;i++){
+    const a=freeAnswers[i];
+    const descIdx=a==='A'?0:a==='B'?1:a==='C'?2:3;
+    evidenceHTML+=`<strong>Q${i+1}「${DATA.questions[i].scene.slice(0,18)}…」</strong>你选了${a}——${freeDesc[i][descIdx]}。<br><br>`;
+  }
+  evidenceHTML+=type.evidence_note+'</p>';
+
+  let modulesHTML='';
+  for(const m of type.modules){
+    modulesHTML+=`<div class="module"><h3>${m.title}</h3><p>${m.content}</p></div>`;
+  }
+
+  let adviceHTML='';
+  for(let i=0;i<type.advice.length;i++){
+    adviceHTML+=`<div class="advice-item"><span class="n">0${i+1}</span><span>${type.advice[i]}</span></div>`;
+  }
+
+  app.innerHTML=`
+    <div class="screen active result">
+      <div class="badge">你的消费安全感类型</div>
+      <div class="type-name">${type.name}</div>
+      <div class="type-sub">${type.tag}</div>
+
+      <div style="font-size:15px;color:#d4b87a;margin-bottom:4px">${type.icon} ${type.score}</div>
+      <p style="font-size:15px;color:#b8b0a0;line-height:1.75;margin-bottom:20px">${type.conclusion}</p>
+
+      <div class="evidence-box">${evidenceHTML}</div>
+      ${modulesHTML}
+
+      <div class="summary-box">
+        <div class="q-mark">"</div>
+        <p>${type.quote}</p>
+      </div>
+
+      <div class="advice-box">
+        <h3>📅 未来30天建议</h3>
+        ${adviceHTML}
+      </div>
+
+      <div class="reminder-box">
+        <h3>⚠️ 关键提醒</h3>
+        <p>${type.reminder}</p>
+      </div>
+
+      <div style="font-size:13px;color:#6a6558;line-height:1.6;text-align:center;margin-bottom:24px">${DATA.disclaimer}</div>
+      <div class="footer">以上结果为自我探索参考 · 每个选择都是了解自己的线索</div>
+    </div>`;
+  window.scrollTo(0,0);
+}
+
+// start
+cover();
+</script>
+</body>
+</html>

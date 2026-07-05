@@ -1,0 +1,318 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
+<title>心理记账测试</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:"PingFang SC","Microsoft YaHei",sans-serif;background:#0f0f1a;color:#e8e0d0;min-height:100vh;display:flex;justify-content:center}
+.app{width:100%;max-width:500px;min-height:100vh;position:relative;overflow:hidden}
+.screen{display:none;flex-direction:column;min-height:100vh;padding:28px 22px 40px}
+.screen.active{display:flex}
+
+.cover{justify-content:center;align-items:center;text-align:center;gap:20px}
+.cover .icon{font-size:52px}
+.cover h1{font-size:29px;font-weight:900;line-height:1.4;letter-spacing:1.5px;padding:0 6px}
+.cover h1 .hl{color:#c9a96e}
+.cover .sub{font-size:15px;color:#8a8070;line-height:1.7;max-width:300px}
+.cover .btn-start{margin-top:10px;padding:15px 50px;font-size:18px;font-weight:700;background:linear-gradient(135deg,#c9a96e,#a6844d);color:#0f0f1a;border:none;border-radius:40px;cursor:pointer;letter-spacing:2px}
+.cover .btn-start:active{transform:scale(.96)}
+.cover .trust{font-size:12px;color:#4a4538;margin-top:6px}
+
+.progress-wrap{padding:4px 0 14px}
+.progress-bar{height:3px;background:#1e1e2e;border-radius:2px;overflow:hidden}
+.progress-fill{height:100%;background:linear-gradient(90deg,#c9a96e,#d4b87a);border-radius:2px;transition:width .3s}
+.progress-label{font-size:13px;color:#5a5548;margin-top:6px;text-align:right}
+
+.q-area{flex:1;display:flex;flex-direction:column;gap:16px}
+.q-area .q-num{font-size:13px;color:#6a6558;letter-spacing:2px}
+.q-area .q-text{font-size:23px;font-weight:700;line-height:1.5}
+.options{display:flex;flex-direction:column;gap:10px}
+.opt{padding:18px 16px;border-radius:14px;background:#16162a;border:1.5px solid #252540;cursor:pointer;transition:all .2s;display:flex;align-items:flex-start;gap:13px}
+.opt:active{transform:scale(.98);border-color:#c9a96e;background:#1e1e34}
+.opt .letter{width:33px;height:33px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:15px;font-weight:700;flex-shrink:0;background:rgba(201,169,110,.12);color:#c9a96e}
+.opt .txt{font-size:15px;line-height:1.55;color:#c8c0b0;flex:1}
+
+.gate-screen{justify-content:center;align-items:center;text-align:center;gap:24px}
+.gate-screen .lock-icon{font-size:48px}
+.gate-screen h2{font-size:26px;font-weight:800;line-height:1.4}
+.gate-screen .gate-desc{font-size:15px;color:#a09880;line-height:1.7;max-width:300px}
+.gate-screen .unlock-list{text-align:left;background:#16162a;border-radius:16px;padding:20px 24px;width:100%;max-width:320px}
+.gate-screen .unlock-list li{font-size:14px;color:#b8b0a0;line-height:2;list-style:none}
+.gate-screen .unlock-list li::before{content:"✓ ";color:#c9a96e;font-weight:700}
+.gate-screen .btn-gate{margin-top:8px;padding:14px 44px;font-size:18px;font-weight:700;background:linear-gradient(135deg,#c9a96e,#a6844d);color:#0f0f1a;border:none;border-radius:40px;cursor:pointer;letter-spacing:2px}
+.gate-screen .btn-gate:active{transform:scale(.96)}
+.gate-screen .price{font-size:14px;color:#6a6558;margin-top:4px}
+
+.loading{justify-content:center;align-items:center;text-align:center;gap:24px}
+.loading .spinner{width:52px;height:52px;border:3px solid #1e1e2e;border-top-color:#c9a96e;border-radius:50%;animation:spin .8s linear infinite}
+@keyframes spin{to{transform:rotate(360deg)}}
+.loading .msg{font-size:16px;color:#a09880;letter-spacing:1px}
+
+.result{padding:28px 22px 48px}
+.result .badge{display:inline-block;padding:7px 16px;border:1px solid rgba(201,169,110,.25);border-radius:16px;font-size:13px;color:#c9a96e;letter-spacing:2px;margin-bottom:14px}
+.result .type-name{font-size:36px;font-weight:900;margin-bottom:6px;line-height:1.2}
+.result .type-sub{font-size:18px;color:#d4b87a;margin-bottom:20px;line-height:1.4}
+
+.evidence-box{background:#16162a;border-radius:16px;padding:20px;margin-bottom:22px;border-left:3px solid #c9a96e}
+.evidence-box h3{font-size:14px;color:#c9a96e;letter-spacing:2px;margin-bottom:10px}
+.evidence-box p{font-size:14px;color:#b8b0a0;line-height:1.7}
+
+.module{margin-bottom:20px}
+.module h3{font-size:16px;color:#a09880;letter-spacing:1.5px;margin-bottom:10px;padding-bottom:8px;border-bottom:1px solid #1e1e2e}
+.module p{font-size:14px;color:#b8b0a0;line-height:1.75;margin-bottom:6px}
+
+.summary-box{background:linear-gradient(135deg,#1a1a2e,#1f1f34);border-radius:16px;padding:24px;margin:24px 0;text-align:center;border:1px solid rgba(201,169,110,.15)}
+.summary-box .q-mark{font-size:28px;color:#c9a96e;margin-bottom:8px}
+.summary-box p{font-size:17px;color:#d4b87a;line-height:1.7;letter-spacing:.5px}
+
+.advice-box{margin-bottom:24px}
+.advice-box h3{font-size:16px;color:#a09880;letter-spacing:2px;margin-bottom:12px}
+.advice-box .advice-item{padding:12px 14px;margin-bottom:8px;background:#16162a;border-radius:12px;font-size:14px;color:#b8b0a0;line-height:1.6;display:flex;gap:10px}
+.advice-box .advice-item .n{color:#c9a96e;font-weight:700;flex-shrink:0}
+
+.reminder-box{background:#16162a;border-radius:16px;padding:20px;margin-bottom:28px;border:1px solid #2a2a40}
+.reminder-box h3{font-size:15px;color:#c9a96e;letter-spacing:2px;margin-bottom:8px}
+.reminder-box p{font-size:14px;color:#a09880;line-height:1.7}
+
+.footer{text-align:center;padding:16px;font-size:11px;color:#3a3a48;border-top:1px solid #16162a;margin-top:auto}
+</style>
+</head>
+<body>
+<div class="app" id="app"></div>
+<script>
+// ========== 内容数据 ==========
+const DATA = {
+  title:"你嘴上说没关系，<br>心里在算什么账",
+  subtitle:"不是测你小不小气——<br>是测你没说出口的那些话，到底在替你要什么",
+
+  questions:[
+    {scene:"有人对你说了一句让你心里"咯噔"一下的话，你嘴上说"没事"，心里最先冒出来的是什么？",A:"这句话我记下了——下次你需要我的时候，我会让你想起今天你是怎么对我的",B:"这是这个月第三次了吧——你对我说的这些话，每一句我都存在心里了",C:"没关系，我不说。但我会记得你今天是怎么对我的，一个字都不差",D:"是不是我想多了？也许人家只是随口一说，是我太敏感了"},
+    {scene:"和好朋友约好一起做一件事，对方临时放了你鸽子，你说"没关系没关系"，但心里在想什么？",A:"上次我为了你推掉了别人的约，这次你连提前说一声都不愿意——这笔账我记下了",B:"我为你改了两次时间，你一次都不愿意为我调整——不是忙不忙的问题，是你心里有没有我",C:"没事。但下次你再约我，我会'碰巧'也有事——你让我等一次，我也让你等一次",D:"也许他真的有事吧……但我为什么会这么难受？是不是我对朋友要求太高了"},
+    {scene:"和伴侣/最好的朋友吵架后，你先说了"算了不说了"，通常是因为什么？",A:"再说下去就变成我在'计较'了——但我心里已经把这次算进了我们的关系账本里",B:"我说不下去了——不是没道理，是再说下去我会把前面好几次的旧账全都翻出来",C:"不说了。反正说了你也不会真的懂，但我会让你从别的地方感觉到我今天不舒服",D:"我分不清这是该说的事还是我在无理取闹——先闭嘴比较安全，至少不会说错"},
+    {scene:"当你嘴上说"没关系"但心里其实很介意的时候，你最想从对方那里得到什么？",A:"不用你道歉——我自己能消化。但我希望下次我需要你的时候，你能记得今天我为你做了什么",B:"我想让你主动发现我不高兴了——不是要你猜心，是希望你能在意到我的情绪变化",C:"我不需要你现在明白。总有一天你会知道——我说没关系的时候，其实每一次都不是",D:"我希望有个人告诉我：你不是小心眼，你的不舒服是有道理的，你不需要为它道歉"},
+    {scene:"当你发现自己在心里默默"记账"了，你最可能会怎么做？",A:"不表现出来，但会在心里调整和这个人的'付出比例'——下次TA需要帮忙的时候，我会停下来想一想",B:"找个信得过的朋友吐槽一遍——不是想听解决方案，只是想把账本摊开给第三个人看看",C:"什么都不做。但会忽然变得冷淡一点点——只有我自己知道为什么，连对方都察觉不到",D:"反复在脑子里复盘——是不是我哪句话说错了？如果我换一种方式表达，TA会不会不一样"},
+    {scene:"在哪种关系里，你最容易不知不觉开启"心里记账"模式？",A:"亲密关系——伴侣、最好的朋友。越亲近的人，我越会在意'我对你这么好，你为什么不能也这样对我'",B:"所有需要我主动维系的关系——当我觉得只有我一个人在努力靠近的时候，账本就自动打开了",C:"和家人——从小到大的某些事，我从来没说出来过，但每一件都在心里存着，从来没删过",D:"职场和社交——总是在事后反复想，是不是自己不够好、不够周全，才让别人这样对我"},
+    {scene:"回忆一下，你最早学会"嘴上说没关系"这一招，大概是在什么时候？",A:"小时候想要什么东西，爸妈说不行——后来我就不开口了，但心里一直记着那些'不行'的理由",B:"第一次被人狠狠伤过之后选择了原谅——但发现原谅之后自己更难受了，从此开始在心里记账",C:"发现说了也没有用的时候——大概是中学，跟父母大吵一架之后决定'算了，不说了，说了也白说'",D:"被人说过'你太敏感了'之后——从那以后，每次心里不舒服都要先问自己三遍是不是想多了"},
+    {scene:"对方做了一个什么举动，最容易瞬间触发你心里那个'记账'按钮？",A:"需要我的时候随叫随到，我需要的时候TA刚好没空——'公平'两个字在脑子里闪个不停",B:"同一件事反复发生——第一次我理解，第二次我包容，第三次开始在心里默默画正字",C:"TA完全没发现我不高兴——比事情本身更让我难受的是'我都在这里难过了，你看不出来吗'",D:"TA用很轻松的语气说了一句让我当场愣住的话——然后我自己一个人纠结了两三天"},
+    {scene:"你心里记的那些'账'，翻开来看看，大多数都和什么有关？",A:"付出和回报不对等——我做了A，你至少应该做到B，但你没有，而且你好像觉得这很正常",B:"情绪被忽略的次数——你让我一个人消化情绪的夜晚，比具体的事更让我记得清清楚楚",C:"那些没被认真回应的话——我说的那句'我没事'，你当时哪怕多问一句'真的吗'，我就好了",D:"别人随口对我的评价——那句话让我怀疑了自己很久很久，但我从来没跟任何人提起过"},
+    {scene:"如果有一本真实的'心里账本'摆在你面前，翻开第一页写的会是什么？",A:"某年某月某日，我为TA做了一件对我来说很重要的事，TA没有说谢谢——不是要谢谢，是要被看见",B:"某年某月某日，TA第三次在同样的事情上让我失望——这一次我没有哭，只是打开了一个空白页面",C:"某年某月某日，我说了'没关系'——这三个字我说了太多年了，说到连自己都快信了",D:"某年某月某日，有人轻描淡写地对我说'你想多了'——从那天起我学会了在表达之前先审判自己"},
+    {scene:"你最希望自己哪一天能改掉'心里默默记账'这个习惯？",A:"希望有一天，我对一个人好，只是因为我想对TA好——不是为了交换什么，也不需要被记住",B:"希望有一天，你让我不舒服的时候，我能当场说出来而不是记下来——让情绪当天清账，不过夜",C:"希望有一天，我说'有关系'的时候，不会被当成在闹脾气——我的边界和我的心跳一样真实",D:"希望有一天，我不需要先说服自己'我有资格不高兴'，才敢对别人说：你刚才那句话让我难受了"},
+    {scene:"如果现在给你一个机会，对你'记了很久账'的那个人说一句话，你最想说什么？",A:"我对你好的时候，从来没想过要你还——但我希望你至少记得，有一个人是这样对你的",B:"我不说，不代表我不记得。我只是在等你主动发现——但你真的，一次都没有发现过",C:"我说了那么多句'没关系'——你哪怕认真问过我一次'你真的没关系吗'，我都会觉得够了",D:"你知道吗，你随口说的那句话，我记了好多年——不是恨你，是我一直在想：你是不是说对了"}
+  ],
+
+  types:{
+    A:{name:"对等计算型",tag:"你的心里有一杆秤——不是小气，是你太在意关系里的公平",icon:"⚖️",
+       score:"关系对等 倾向 84%",
+       conclusion:"你在关系里默默算的账，本质上是一笔"公平账"。你并不想从别人那里多拿什么——你只是希望：我对你有多用心，你能用同样的用心看见我。你不是在计较谁付出得多，你是在意"被当成理所当然"的感觉。当你觉得关系里的天平倾斜了，你的第一反应不是发火——是在心里把账记下来，调整下一次的付出。",
+       evidence_note:"你在被人亏待时第一反应是"记下这笔账，下次再算"（Q1），你对朋友放鸽子的反应是回忆"上次我为你做了什么"（Q2），你吵架先闭嘴是因为"再说就变成我在计较了"（Q3），你想要的不是道歉而是"下次记得我为你做过什么"（Q4）。这些选择都指向同一个底层模式：你不是在索取——你是在维护一个你心里默认的"公平交换系统"。当这个系统被打破，你不会抗议，你会调整——减少付出、降低期待、在心里把这笔账记清楚。",
+       quote:"你不是在计较谁给得多——你是在等一个人，能在你对TA好的时候，不只说谢谢，而是记得。",
+       modules:[
+         {title:"你的关系计算类型：对等计算型",content:"你的心里有一架精密的公平天平——不是用来称别人给了你多少，而是用来提醒自己不要"给太多了"。你曾经在关系里付出过很多，但有一两次，你发现对方根本没注意到，或者注意到了也没当回事。从那以后，你学会了在心里记账：我做到了A，你至少应该回应B。你并不冷漠——恰恰相反，你是因为太认真对待关系，才会在意这些"对等"。你怕的不是给出去，是给出去之后，对方觉得这是理所应当的。"},
+         {title:"你嘴上说没事时心里在算什么",content:"你在算的是"我已经做了这么多，你看到了吗"。你的"没事"是一个缓冲——不是在原谅，是在给对方一个"主动想起来"的机会。如果对方没抓住这个机会，你不会发脾气，但你会默默把"付出阈值"调低一格：下次你找我的时候，我不会再那么快了。这其实是一种自我保护——你不是不想对别人好，你只是不想再一次"给了很多、换回来一个'哦'"。"},
+         {title:"哪种关系最容易触发你的"记账"模式",content:"越是你在意的关系，越容易触发你的公平敏感。伴侣、最好的朋友、你主动维系很久的人——当这些关系里出现"不平衡"，你的心里天平就会自动启动。你会在亲密关系里反复核对：上次是我主动找TA的，这次TA有没有主动找我？上次我帮了TA，这次我需要的时候TA在哪里？这不是小心眼——是因为你对这些关系"下了重注"，所以你比任何人都怕输。"},
+         {title:"算账不等于小气——你的真实需求是什么",content:"你心里算的账，翻译过来其实只有一句话：请你也把我当回事。你不需要别人还你什么——你需要的是"双向"。你需要确认这段关系不是只有你一个人在认真维护，不是你一个人的独角戏。你那些没算完的账，不是斤斤计较的证据，是你还没说出口的"你能不能也为我停一下"。你的需求一点都不贪心——你只是希望，自己对待别人的方式，也能被温柔地对待回来。"},
+         {title:"怎么把"心里算"变成"嘴上能说"",content:"第一步：在"记账"那个瞬间，先别咽下去。试着说一句"我有点在意这个"——不用解释，不用讲道理，就六个字。第二步：学会在"还没开始算"的时候先表达。比如："这件事对我来说很重要，你能不能帮我一下？"——主动要，比被动等公平要容易得多。第三步：允许对方不知道。你心里那架天平，只有你看得见——你不说出来之前，对方真的不知道你在算什么。说出来不是为了吵架，是为了让对方有机会靠近你。"}
+       ],
+       advice:["这周找一段你"记了很久"的关系，做一次小的、直接的表达："上次你答应我的事没做，我有点介意"——不翻旧账，只说这一件。","和朋友约定下一件事时，提前说清楚你的期待："这件事我挺在意的，你如果来不了，提前一天跟我说就好"——把"公平"变成提前沟通，而不是事后计算。","写下来你最近三次"算了不说了"的瞬间——然后在旁边写上"如果我当时说了，我会怎么说"。不是为了发给别人，是练习把自己的需求翻译成语言。","你可以继续对别人好——但同时，练习在给出去之后问自己一句：这次我给，是因为我想给，还是在等对方还？只做前者。"],
+       reminder:"你不是小气——你是在关系里太认真了，认真到连"公平"都替对方操心了一遍。但公平不是算出来的，是说出来之后、两个人一起调的。你值得的关系，不是一个人扛着天平走，是两个人一起扶着它。"
+    },
+    B:{name:"情感记账型",tag:"你的心里有一个情感账本——每一笔都是你没说出口的'我受伤了'",icon:"📖",
+       score:"情感记录 倾向 82%",
+       conclusion:"你在关系里记的账，不是关于谁做了什么事——而是关于"你又让我一个人消化情绪了"。你能原谅具体的事情，但你很难忘记事情发生时的感受。你会数：这是第几次了。你会回忆：上次也是这样。你嘴上说"算了"，但心里在把同样性质的伤害叠在一起——不是记仇，是记"疼"。你能接受别人犯错，但你不能接受同一个人用同一种方式反复让你疼。",
+       evidence_note:"你在被冒犯时的第一反应是数次数——"这是这个月第三次了"（Q1），朋友放你鸽子时你算的不是时间而是对方"心里有没有你"（Q2），你吵架闭嘴是因为"再说会把之前的账全翻出来"（Q3），你最想要的是"对方主动发现我不高兴"（Q4）。你的底层逻辑不是计较事情本身——你在记录的是"你有没有在意我的感受"。对你来说，事情可以翻篇，但情绪上的"被忽略感"不会被清零——它们会叠加、排队、等你终于受不了的那一天一起出来。",
+       quote:"你可以原谅同一件事很多次——但你没法假装那些"被晾在一边"的感觉没有发生过。你不是记仇，你是在等一个人，能在你疼的时候不让你一个人。",
+       modules:[
+         {title:"你的关系计算类型：情感记账型",content:"你的心里有一本情感日记——记的不是事件，是感受。第三页写的是"那天TA说的那句话，我后来一个人哭了"。第五页写的是"今天TA又忘了，同一件小事，我已经提醒过三次了"。你不是在翻旧账——你是在确认一个模式：这个人，是不是一直在同一个地方让我疼。你最怕的不是伤害本身，而是"TA明知道这样会让我难受，但TA还是做了"——或者更糟的，"TA根本没注意到我难受了"。"},
+         {title:"你嘴上说没事时心里在算什么",content:"你在数的是"这是第几次了"和"你什么时候才会发现我不高兴"。你的"没事"是一个测试——你在等对方有没有多看你一眼、多问一句、多停一下。你不想主动说，因为你说了太多次了——你不想再说一次"我不舒服"，然后看到对方一脸"你怎么又来了"的表情。所以你选择沉默，把这一笔记进账本里——不是不说，是攒到"够多"的时候，一次性算清楚。"},
+         {title:"哪种关系最容易触发你的"记账"模式",content:"所有你觉得"只有我在意"的关系。当一段关系需要你不断主动——主动联系、主动维系、主动表达、主动原谅——你很快就会开始记情感账。你不是不愿意付出，你是不愿意付出了之后，对方连你的情绪都没注意到。亲密关系、老友、家人——最亲近的人最容易上你的账本，因为你对他们的期待最高：你不需要他们做什么，但你希望他们至少能"看见"。当"看见"变成了奢求，记账就开始了。"},
+         {title:"算账不等于小气——你的真实需求是什么",content:"你记了那么多情感账，翻译过来其实只有一句话：请你也心疼我。你不需要完美的回应——你只需要对方在你沉默的时候停一下，问一句"你怎么了"；在你明显低落的时候不走开，待在你旁边就好。你那些没算完的账，不是因为你心眼小——是因为你太容易共情别人了，太会照顾别人的情绪了，所以当你发现自己得不到同样的照顾时，你会特别委屈。你的需求不是"还我"，是"你也来我这里待一会儿"。"},
+         {title:"怎么把"心里算"变成"嘴上能说"",content:"第一步：学会在情绪"刚开始记账"的时候就喊停——不是对别人喊，是提醒自己："我又在记了"。意识到自己开始数次数，就已经成功了一半。第二步：换一种说法。不说"你每次都这样"，说"今天这件事让我有点难受"——把"每次"变成"这一次"，对方能听见的概率会大很多。第三步：给自己设一个"表达时限"——比如，不舒服的感受必须在24小时内说出来，不过夜。你可以选择不说，但如果选择不说，就真的让它过去——不记进账本里。"}
+       ],
+       advice:["这周选一个人，对TA做一次"当天清账"的练习：今天让你不舒服的事，今天就说出来，不说"你每次都"这四个字——只说"今天这件事"。","翻一翻你心里的情感账本，挑三笔"已经过了一年还没算完"的旧账——问自己：我现在还记着这件事，是在等什么？如果那个人一辈子都不知道，我能放下吗？","找一个你觉得"反正说了TA也不懂"的人，试一次——就一次——说出来。不是为了TA懂，是为了让你自己听见：你的感受，说出来的那一刻，就已经被你自己承认了。","练习区分"情绪"和"事件"——事件可以原谅，但情绪需要被照顾。下次你原谅了事件但情绪还在，可以这样说："事情我不在意了，但我刚才挺难过的，你能不能陪我坐一会儿"。"],
+       reminder:"你记的不是账——是你没被接住的情绪。你放不下的不是那个事件，而是那个事件发生的时候，你一个人消化了所有。但你可以教会别人怎么接住你：你的感受说出来之前，别人真的不知道你在疼。试着让他们知道——不是抱怨，是邀请。"
+    },
+    C:{name:"沉默积累型",tag:"你不说，但你全都记得——沉默不是原谅，是一座迟早会喷发的火山",icon:"🌋",
+       score:"沉默积累 倾向 86%",
+       conclusion:"你是一个"安静记账"的高手。你不吵不闹、不翻旧账——你只是把每一笔都存进一个谁都看不见的文件夹里。别人以为你"没事了"，其实你只是把情绪压缩、打包、塞进了心里的地下室。你可以忍很久——一年、两年、甚至一辈子。但只要那个文件夹的容量到达了上限，一次很小的事就能让一切决堤。你不是没脾气——你是太擅长管理脾气了，管到连自己都以为那些事"不算什么"。",
+       evidence_note:"你的"没关系"后面永远跟着一个省略号——"我会记得"、"一个字都不差"（Q1）、"下次你也等一次"（Q2）、"我会让你从别的地方感受到"（Q3）、"总有一天你会知道我每一次都不是真的没事"（Q4）。你的防御机制不是对抗——是"延迟反应"。你选择不表达，不是因为没有感受，而是因为你曾经试过表达，没有得到回应。所以你换了一种策略：不说了，但也不忘了——等到某一天，用一个对方无法忽视的方式，让TA知道。",
+       quote:"你以为你在忍，其实你是在攒。攒到有一天，连你自己都分不清——这到底是原谅了，还是只是放进了另一个文件夹里。说出来吧，趁火山还没醒。",
+       modules:[
+         {title:"你的关系计算类型：沉默积累型",content:"你是一个在沉默里记账的人——不声不响，但每一笔都记得清清楚楚。你曾经试图表达过——可能是小时候跟父母说的事没人听，可能是某次吵架你说的话被忽略，也可能是你把心掏出来之后对方没接住。从某一天起，你学会了一个"更安全"的方式：不说了，但也不忘了。你以为这样就不会受伤——但其实，你把所有的伤都存进了身体里，等它们自己发酵。你不说的那些话，没有消失——它们变成了你的疏远、你的冷淡、你心里那座越来越高的围墙。"},
+         {title:"你嘴上说没事时心里在算什么",content:"你在算的不是具体的账——你在算的是"我说出来能被接住的概率"。每一次沉默，都是你评估之后觉得"说了也没用"的结果。你心里有一整套精密的"沉默决策树"：我说了你能理解吗？你理解之后会改吗？如果不会改，我说了不是白说？这个逻辑让你避免了无效的争吵，但也让你错过了很多"其实说出来就有用"的时刻。你算的根本不是账——你算的是失望，是一次一次累积起来的、从"想说话"到"不想说"的过程。"},
+         {title:"哪种关系最容易触发你的"记账"模式",content:"越长久的关系，越容易变成你的账本。家人——从小到大，那些没被接住的话，你全记着。老朋友——那些让过她但她没让过你的时刻，你全记得。伴侣——那些你说"没关系"但心里在滴血的次数，你差不多能背出来。这些关系有一个共同点：它们太重要了，重要到你不敢用"吵架"来冒险。所以你选择了最安静的方式——不说。但不说，不代表不期待。你其实一直在等——等他们自己发现。"},
+         {title:"算账不等于小气——你的真实需求是什么",content:"你那些沉默里藏的需求，其实是全世界最简单的东西：被回应。你不需要别人完美——你只需要你鼓起勇气说出"我有点受伤了"的时候，对方能认真听，不打断，不说"你太敏感了"。你需要确认的是：我说的话有价值，我的感受值得被认真对待。你之所以选择沉默，不是因为没有需求——是因为曾经的需求被落地无声地跌碎了太多次。你的需求不是"赢"，是"被听到"。"},
+         {title:"怎么把"心里算"变成"嘴上能说"",content:"第一步：打破"说了也没用"的预设。你脑子里的那个"说了也没用"，是你过去经验的总结——不一定是当下这个人的反应。给这个人一次机会，也给"说出来的后果"一个翻盘的机会。第二步：从最小的事开始说——不说"你从来不理解我"，说"刚才那句话让我有点不舒服"。越小越好、越具体越好、越靠近当下越好。第三步：允许自己"说得不完美"。你可以结巴、可以哭、可以先说两句再停——说出来的重点不是漂亮，是"这一笔，我今天清了"。"}
+       ],
+       advice:["找一个你觉得安全的人，对TA说出最近一件"我以为说了也没用所以没说"的事——不是翻旧账，是练习"说出来"。看看结果是不是和你想的不一样。","给心里的账本设一个"保质期"——超过两周的事，要么找到合适的方式说出来，要么写在一张纸上、撕掉、真的让它过去。不是你放下了，是你选择了不再背着。","打开手机备忘录，写一封信——给那个你记了最久账的人。不用发出去。写完之后问自己：如果TA一辈子都不知道这封信存在，我还能不能往前走？。","练习一个"当天说"的习惯：今天让你不舒服的，今天就说——哪怕只说一句'今天这个让我有点在意'。说出来不是为了改变什么，是为了不把这笔账存到第二天。"],
+       reminder:"你的沉默曾经保护过你——在那些"说了确实没用"的时候。但现在不一样了。你现在身边有一些人，是愿意听的——只是他们不知道你在等。不要让你的沉默替你做选择——你值得让那些人知道，你在意什么、你需要什么、什么让你疼。不是因为你脆弱，是因为你在意的，本来就值得被在意。"
+    },
+    D:{name:"自我怀疑型",tag:"你先问自己是不是太敏感了——你的账本里记的，都是对自己的审判",icon:"🪞",
+       score:"自我审视 倾向 79%",
+       conclusion:"你是唯一一个在心里记账的时候，第一反应不是"你凭什么这样对我"，而是"是不是我想多了"。你有一个内置的"自我审查系统"——每次不舒服，先问自己三遍：这件事值得在意吗？我是不是太敏感了？换了别人会不会觉得这不算什么？你不是没有情绪——你是太擅长否定自己的情绪了。你记的那些账，与其说是对别人的记录，不如说是对自己的反复审问：我到底有没有资格不高兴。",
+       evidence_note:"你的第一反应永远是自我质疑——"是不是我想多了"（Q1）、"是不是我对朋友要求太高了"（Q2）、"我分不清这是该说的还是我在无理取闹"（Q3）、"我希望有人告诉我：你不需要为它道歉"（Q4）、"反复复盘是不是自己哪句话说的不对"（Q5）。你对别人的宽容和对自己的严苛形成了鲜明对比——你能接受别人伤害你，但你不能接受自己"过度反应"。你心里那个"自我怀疑"的声音，可能来自某个早期的评判——"你太敏感了"这句话，一旦被种进心里，就会长成一棵你自己都不认识的大树。",
+       quote:"你花了太多时间说服自己'这件事不值得在意'——但其实，让你不舒服的事情，本身就是值得在意的。不是因为你敏感，是因为你在意自己。这没有错。",
+       modules:[
+         {title:"你的关系计算类型：自我怀疑型",content:"你心里不是没有账本——你有，而且记得比别人都细。区别在于：你记下的每一笔，旁边都会附上一行自己的旁注——'是不是我想多了''也许别人不是故意的''换了别人可能根本不会在意这个'。你不是在给别人记账——你是在给"自己的感受"做辩护，而且你总是站在"对方"那边。这种模式往往来自某一个关键的瞬间——可能是一个重要的人在某一天轻飘飘地对你说了一句"你想多了"，从那以后，你学会了在表达情绪之前，先把自己审判一遍。"},
+         {title:"你嘴上说没事时心里在算什么",content:"你在算的是"我到底有没有资格说有事"。你的"没事"和其他人都不一样——你不是在忍，你是在等：等自己找到"证据"证明这件事确实值得在意。你需要一个外部的声音来帮你确认——一个朋友说"换了我也会生气"、一本书里的一句话让你泪流满面、甚至陌生人一句无心的"你这样很正常"。你不是不知道自己在疼——你是不确定这个疼是不是"合理"。你在等一个许可——一个让你可以理直气壮说"我难受"的许可。"},
+         {title:"哪种关系最容易触发你的"记账"模式",content:"所有你觉得"自己不如别人"的关系。职场里对你评价很高的领导、社交中看起来很厉害的同行、亲密关系里比你更擅长表达的人——在这些关系里，你更容易把自己的不舒服当成"自己不够好"的证据。你会想：TA这么说可能是因为TA有道理，是我太弱了。但实际上，让你不舒服的事情和你的强弱没有关系——它只是让你不舒服了。不舒服就是不舒服，不需要附带一份说明书。"},
+         {title:"算账不等于小气——你的真实需求是什么",content:"你记了这么多"不确定自己有没有资格在意"的账，翻译过来其实只有一句话：我需要被确认——我的感受是真实的、合理的、值得被认真对待的。你不是不知道自己要什么——你是不敢确认自己要的对不对。你需要的不只是来自别人的确认，更是来自于你自己的一句话说：'我觉得不舒服，这就够了。我不需要为它写三千字的证据材料。'你的需求一点都不奢侈——你想要被验证的，是你一直在寻找的"自己的感受是正当的"这件事。"},
+         {title:"怎么把"心里算"变成"嘴上能说"",content:"第一步：停止在脑子里写"证据链"。你不需要证明给别人看这件事"确实值得在意"——你只需要感觉到不舒服，就可以说出来。第二步：练习一个简单的句子："刚才那句话让我有点不舒服"——不加解释、不附证据、不等别人同意。说完了就停，看看会发生什么。第三步：找一个你信任的人，对TA说："有件事我一直在想是不是我想多了，你能不能帮我听听看"——把"自我审查"的任务外包出去一次。你会发现：别人听完之后说的第一句话，通常不是"你想多了"。"}
+       ],
+       advice:["这周当你觉得"是不是我想多了"的时候，暂停一下——不要急着审判自己。先把让你不舒服的那句话写下来，旁边写"不管是不是想多了，这件事确实让我不舒服了"。","找一个你觉得"比我厉害"的人，问TA一个问题："你在关系里有没有因为一件小事纠结很久的经历？"——你会惊讶地发现，大家都这样。你一点都不特别。","练习一次"不给证据的表达"：对你伴侣或好朋友说"我今天心情不太好，不是因为什么大事，但你能不能就陪陪我"——不加解释，只需要陪伴。","翻出你心里那个最早对你说"你想多了"的人——可能是父母、老师、前男友、某段友谊里的一个人——给TA写一封信（不寄），信的结尾写：从今天开始，我决定相信自己的感受。"],
+       reminder:"你不是太敏感——你是太早被教会了"你的感受需要经过审批"。但感受从来不需要审批。你觉得不舒服，就是不舒服；你在意，就是在意。你的情绪不需要通过任何人的"合理性审查"——它出现在你心里，就已经是正当的了。从今天开始，试着把"是不是我想多了"换成"这件事让我不舒服，我记下了"——不是为了跟别人算账，是为了对自己说：你的感受，算数。"
+    }
+  },
+
+  productModules:[
+    "你的关系计算类型",
+    "你嘴上说没事时心里在算什么",
+    "哪种关系最容易触发你的"记账"模式",
+    "算账不等于小气——你的真实需求是什么",
+    "怎么把"心里算"变成"嘴上能说""
+  ],
+
+  disclaimer:"本测试仅为自我探索参考，不构成任何诊断、心理咨询或关系建议。每个人在关系里的感受都是独特的，请结合自己的实际情况判断。"
+};
+
+// ========== 引擎 ==========
+let answers=[],currentQ=0,paid=false;
+
+function $(id){return document.getElementById(id)}
+const app = document.getElementById('app');
+
+function cover(){
+  app.innerHTML=`
+    <div class="screen active cover">
+      <div class="icon">📒</div>
+      <h1>${DATA.title}</h1>
+      <div class="sub">${DATA.subtitle}</div>
+      <button class="btn-start" onclick="start(true)">开始测试</button>
+      <div class="trust">前5题免费 · 记下答案左滑查看报告预览</div>
+    </div>`;
+}
+
+function start(free){answers=[];currentQ=0;paid=!free;renderQ()}
+
+function renderQ(){
+  if(currentQ>=DATA.questions.length){showResult();return;}
+  if(currentQ===5 && !paid){showGate();return;}
+  const q=DATA.questions[currentQ];
+  const pct=Math.round((currentQ/DATA.questions.length)*100);
+  const letters=['A','B','C','D'];
+  app.innerHTML=`
+    <div class="screen active">
+      <div class="progress-wrap">
+        <div class="progress-bar"><div class="progress-fill" style="width:${pct}%"></div></div>
+        <div class="progress-label">第 ${currentQ+1}/${DATA.questions.length} 题</div>
+      </div>
+      <div class="q-area">
+        <div class="q-num">${currentQ<5?'免费测试 · 第'+(currentQ+1)+'题':'深度解锁 · 第'+(currentQ+1)+'题'}</div>
+        <div class="q-text">${q.scene}</div>
+        <div class="options">
+          ${letters.map(l=>`<div class="opt" onclick="pick('${l}')"><div class="letter">${l}</div><div class="txt">${q[l]}</div></div>`).join('')}
+        </div>
+      </div>
+      ${currentQ===4?'<div style="text-align:center;font-size:13px;color:#6a6558;padding:8px 0">记下5个答案，左滑查看报告预览 →</div>':''}
+    </div>`;
+}
+
+function pick(letter){
+  answers.push(letter);
+  currentQ++;
+  renderQ();
+  window.scrollTo(0,0);
+}
+
+function showGate(){
+  app.innerHTML=`
+    <div class="screen active gate-screen">
+      <div class="lock-icon">🔓</div>
+      <h2>前5题只是倾向<br>完整12题才能看清全貌</h2>
+      <div class="gate-desc">后7题继续拆解：你在哪种关系里最容易"记账"、你的记账模式从什么时候开始、你最想被理解的是什么</div>
+      <ul class="unlock-list">
+        ${DATA.productModules.map(m=>`<li>${m}</li>`).join('')}
+      </ul>
+      <button class="btn-gate" onclick="unlock()">继续完成12题 · 解锁完整报告</button>
+      <div class="price">完整12题报告 · 做完自动解锁</div>
+    </div>`;
+}
+
+function unlock(){paid=true;renderQ()}
+
+function showResult(){
+  const counts={A:0,B:0,C:0,D:0};
+  for(let i=5;i<answers.length;i++){counts[answers[i]]++}
+  const sorted=Object.entries(counts).sort((a,b)=>b[1]-a[1]);
+  let typeKey=sorted[0][0];
+  if(sorted[0][1]===sorted[1][1]&&sorted[0][0]==='A'&&(sorted[1][0]==='C'||sorted[1][0]==='D'))typeKey=sorted[1][0];
+  if(sorted[0][1]===sorted[1][1]&&sorted[0][0]==='B'&&sorted[1][0]==='D')typeKey='D';
+  const type=DATA.types[typeKey];
+
+  const freeAnswers=answers.slice(0,5);
+  const freeLabels=['第一反应','被放鸽子时的内心戏','吵架先闭嘴的原因','嘴上说没关系时真正的渴望','记账后的行为倾向'];
+  const freeDesc=[
+    ['你默默记下这笔账——下次再算','你心里数着次数——"这已经是第几次了"','你什么都不说——但一个字都不会忘','你先反问自己——"是不是我想多了"'],
+    ['你在算上次自己为对方做了什么','你在想"你心里到底有没有我"','你已经想好了下次怎么让对方也尝尝等的滋味','你在怀疑自己是不是对别人要求太高了'],
+    ['你怕被当成"计较的人"——于是把不满存进账本','你怕自己翻旧账——但心里已经把旧账全搬出来了','你觉得说了对方也不会懂——所以选择用沉默让对方自己感受','你分不清这是该说的还是在无理取闹——先闭嘴比较安全'],
+    ['你不求道歉——只希望对方下次记得你做过什么','你想要对方主动发现你不高兴——不是猜，是在意','你不需要现在被理解——你相信总有一天对方会知道','你想要有个人告诉你：你的不舒服是有道理的，不需要道歉'],
+    ['你不会表现出来——但会在心里调整对这个人付出的比例','你会找信任的人吐槽——把账本摊开给第三方看一看','你会突然冷淡一点点——只有你自己知道为什么','你会独自复盘——反复想是不是自己哪里做得不够好']
+  ];
+
+  let evidenceHTML='<h3>📋 答案证据</h3><p>';
+  for(let i=0;i<5;i++){
+    const a=freeAnswers[i];
+    const descIdx=a==='A'?0:a==='B'?1:a==='C'?2:3;
+    evidenceHTML+=`<strong>Q${i+1}「${DATA.questions[i].scene.slice(0,18)}…」</strong>你选了${a}——${freeDesc[i][descIdx]}。<br><br>`;
+  }
+  evidenceHTML+=type.evidence_note+'</p>';
+
+  let modulesHTML='';
+  for(const m of type.modules){
+    modulesHTML+=`<div class="module"><h3>${m.title}</h3><p>${m.content}</p></div>`;
+  }
+
+  let adviceHTML='';
+  for(let i=0;i<type.advice.length;i++){
+    adviceHTML+=`<div class="advice-item"><span class="n">0${i+1}</span><span>${type.advice[i]}</span></div>`;
+  }
+
+  app.innerHTML=`
+    <div class="screen active result">
+      <div class="badge">你的关系计算类型</div>
+      <div class="type-name">${type.name}</div>
+      <div class="type-sub">${type.tag}</div>
+
+      <div style="font-size:15px;color:#d4b87a;margin-bottom:4px">${type.icon} ${type.score}</div>
+      <p style="font-size:15px;color:#b8b0a0;line-height:1.75;margin-bottom:20px">${type.conclusion}</p>
+
+      <div class="evidence-box">${evidenceHTML}</div>
+      ${modulesHTML}
+
+      <div class="summary-box">
+        <div class="q-mark">"</div>
+        <p>${type.quote}</p>
+      </div>
+
+      <div class="advice-box">
+        <h3>📅 未来30天建议</h3>
+        ${adviceHTML}
+      </div>
+
+      <div class="reminder-box">
+        <h3>⚠️ 关键提醒</h3>
+        <p>${type.reminder}</p>
+      </div>
+
+      <div style="font-size:13px;color:#6a6558;line-height:1.6;text-align:center;margin-bottom:24px">${DATA.disclaimer}</div>
+      <div class="footer">以上结果为自我探索参考 · 每个选择都是了解自己的线索</div>
+    </div>`;
+  window.scrollTo(0,0);
+}
+
+// start
+cover();
+</script>
+</body>
+</html>

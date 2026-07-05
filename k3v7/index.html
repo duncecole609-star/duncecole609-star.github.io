@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
+<title>朋友圈人设测试</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:"PingFang SC","Microsoft YaHei",sans-serif;background:#0f0f1a;color:#e8e0d0;min-height:100vh;display:flex;justify-content:center}
+.app{width:100%;max-width:500px;min-height:100vh;position:relative;overflow:hidden}
+.screen{display:none;flex-direction:column;min-height:100vh;padding:28px 22px 40px}
+.screen.active{display:flex}
+.cover{justify-content:center;align-items:center;text-align:center;gap:20px}
+.cover .icon{font-size:52px}
+.cover h1{font-size:29px;font-weight:900;line-height:1.4;letter-spacing:1.5px;padding:0 6px}
+.cover h1 .hl{color:#c9a96e}
+.cover .sub{font-size:15px;color:#8a8070;line-height:1.7;max-width:300px}
+.cover .btn-start{margin-top:10px;padding:15px 50px;font-size:18px;font-weight:700;background:linear-gradient(135deg,#c9a96e,#a6844d);color:#0f0f1a;border:none;border-radius:40px;cursor:pointer;letter-spacing:2px}
+.cover .btn-start:active{transform:scale(.96)}
+.cover .trust{font-size:12px;color:#4a4538;margin-top:6px}
+.progress-wrap{padding:4px 0 14px}
+.progress-bar{height:3px;background:#1e1e2e;border-radius:2px;overflow:hidden}
+.progress-fill{height:100%;background:linear-gradient(90deg,#c9a96e,#d4b87a);border-radius:2px;transition:width .3s}
+.progress-label{font-size:13px;color:#5a5548;margin-top:6px;text-align:right}
+.q-area{flex:1;display:flex;flex-direction:column;gap:16px}
+.q-area .q-num{font-size:13px;color:#6a6558;letter-spacing:2px}
+.q-area .q-text{font-size:23px;font-weight:700;line-height:1.5}
+.options{display:flex;flex-direction:column;gap:10px}
+.opt{padding:18px 16px;border-radius:14px;background:#16162a;border:1.5px solid #252540;cursor:pointer;transition:all .2s;display:flex;align-items:flex-start;gap:13px}
+.opt:active{transform:scale(.98);border-color:#c9a96e;background:#1e1e34}
+.opt .letter{width:33px;height:33px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:15px;font-weight:700;flex-shrink:0;background:rgba(201,169,110,.12);color:#c9a96e}
+.opt .txt{font-size:15px;line-height:1.55;color:#c8c0b0;flex:1}
+.gate-screen{justify-content:center;align-items:center;text-align:center;gap:24px}
+.gate-screen .lock-icon{font-size:48px}
+.gate-screen h2{font-size:26px;font-weight:800;line-height:1.4}
+.gate-screen .gate-desc{font-size:15px;color:#a09880;line-height:1.7;max-width:300px}
+.gate-screen .unlock-list{text-align:left;background:#16162a;border-radius:16px;padding:20px 24px;width:100%;max-width:320px}
+.gate-screen .unlock-list li{font-size:14px;color:#b8b0a0;line-height:2;list-style:none}
+.gate-screen .unlock-list li::before{content:"✓ ";color:#c9a96e;font-weight:700}
+.gate-screen .btn-gate{margin-top:8px;padding:14px 44px;font-size:18px;font-weight:700;background:linear-gradient(135deg,#c9a96e,#a6844d);color:#0f0f1a;border:none;border-radius:40px;cursor:pointer;letter-spacing:2px}
+.gate-screen .btn-gate:active{transform:scale(.96)}
+.gate-screen .price{font-size:14px;color:#6a6558;margin-top:4px}
+.loading{justify-content:center;align-items:center;text-align:center;gap:24px}
+.loading .spinner{width:52px;height:52px;border:3px solid #1e1e2e;border-top-color:#c9a96e;border-radius:50%;animation:spin .8s linear infinite}
+@keyframes spin{to{transform:rotate(360deg)}}
+.loading .msg{font-size:16px;color:#a09880;letter-spacing:1px}
+.result{padding:28px 22px 48px}
+.result .badge{display:inline-block;padding:7px 16px;border:1px solid rgba(201,169,110,.25);border-radius:16px;font-size:13px;color:#c9a96e;letter-spacing:2px;margin-bottom:14px}
+.result .type-name{font-size:36px;font-weight:900;margin-bottom:6px;line-height:1.2}
+.result .type-sub{font-size:18px;color:#d4b87a;margin-bottom:20px;line-height:1.4}
+.evidence-box{background:#16162a;border-radius:16px;padding:20px;margin-bottom:22px;border-left:3px solid #c9a96e}
+.evidence-box h3{font-size:14px;color:#c9a96e;letter-spacing:2px;margin-bottom:10px}
+.evidence-box p{font-size:14px;color:#b8b0a0;line-height:1.7}
+.module{margin-bottom:20px}
+.module h3{font-size:16px;color:#a09880;letter-spacing:1.5px;margin-bottom:10px;padding-bottom:8px;border-bottom:1px solid #1e1e2e}
+.module p{font-size:14px;color:#b8b0a0;line-height:1.75;margin-bottom:6px}
+.summary-box{background:linear-gradient(135deg,#1a1a2e,#1f1f34);border-radius:16px;padding:24px;margin:24px 0;text-align:center;border:1px solid rgba(201,169,110,.15)}
+.summary-box .q-mark{font-size:28px;color:#c9a96e;margin-bottom:8px}
+.summary-box p{font-size:17px;color:#d4b87a;line-height:1.7;letter-spacing:.5px}
+.advice-box{margin-bottom:24px}
+.advice-box h3{font-size:16px;color:#a09880;letter-spacing:2px;margin-bottom:12px}
+.advice-box .advice-item{padding:12px 14px;margin-bottom:8px;background:#16162a;border-radius:12px;font-size:14px;color:#b8b0a0;line-height:1.6;display:flex;gap:10px}
+.advice-box .advice-item .n{color:#c9a96e;font-weight:700;flex-shrink:0}
+.reminder-box{background:#16162a;border-radius:16px;padding:20px;margin-bottom:28px;border:1px solid #2a2a40}
+.reminder-box h3{font-size:15px;color:#c9a96e;letter-spacing:2px;margin-bottom:8px}
+.reminder-box p{font-size:14px;color:#a09880;line-height:1.7}
+.footer{text-align:center;padding:16px;font-size:11px;color:#3a3a48;border-top:1px solid #16162a;margin-top:auto}
+</style>
+</head>
+<body><div class="app" id="app"></div><script>
+var DATA={title:"你的朋友圈，<br>在别人眼里<br><span class='hl'>是什么感觉</span>",subtitle:"不是测你发得多不多——<br>是测你的朋友圈在替你说什么你自己没说的话",questions:[
+{scene:"你编辑一条朋友圈的时候，最常发生哪件事？",A:"文案改了三遍，图片换了四次，最后发出去之后过了十分钟又删了——因为觉得\"好像有点刻意\"",B:"拍完直接发。今天的感受今天就好——不修图不纠结，朋友圈不是简历",C:"其实很少发。但每次发之前会在脑子里过一遍\"谁会看到\"——然后决定发还是不发",D:"发之前问自己：这条对别人有用吗？有趣吗？如果没有——那不发"},
+{scene:"发完朋友圈之后，你最常做的事情是？",A:"隔几分钟点进去看一次。不是看点赞——是检查有没有人说\"你是不是怎么了\"",B:"发了就发了。把手机扔一边去做别的事——朋友圈是记录，不是任务",C:"反复看自己的文案和图片——\"我传达的是我想传达的吗？有没有人误会了什么\"",D:"看看有没有人在评论区聊起来——如果这条能引发一段有质量的对话，那就算发对了"},
+{scene:"你最怕朋友圈里出现哪种情况？",A:"发了一条很用心的内容——没人点赞、没人评论。静得像什么都没发生过",B:"有人在你发的日常下面评论\"你今天是不是心情不好\"——不，我只是随手发了一张天空",C:"被不太熟的人截屏转发给另一个不太熟的人——\"你看她发的这个……\"",D:"发完之后自己回头看觉得\"好无聊\"——不是怕别人觉得无聊，是连自己都觉得不值一发"},
+{scene:"你刷到别人发的精致九宫格——餐厅、穿搭、笑容正好，你的第一反应是？",A:"有点羡慕，但更多的是——我知道我也可以发这样的，只是我觉得\"没准备好\"",B:"翻得很快。对这种\"看起来太完美\"的内容有种说不清的免疫——不是讨厌，是不太信",C:"仔细看排版和色调——不是比较，是真心觉得好看，想知道她怎么做到的",D:"看了一遍，然后看看文字写的是什么——如果只有图没有内容，不会停留超过两秒"},
+{scene:"如果让你用三个词形容自己朋友圈的整体感觉，你会选？",A:"克制的、不肯定的、但其实是认真的——每一条背后都有很多没发出来的草稿",B:"随意的、真实的、不设防的——今天吃到什么、看到什么、想到什么，就是什么",C:"有选择的、有温度的、但不太确定别人看懂了没有——每次发都是在\"试着表达\"",D:"有用大过有趣、品质大过频率——不发则已，发了就要对得起看到的人的时间"},
+{scene:"你翻了翻自己过去一年发的朋友圈，发现什么？",A:"发了然后又删掉的比留下的多。留下的那些——大部分是和别人的合照，因为合照不怕被评价\"刻意\"",B:"发的都是日常——吃饭、散步、一个好笑的路牌。看完觉得自己这一年过得还不错，至少很真实",C:"数量很少，但每一条都像一个小作品。有些发完之后自己会回来再看一遍——给自己看的",D:"大部分是转发和分享——文章、音乐、展览。关于自己的其实没几条。关于\"我觉得什么东西好\"的很多"},
+{scene:"你最欣赏的朋友圈类型是？",A:"那种发什么都看起来很轻松的人——不是内容轻松，是\"想发就发\"的状态让我羡慕",B:"那种从来不修图、不打码、不删内容的人——她好像不太在意别人怎么想，或者至少装得很像",C:"那种每一条都像在讲一个小故事的人——不是文案好，是她拍的东西让你觉得\"她想说什么\"",D:"那种很少发但每次发都能让人停下来看的人——不是内容多，是每一句都像真的在说什么"},
+{scene:"你什么时候最不想打开朋友圈？",A:"自己状态不好的时候。翻到别人光鲜的内容会觉得——\"我现在的样子，不值得发，也不值得看\"",B:"被工作塞满的时候。朋友圈变成了另一个需要\"处理\"的地方——我更想关机",C:"刚发完一条但没什么回应的时候。不是玻璃心——是那种\"说了但没人听到\"的感觉不太想再体验",D:"朋友圈刷了十分钟全是广告和转发的时候。明明是\"朋友\"圈——但看不到朋友，只看到人设"},
+{scene:"如果朋友圈有一个\"匿名印象\"功能——别人看完你所有内容后可以留一句话，你觉得最可能是什么？",A:"\"你发的每一条都很认真——但感觉你还有很多没发出来的话\"",B:"\"你应该是朋友圈里活得最轻松的那个人——至少看起来是这样的\"",C:"\"你的朋友圈值得仔细看——但需要一点时间，不是刷过去就能懂的\"",D:"\"你不常出现，但每次出现都让人觉得——哦，你还在，还好\""},
+{scene:"你和一个很久没联系的朋友见面，TA说\"我经常看你朋友圈\"，你的第一反应是？",A:"心里一惊——开始飞速回想自己都发了什么、有没有发过什么不太好的",B:"开心。\"是吗？那我就不用现在从头跟你讲了——你都看见了\"",C:"有点不好意思——\"其实我发的都是想让你看到的那些……还有很多没发出来的\"",D:"会问回去——\"那你觉得我过得怎么样？\"——不是试探，是真的想知道别人视角里的自己"},
+{scene:"你觉得自己的朋友圈和你真实的生活之间，差了什么？",A:"差了勇气——我比你看到的更在意、更不确定、更需要回应，但我不敢发这些",B:"差了无聊的部分——朋友圈只记录了\"值得发的瞬间\"，剩下90%的普通日子都在镜头之外",C:"差了安全感——真实的生活太乱了，发出来需要筛选。我发的都是\"可以公开的版本\"",D:"差了\"我其实在这里\"——转发和分享说了很多我感兴趣的东西，但没说太多关于我自己的事"},
+{scene:"如果可以给朋友圈加一个看不见的签名——只对自己可见，你会写什么？",A:"\"我很在意你们怎么看我——但我正在学习不那么在意\"",B:"\"我挺好的——不只是看起来挺好，是真的在自己的节奏里\"",C:"\"如果你愿意多看两眼——你会发现我比你看到的更愿意被了解\"",D:"\"我不需要每天出现来证明我在这里——但谢谢你还记得我\""}
+],types:{
+A:{name:"克制型表达者",tag:"你的朋友圈是一个精心编辑过的自己——不是不真实，是不敢不设防",icon:"📱",score:"克制指数 83%",conclusion:"你的朋友圈有一个反复出现的模式：发了、看了、删了。你不是不想表达——你是每次表达完都会进入一轮自我审查。你怕\"太刻意\"、怕\"没人回应\"、怕\"被误会\"。所以你选择少发、或者发了又删。朋友圈对你来说不是日记——是一个需要反复确认\"这样写对不对\"的公开场合。",evidence_note:"你会反复编辑和删除（Q1），发完之后频繁检查有没有人说你什么（Q2），最怕的是用心发了没人回应（Q3），你羡慕那种\"想发就发\"的轻松（Q7），状态不好的时候完全不想打开朋友圈（Q8）。这些选择的共同点不是\"不爱表达\"——而是\"太在意表达之后的回响\"。",quote:"你的克制不是没有话想说——是你太清楚：每一条发出去的，都是留给别人解读你的线索。你只是还没准备好被那么多人读懂。",modules:[{title:"你的朋友圈人格：审查型记录者",content:"你在按下\"发表\"之前，脑子里已经跑完了一段完整的自我审判：这条会不会太刻意、会不会没人懂、会不会有人截屏、会不会明天回头看觉得傻。你不是没有表达的冲动——你是被自己的\"审核系统\"挡在了发表之前。这种审查能力可能来自某次不够谨慎的发言让你受过伤，也可能来自你对自己的高要求——你希望每一次被看见，都是\"准备好\"的样子。"},{title:"你的朋友圈在替你说什么",content:"它在说：\"我很在意——但我不太敢让你看出来我很在意。\"你留下的那些内容，大部分是和别人的合照——因为有别人在的时候，你不会觉得自己在\"刻意展示\"。你真正想说的话，其实都在那些编辑后又删掉的草稿里。"},{title:"别人从你的朋友圈里读到了什么（可能是误读）",content:"别人可能读到了\"不太常更新\"\"好像不太爱分享\"——会有人觉得你神秘、内向、或者不太需要社交联系。但他们没看到的是：你不是不想分享——你是每一次分享之前都在跟自己打一架。也可能会有人觉得你\"太在意别人怎么看\"——但你在意的不是\"别人\"，是\"值得在意的人\"。"},{title:"最容易掉进的朋友圈误区",content:"你有时候会把\"再想想\"变成\"算了不发了\"——然后那些话就再也没说出来。你以为少发就安全了——但少发让想了解你的人少了很多条可以靠近你的路。另一个误区：你总以为别人会像你审视自己一样审视你的每一条朋友圈——但其实大部分人只是随手刷过。"},{title:"怎么让你的朋友圈更贴近真实的你",content:"下一周发一条\"不完美的\"朋友圈——不需要有意义、不需要有人回应、不需要考虑任何人的观感。就发——\"今天吃到了一个特别好吃的橘子\"。让\"想发就发\"变成一个小实验。你会发现：没人在审判你——审判你的那个人，只有你自己。"}],advice:["这周发一条\"不检查第三遍\"的朋友圈——发出去的瞬间截图保存，不删，24小时后回来看。","在备忘录里写下三条\"一直想发但没敢发\"的内容——只写给自己看。看看它们到底哪里让你觉得\"不安全\"。","下次刷到别人发的朋友圈时，想一件：我看了三秒就滑走了——别人看我的也一样。不用把每条都当成代表作。","约一个你不需要\"准备好\"也能见面的朋友，把那条你一直没发的内容当面说给TA听——看看TA的反应有没有你担心的那么可怕。"],reminder:"你不是没有东西可以发——你是太知道：每一条朋友圈都是别人理解你的一个侧面。但给他们看一个\"不完美的侧面\"，可能比\"不发\"更接近真正的你。"},
+B:{name:"松弛型记录者",tag:"你的朋友圈是你生活的快照——不修图、不纠结、不过滤。你让刷到你的人觉得\"活着也挺好的\"",icon:"📷",score:"松弛指数 85%",conclusion:"你发朋友圈的方式很像一个随手拍照的人——看到什么有意思的，拍下来，发出去，然后继续走路。你不把朋友圈当成舞台——你把它当成一个公开的相册。别人在你的内容里看到的不是\"人设\"，是一个人的日常：吃饭、散步、好笑的路牌、今天的天。这种松弛不是随便——是你对自己生活的底气质感是肯定的：不需要滤镜也很好。",evidence_note:"你拍完就发、不纠结（Q1），发完就去干别的（Q2），你不太在意别人怎么解读——\"发了一张天空而已，你觉得我心情不好是你的事\"（Q3），你翻完自己的朋友圈觉得\"这一年活得还不错\"（Q6），你羡慕那种不修图不删内容的人（Q7）——其实你羡慕的是你自己已经在做的事情。",quote:"你的朋友圈让人觉得——活着可以不用那么紧张。你记录的不是\"值得被看见的瞬间\"，而是\"我刚才看见的、想分享给你看看\"。",modules:[{title:"你的朋友圈人格：松弛型记录者",content:"你发朋友圈的第一动机是记录，不是展示。今天看到、吃到、想到的东西，随手记下来——不是为了给别人看，是给自己留一个\"我今天活过\"的痕迹。你的松弛来自一个内在信念：我不用在朋友圈里证明什么。这种信念可能来自你真实生活中已经有足够多的确认——也可能来自你决定不再为别人的眼光焦虑。"},{title:"你的朋友圈在替你说什么",content:"它在说：\"我挺好的——不只是看起来挺好，是真的在自己的节奏里。\"你的内容有一种\"不讨好\"的气质——不会刻意营造气氛、不会精心控制发布频率。这种松弛反而变成了一种吸引力：别人刷到你的时候，不用绷着——就像看到了一个在认真生活的朋友。"},{title:"别人从你的朋友圈里读到了什么（可能是误读）",content:"别人可能读到了\"随意\"\"不太在意外界\"——这是对的。但他们也可能以为你\"对什么都不太认真\"——这是误读。你的松弛不等于不在乎——你只是选择把\"认真\"用在更重要的地方，而不是一条朋友圈。也有人可能觉得你\"有点粗线条\"——但你其实有你的细腻，只是不习惯用朋友圈展示那部分。"},{title:"最容易掉进的朋友圈误区",content:"你的\"随手发\"有时候会变成\"什么都发\"——在某些场合（比如工作群可见的内容），你可能需要比平时多想一步。另一个误区：你的真实有时候会被当成\"不够在意\"——但事实恰恰相反，你是因为在意真实，才不愿意假装成更精致的样子。"},{title:"怎么让你的朋友圈更贴近真实的你",content:"保持你的松弛——但可以偶尔发一些\"不那么随手\"的东西：一篇让你认真看了的文章、一张有故事的照片、一段想了很久的话。让关注你的人在你的松弛之外，也看到你的深度。不需要变——只需要偶尔多给一点。"}],advice:["下一周保留你的\"随手发\"习惯，但加一条——这周发一件\"让你认真了\"的事情。","翻翻过去一年发的照片，找出三张你觉得\"不只是随手拍\"的——看看它们之间有没有一个你以前没注意到的审美偏好。","在你的朋友圈里，你看到的是\"记录\"。别人看到的是\"生活样本\"。偶尔让后者多一点点——让别人也能从你的生活里看到一点\"可能性\"。","你不需要给每一张照片配文案——但可以给某一两张配一段真心的文字。你的文字会让人从\"滑过去\"变成\"停下来\"。"],reminder:"你的松弛是你在朋友圈最珍贵的东西——很多人做不到。继续保持。同时偶尔让人看到你\"认真了\"的样子——那个版本也是你，值得被记录。"},
+C:{name:"温度型策展人",tag:"你的每一条朋友圈都是一次小心翼翼的邀请——你在说：\"我有话想说，你愿意听吗？\"",icon:"✨",score:"温度指数 81%",conclusion:"你发的每一条朋友圈都像在准备一个小礼物——你希望收到的人觉得\"她有在想这件事\"。你可能发得不多，但每一条都有温度、有选择、有你想传达的东西。你不是在经营人设——你是在用朋友圈练习表达：怎么把心里的东西变成别人能懂的话和画面。",evidence_note:"你发之前会在脑子里过一遍\"谁会看到\"（Q1），发完之后会反复看自己的文案确认\"有没有传达对\"（Q2），你最怕的是被不知情的人截屏转发和误读（Q3），你欣赏那种每一条都像在讲故事的人（Q7），你觉得朋友圈和真实生活之间差了\"安全感\"（Q11）。你的朋友圈是一个\"可以公开的版本\"——你希望它被看到，但更希望它被准确理解。",quote:"你的朋友圈值得慢下来看——不是刷过去就算了的那种。你藏在图片和文字里的东西，比你以为的要多。",modules:[{title:"你的朋友圈人格：温度型策展人",content:"你把每一条朋友圈当成一个\"小作品\"在对待——不是说要完美，而是说它要有温度、有信息、有\"我想传达的东西\"。你在发之前会问自己：这句话别人会怎么读？这张图传达的是我想传达的吗？这种\"在意\"不是焦虑——是你对表达本身的尊重。你希望被看见——但更希望被看见的是\"真正的你\"，不是被误读的你。"},{title:"你的朋友圈在替你说什么",content:"它在说：\"如果你愿意花三秒钟多看一会儿——你会发现我比你看到的更愿意被了解。\"你的朋友圈有一种\"可以细看\"的质感。排版、色调、文字之间的留白——你照顾到了别人可能不会注意到的地方。这些细节不是在讨好谁——是你在把自己的感受翻译成别人可以接收的信号。"},{title:"别人从你的朋友圈里读到了什么（可能是误读）",content:"别人可能读到了\"精致\"\"有审美\"\"有态度\"——这是你希望传达的。但也有人可能觉得你\"不够随意\"、\"每条都像在经营什么\"——他们没看到的是：你的每条内容背后，是大量没有发出来的心情和草稿。你不是在经营——你是在筛选：哪些真实的自己可以被公开看见。"},{title:"最容易掉进的朋友圈误区",content:"你有时候会因为担心\"传达不准\"而干脆不发——但你没发的内容，别人永远看不到。错过比误读更可惜。另一个误区：你太在意\"别人会不会误解\"——但任何表达都有被误解的风险。不能因为怕误解就放弃表达。"},{title:"怎么让你的朋友圈更贴近真实的你",content:"每月发一条\"不太精致但真的想说\"的内容——不需要配图、不需要调色、不需要考虑排版。就让文字自己说话。你会发现：那些最不讲究形式的内容，有时候反而最容易被记住。"}],advice:["这周发一条\"纯文字\"的内容——不加图、不加emoji、不调整格式。就一句你想说的话。","翻出你编辑过但没发出去的草稿（如果你有存的话），或者打开备忘录写一条你一直想发但觉得\"还不够好\"的东西——发出去。","下次发朋友圈之前，把\"别人会怎么理解\"换成\"我想怎么说\"——先忠于自己的表达，再考虑别人的接收。","找一个你信任的人，把你那条\"一直想发但不确定\"的内容先发给TA看——TA的反馈可能比你想象的更简单：\"挺好的，发啊。\""],reminder:"你的在意是好的——它让你的表达有温度。但不要让\"在意\"变成\"不发\"。那些会认真看你朋友圈的人，值得一个\"不完美的版本\"。"},
+D:{name:"价值型筛选者",tag:"你不常出现——但每次出现都让人停下来。你的朋友圈不是日记，是一个有门槛的客厅",icon:"🎯",score:"筛选指数 79%",conclusion:"你对朋友圈有一条内在标准：发出去的要对得起别人的时间。所以你宁可少发——只发你觉得真的有意思的、有信息的、有\"转发理由\"的东西。你不太在朋友圈里展示自己的日常——你展示的是\"我觉得什么东西重要\"。你的朋友圈像一个选择性开放的客厅：你欢迎那些愿意认真看的人，但不想占用任何人的时间。",evidence_note:"你发之前会问自己\"这条对别人有用吗\"（Q1），最怕自己回头看觉得\"好无聊\"（Q3），你的朋友圈大部分是转发和分享而不是关于自己的内容（Q6），你欣赏那种\"不发则已一发就让人停下来\"的类型（Q7），你觉得朋友圈和真实生活之间差了\"关于我的那部分\"（Q11）。你在朋友圈里是一个\"策展人\"而不是\"主角\"。",quote:"你不常出现——但每次出现都让人觉得：哦，你在。还好你还在。你的存在本身，就是一种筛选。",modules:[{title:"你的朋友圈人格：价值型筛选者",content:"你在朋友圈有一套不常被察觉的\"质量标准\"：不是排版和色调，是\"这条内容有没有存在的必要\"。你发的东西很少关于自己——更多的是分享：一首歌、一篇文章、一个你觉得\"应该被更多人看到\"的东西。你不是不愿意表达自己——你是觉得\"关于我\"的内容需要更大的勇气和更对的时机。"},{title:"你的朋友圈在替你说什么",content:"它在说：\"我在这里——不是用我的脸，是用我的判断力。\"你用分享代替了表达：你分享的东西和你关注的东西，间接描绘了你是一个怎样的人。会看的人能从中拼出一个轮廓——你的品味、你的价值观、你觉得\"值\"的东西。不会看的人直接滑过去——你也觉得没关系。"},{title:"别人从你的朋友圈里读到了什么（可能是误读）",content:"别人可能读到了\"没什么自己的生活可以发\"——这是最大的误读。你有很多可以发的东西，只是你觉得\"没必要发\"。也有人可能读到\"有距离感\"\"不太想交朋友\"——但其实你不是不想交朋友，你是不想用朋友圈里的\"人设\"交朋友。你更想被了解的是\"你的判断\"而不是\"你的照片\"。"},{title:"最容易掉进的朋友圈误区",content:"你有时候把\"不发\"当成了\"保持格调\"——但偶尔发一些\"不够格调但真实\"的内容，不会降低你的标准。另一个误区：你以为分享就能代替表达——但别人需要通过\"关于你\"的内容来判断要不要走近你。分享说了你很聪明——但没说你是怎样的人。"},{title:"怎么让你的朋友圈更贴近真实的你",content:"每个月在\"分享\"之外发一条\"关于我\"的内容——不需要太长、不需要太精彩。就写：今天做了一件什么事、今天有一个什么感想。让关注你的人有一条\"可以直接看到你\"而不是\"看到你喜欢什么\"的通道。"}],advice:["这周发一条\"关于今天\"而不是\"关于这篇文章\"的内容——一张图、一句话，从你的日常里直接来的。","翻翻你转发的那些内容，看看它们之间有没有一条共同的线索——那个线索就是你一直在寻找的\"关于自己\"的表达。","给你的分享加一行你自己的话——不只是转发，是告诉别人\"我为什么觉得这个值得看\"。那一行字，就是你自己。","你不需要每天更新来证明你在这里。但你可以在某些你觉得\"值得\"的时刻——让朋友圈成为你的声音，而不只是你的收藏夹。"],reminder:"你的克制让你每一次出现都有分量。但偶尔不克制一次——发一条\"没什么用但就是想发\"的内容——也是一种对自己表达冲动的信任。"}
+},productModules:["你的朋友圈人格类型","你的朋友圈在替你说什么（可能不是你想表达的）","别人从你的内容里读到了什么","最容易掉进的朋友圈误区","怎么让朋友圈更贴近真实的你"],disclaimer:"本测试仅为自我探索参考，不构成任何诊断或承诺。朋友圈是个人选择，请结合自己的实际感受判断。"};
+var answers=[],currentQ=0,paid=false;
+function $(id){return document.getElementById(id)}
+var app=document.getElementById('app');
+function cover(){app.innerHTML='<div class="screen active cover"><div class="icon">📱</div><h1>'+DATA.title+'</h1><div class="sub">'+DATA.subtitle+'</div><button class="btn-start" onclick="start(true)">开始测试</button><div class="trust">前5题免费 · 记下答案左滑查看报告预览</div></div>'}
+function start(free){answers=[];currentQ=0;paid=!free;renderQ()}
+function renderQ(){if(currentQ>=DATA.questions.length){showResult();return}if(currentQ===5&&!paid){showGate();return}var q=DATA.questions[currentQ];var pct=Math.round((currentQ/DATA.questions.length)*100);var letters=['A','B','C','D'];app.innerHTML='<div class="screen active"><div class="progress-wrap"><div class="progress-bar"><div class="progress-fill" style="width:'+pct+'%"></div></div><div class="progress-label">第 '+(currentQ+1)+'/'+DATA.questions.length+' 题</div></div><div class="q-area"><div class="q-num">'+(currentQ<5?'免费测试 · 第'+(currentQ+1)+'题':'深度解锁 · 第'+(currentQ+1)+'题')+'</div><div class="q-text">'+q.scene+'</div><div class="options">'+letters.map(function(l){return'<div class="opt" onclick="pick(\''+l+'\')"><div class="letter">'+l+'</div><div class="txt">'+q[l]+'</div></div>'}).join('')+'</div></div>'+(currentQ===4?'<div style="text-align:center;font-size:13px;color:#6a6558;padding:8px 0">记下5个答案，左滑查看报告预览 →</div>':'')+'</div>'}
+function pick(letter){answers.push(letter);currentQ++;renderQ();window.scrollTo(0,0)}
+function showGate(){app.innerHTML='<div class="screen active gate-screen"><div class="lock-icon">🔓</div><h2>前5题只是倾向<br>完整12题才能看清全貌</h2><div class="gate-desc">后7题继续拆解：你的朋友圈在替你说什么、别人读到了什么、你最深的社交需求是什么</div><ul class="unlock-list">'+DATA.productModules.map(function(m){return'<li>'+m+'</li>'}).join('')+'</ul><button class="btn-gate" onclick="unlock()">继续完成12题 · 解锁完整报告</button><div class="price">完整12题报告 · 做完自动解锁</div></div>'}
+function unlock(){paid=true;renderQ()}
+function showResult(){var counts={A:0,B:0,C:0,D:0};for(var i=5;i<answers.length;i++){counts[answers[i]]++}var sorted=Object.entries(counts).sort(function(a,b){return b[1]-a[1]});var typeKey=sorted[0][0];if(sorted[0][1]===sorted[1][1]&&sorted[0][0]==='A'&&(sorted[1][0]==='C'||sorted[1][0]==='D'))typeKey=sorted[1][0];if(sorted[0][1]===sorted[1][1]&&sorted[0][0]==='B'&&sorted[1][0]==='D')typeKey='D';var type=DATA.types[typeKey];var freeAnswers=answers.slice(0,5);var freeDesc=[['你在反复确认\"这样OK吗\"','你选择直接记录当下','你在意谁会看到','你先问\"有意义吗\"'],['你在等别人的反馈','你发完就走了','你在检查\"传达对了吗\"','你在看有没有引发对话'],['你最怕\"用心了但没人回应\"','你最怕被过度解读','你最怕被误传和误读','你最怕连自己都觉得不值'],['你觉得别人准备了更完美的版本','你对\"太完美\"的内容有免疫力','你真心欣赏别人的审美和用心','你更在意内容有没有料'],['你对自己不太确定','你对自己挺确定的','你在试着让别人更确定你','你的标准是\"值不值得看\"']];var evidenceHTML='<h3>📋 答案证据</h3><p>';for(var i=0;i<5;i++){var a=freeAnswers[i];var di=a==='A'?0:a==='B'?1:a==='C'?2:3;evidenceHTML+='<strong>Q'+(i+1)+'「'+DATA.questions[i].scene.slice(0,18)+'…」</strong>你选了'+a+'——'+freeDesc[i][di]+'。<br><br>'}evidenceHTML+=type.evidence_note+'</p>';var modulesHTML='';for(var j=0;j<type.modules.length;j++){modulesHTML+='<div class="module"><h3>'+type.modules[j].title+'</h3><p>'+type.modules[j].content+'</p></div>'}var adviceHTML='';for(var k=0;k<type.advice.length;k++){adviceHTML+='<div class="advice-item"><span class="n">0'+(k+1)+'</span><span>'+type.advice[k]+'</span></div>'}app.innerHTML='<div class="screen active result"><div class="badge">你的朋友圈人格</div><div class="type-name">'+type.name+'</div><div class="type-sub">'+type.tag+'</div><div style="font-size:15px;color:#d4b87a;margin-bottom:4px">'+type.icon+' '+type.score+'</div><p style="font-size:15px;color:#b8b0a0;line-height:1.75;margin-bottom:20px">'+type.conclusion+'</p><div class="evidence-box">'+evidenceHTML+'</div>'+modulesHTML+'<div class="summary-box"><div class="q-mark">"</div><p>'+type.quote+'</p></div><div class="advice-box"><h3>📅 未来30天建议</h3>'+adviceHTML+'</div><div class="reminder-box"><h3>⚠️ 关键提醒</h3><p>'+type.reminder+'</p></div><div style="font-size:13px;color:#6a6558;line-height:1.6;text-align:center;margin-bottom:24px">'+DATA.disclaimer+'</div><div class="footer">以上结果为自我探索参考 · 每个选择都是了解自己的线索</div></div>';window.scrollTo(0,0)}
+cover();
+</script>
+</body>
+</html>
