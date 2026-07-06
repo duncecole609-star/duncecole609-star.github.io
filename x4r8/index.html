@@ -1,0 +1,318 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
+<title>随便心理测试</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:"PingFang SC","Microsoft YaHei",sans-serif;background:#0f0f1a;color:#e8e0d0;min-height:100vh;display:flex;justify-content:center}
+.app{width:100%;max-width:500px;min-height:100vh;position:relative;overflow:hidden}
+.screen{display:none;flex-direction:column;min-height:100vh;padding:28px 22px 40px}
+.screen.active{display:flex}
+
+.cover{justify-content:center;align-items:center;text-align:center;gap:20px}
+.cover .icon{font-size:52px}
+.cover h1{font-size:29px;font-weight:900;line-height:1.4;letter-spacing:1.5px;padding:0 6px}
+.cover h1 .hl{color:#c9a96e}
+.cover .sub{font-size:15px;color:#8a8070;line-height:1.7;max-width:300px}
+.cover .btn-start{margin-top:10px;padding:15px 50px;font-size:18px;font-weight:700;background:linear-gradient(135deg,#c9a96e,#a6844d);color:#0f0f1a;border:none;border-radius:40px;cursor:pointer;letter-spacing:2px}
+.cover .btn-start:active{transform:scale(.96)}
+.cover .trust{font-size:12px;color:#4a4538;margin-top:6px}
+
+.progress-wrap{padding:4px 0 14px}
+.progress-bar{height:3px;background:#1e1e2e;border-radius:2px;overflow:hidden}
+.progress-fill{height:100%;background:linear-gradient(90deg,#c9a96e,#d4b87a);border-radius:2px;transition:width .3s}
+.progress-label{font-size:13px;color:#5a5548;margin-top:6px;text-align:right}
+
+.q-area{flex:1;display:flex;flex-direction:column;gap:16px}
+.q-area .q-num{font-size:13px;color:#6a6558;letter-spacing:2px}
+.q-area .q-text{font-size:23px;font-weight:700;line-height:1.5}
+.options{display:flex;flex-direction:column;gap:10px}
+.opt{padding:18px 16px;border-radius:14px;background:#16162a;border:1.5px solid #252540;cursor:pointer;transition:all .2s;display:flex;align-items:flex-start;gap:13px}
+.opt:active{transform:scale(.98);border-color:#c9a96e;background:#1e1e34}
+.opt .letter{width:33px;height:33px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:15px;font-weight:700;flex-shrink:0;background:rgba(201,169,110,.12);color:#c9a96e}
+.opt .txt{font-size:15px;line-height:1.55;color:#c8c0b0;flex:1}
+
+.gate-screen{justify-content:center;align-items:center;text-align:center;gap:24px}
+.gate-screen .lock-icon{font-size:48px}
+.gate-screen h2{font-size:26px;font-weight:800;line-height:1.4}
+.gate-screen .gate-desc{font-size:15px;color:#a09880;line-height:1.7;max-width:300px}
+.gate-screen .unlock-list{text-align:left;background:#16162a;border-radius:16px;padding:20px 24px;width:100%;max-width:320px}
+.gate-screen .unlock-list li{font-size:14px;color:#b8b0a0;line-height:2;list-style:none}
+.gate-screen .unlock-list li::before{content:"✓ ";color:#c9a96e;font-weight:700}
+.gate-screen .btn-gate{margin-top:8px;padding:14px 44px;font-size:18px;font-weight:700;background:linear-gradient(135deg,#c9a96e,#a6844d);color:#0f0f1a;border:none;border-radius:40px;cursor:pointer;letter-spacing:2px}
+.gate-screen .btn-gate:active{transform:scale(.96)}
+.gate-screen .price{font-size:14px;color:#6a6558;margin-top:4px}
+
+.loading{justify-content:center;align-items:center;text-align:center;gap:24px}
+.loading .spinner{width:52px;height:52px;border:3px solid #1e1e2e;border-top-color:#c9a96e;border-radius:50%;animation:spin .8s linear infinite}
+@keyframes spin{to{transform:rotate(360deg)}}
+.loading .msg{font-size:16px;color:#a09880;letter-spacing:1px}
+
+.result{padding:28px 22px 48px}
+.result .badge{display:inline-block;padding:7px 16px;border:1px solid rgba(201,169,110,.25);border-radius:16px;font-size:13px;color:#c9a96e;letter-spacing:2px;margin-bottom:14px}
+.result .type-name{font-size:36px;font-weight:900;margin-bottom:6px;line-height:1.2}
+.result .type-sub{font-size:18px;color:#d4b87a;margin-bottom:20px;line-height:1.4}
+
+.evidence-box{background:#16162a;border-radius:16px;padding:20px;margin-bottom:22px;border-left:3px solid #c9a96e}
+.evidence-box h3{font-size:14px;color:#c9a96e;letter-spacing:2px;margin-bottom:10px}
+.evidence-box p{font-size:14px;color:#b8b0a0;line-height:1.7}
+
+.module{margin-bottom:20px}
+.module h3{font-size:16px;color:#a09880;letter-spacing:1.5px;margin-bottom:10px;padding-bottom:8px;border-bottom:1px solid #1e1e2e}
+.module p{font-size:14px;color:#b8b0a0;line-height:1.75;margin-bottom:6px}
+
+.summary-box{background:linear-gradient(135deg,#1a1a2e,#1f1f34);border-radius:16px;padding:24px;margin:24px 0;text-align:center;border:1px solid rgba(201,169,110,.15)}
+.summary-box .q-mark{font-size:28px;color:#c9a96e;margin-bottom:8px}
+.summary-box p{font-size:17px;color:#d4b87a;line-height:1.7;letter-spacing:.5px}
+
+.advice-box{margin-bottom:24px}
+.advice-box h3{font-size:16px;color:#a09880;letter-spacing:2px;margin-bottom:12px}
+.advice-box .advice-item{padding:12px 14px;margin-bottom:8px;background:#16162a;border-radius:12px;font-size:14px;color:#b8b0a0;line-height:1.6;display:flex;gap:10px}
+.advice-box .advice-item .n{color:#c9a96e;font-weight:700;flex-shrink:0}
+
+.reminder-box{background:#16162a;border-radius:16px;padding:20px;margin-bottom:28px;border:1px solid #2a2a40}
+.reminder-box h3{font-size:15px;color:#c9a96e;letter-spacing:2px;margin-bottom:8px}
+.reminder-box p{font-size:14px;color:#a09880;line-height:1.7}
+
+.footer{text-align:center;padding:16px;font-size:11px;color:#3a3a48;border-top:1px solid #16162a;margin-top:auto}
+</style>
+</head>
+<body>
+<div class="app" id="app"></div>
+<script>
+// ========== 内容数据 ==========
+const DATA = {
+  title:"你说的\"随便\"，<br>和心里真正想要的<br><span class='hl'>差多远</span>",
+  subtitle:"不是测你会不会点菜——<br>是测你每一次说\"随便\"时，咽下去了什么",
+
+  questions:[
+    {scene:"朋友问你想吃什么，你说\"随便\"。那时候你心里其实在想什么？",A:"其实有想吃的，但怕说出来对方不喜欢——算了，随便吧",B:"翻了一圈菜单，确实没感觉——我是真的不知道想吃什么",C:"心里有答案但不敢说——万一被说\"你怎么想吃这个\"怎么办",D:"对方想吃什么比我重要——TA开心我就开心，我吃什么都行"},
+    {scene:"周末朋友问你想去哪玩，你说\"随便\"。你真正的状态是？",A:"有想去的地方，但万一不好玩呢——还是让对方决定吧",B:"去哪都差不多，没特别想去的地方——我是真的没想法",C:"有个地方想去很久了，但怕说出来显得很无聊——等对方提",D:"只要跟TA在一起去哪都行——我的意见不重要，TA定"},
+    {scene:"小组讨论时有人问你的意见，你说\"我都行，随便\"。心里在想？",A:"有想法但万一方案出问题了就是我的锅——不说最安全",B:"大家的方案我都能接受——没有特别倾向哪一个",C:"其实有偏向，但怕别人觉得我的想法太奇怪——别说了",D:"我的意见又不重要，听大家的就好——不想拖慢进度"},
+    {scene:"伴侣问你看什么电影，你说了\"随便\"。实际上你？",A:"其实想看那一部，但上次推荐的对方不喜欢——不想再背锅",B:"打开排片表看了五分钟，真的选不出来——都还行都不够想看",C:"想看的类型对方可能不喜欢——说出来会被觉得品位奇怪",D:"TA想看什么就看什么，我陪着就好——TA开心比我选什么重要"},
+    {scene:"选餐厅时别人让你定，你说\"随便都可以\"。这种\"随便\"最接近？",A:"怕选了不好吃的被埋怨——不说选择就不用对结果负责",B:"真吃什么都行，没有特别想吃的——从小到大好像都是这样",C:"有想吃的，但怕提出来扫别人的兴——还是等别人先说吧",D:"别人想吃的一定比我更想吃——我吃什么都无所谓"},
+    {scene:"你最早学会说\"随便\"，是在什么样的关系里学会的？",A:"小时候选什么都有人说\"这个不好\"——后来干脆不选了",B:"爸妈一直帮我做决定——我从来没练习过为自己做选择",C:"有次兴冲冲说了一个想法被笑得很惨——从此不说真话了",D:"家里总有人说\"你小，你先选\"——后来我学会把选择让给别人"},
+    {scene:"别人因为你的\"随便\"做了你不喜欢的决定，你心里什么感受？",A:"后悔但不敢说——毕竟是我自己说的\"随便\"，怨不了别人",B:"有点烦但说不清烦什么——好像也不是别人的错",C:"憋屈但只能忍着——谁让我自己不说呢，活该",D:"算了，也不是什么大事——但下次还是一样"},
+    {scene:"当你说\"随便\"时，你最怕对方做出什么反应？",A:"追问我\"你到底想怎样\"——最怕被逼着当场做决定",B:"真的随便选了一个——然后发现我不喜欢但也不知道喜欢啥",C:"选了一个我明显不喜欢的——然后发现其实我早就有答案了",D:"直接帮我做决定——松一口气，但也隐约觉得自己被忽略了"},
+    {scene:"有没有哪一次你说\"随便\"之后特别后悔？因为什么？",A:"有。那次对方选了我最不喜欢的——但我没资格抱怨",B:"有。发现对方选的我其实不满意——但我也提不出更好的",C:"有。对方直接略过我——我才发现\"随便\"等于放弃发言权",D:"有。对方为我考虑了很多——我却只说了一句\"随便\""},
+    {scene:"如果世界上没人会评判你的选择，你还会说\"随便\"吗？",A:"不会。我不是没想法——我是怕想法被否定才说随便",B:"可能还是偶尔会——不是怕评判，是脑子里真的经常一片空白",C:"绝对不会。我会把憋了二十年没说的话全说出来",D:"不一定。就算没人评判，我也习惯先考虑别人的需求"},
+    {scene:"你的\"随便\"伤害过一段关系吗？",A:"有过。对方觉得我不在乎——其实我是太在乎才不敢选",B:"有过。对方觉得跟我在一起很累——什么都要TA来决定",C:"有过。对方说\"你能不能有一次说一说你想要什么\"",D:"有过。对方慢慢不再问我的意见了——反正我都是\"随便\""},
+    {scene:"从今天起再也不能说\"随便\"，你最大的恐惧是什么？",A:"做了决定就要承担后果——万一错了，就是我的全责",B:"被问到想要什么时大脑一片空白——我是真的不知道",C:"我说了想要什么之后——对方的表情会让我后悔说出来",D:"选了之后发现对方其实不想去——我的需求成了别人的负担"}
+  ],
+
+  types:{
+    A:{name:"不敢做决定",tag:"你说\"随便\"，不是因为没想法——是因为怕为选择负责",icon:"🎯",
+       score:"不敢做决定 倾向 88%",
+       conclusion:"你的\"随便\"之下藏着的，不是没主见——而是一个从小就学会的计算：说随便就不会错，做决定就可能被批评。你曾经在某个时刻鼓足勇气做了一个选择，结果却被说\"你怎么选这个\"\"这个不好\"。从那以后，你的大脑自动生成了一个公式——\"让别人决定=安全\"。你不是没有判断力，你是把判断力全用在了\"判断这件事值不值得冒险做决定\"上。",
+       evidence_note:"你在Q1中把\"怕对方不喜欢\"作为说随便的理由，Q2里怕推荐的不好玩要担责，Q3中把\"方案出问题是我的锅\"挂在心上——你的随便不是无所谓，是风险规避。Q6中你追溯到童年：选什么都被人说不好，所以你学会了不选。Q12里你最大的恐惧非常清晰——\"万一错了，就是我的全责\"。这些答案串联出一条清晰的线索：你有一个被否定过太多次的决策史，所以你学会了把方向盘交出去。",
+       quote:"你每一次说\"随便\"，都是在保护那个曾经因为选错了而被失望的自己。但你不是那个小孩了——你的判断，值得被你自己信任一次。",
+       modules:[
+         {title:"你的\"随便\"类型：责任规避型",content:"你的\"随便\"是一种精密的风险管理策略。你不是没想法——你是在内心快速评估了一个选项之后，立刻想到\"万一这个不好怎么办\"\"万一对方不喜欢怎么办\"，然后主动放弃了决策权。这种惯性可能来自童年：你的每一个选择都曾被放大检视，选得好是应该的，选得差就成了你的问题。久而久之，你学会了——不选，就不会被问责。"},
+         {title:"你说\"随便\"时心里真正在想什么",content:"你在想：\"其实有个答案在我嘴边，但我咽回去是因为我害怕承担这个答案带来的任何不完美。\"你说随便的时候往往已经做了判断——但你对自己的判断不够信任。你需要别人先点头，你才敢确认自己的选择是对的。你在等一个\"你先说，我跟着你\"的安全距离。"},
+         {title:"为什么你不敢直接说你想要什么",content:"因为你曾经因为\"说了想要什么\"而被惩罚过——不是肉体上的惩罚，是失望、批评、嘲讽、以及\"你看你又选错了\"的无力感。你怕的不是选择本身——是选择之后那个\"万一错了\"所需要独自面对的局面。你还没学会一个道理：一个选择不好，不等于你整个人不好。"},
+         {title:"最容易让人误判你的场合",content:"在需要快速决策的场合——比如点菜、选电影、定方案——别人会误判你为\"没主见\"或\"什么都行的人\"。但你不是没主见，你是怕担责。更危险的是：时间久了，你真的会开始怀疑自己是不是本来就没什么主见。职场上这种感觉尤其致命——同事可能觉得你不敢扛事，而实际上你只是怕扛错了。"},
+         {title:"怎么从\"随便\"走到\"我要这个\"",content:"从小决定开始练习：下次点外卖时，在3分钟内自己定，不参考任何人的意见。告诉自己——一顿饭而已，选错了也就这一顿。然后逐步升级：主动给朋友推荐一部电影说\"我想看这部\"，而不是\"你选吧\"。每一次做完决定之后，观察——天没有塌，没有人埋怨你，而且你吃到了你真正想吃的。用这些微小的胜利，重建你对自己判断力的信任。"}
+       ],
+       advice:["这周找一个无关紧要的决定——午餐、饮品、散步路线——自己定，不征求任何人意见。事后对自己说一句：\"这次我选的，我觉得还不错。\"","回忆一次你小时候因为选错了而被批评的经历，写下来——然后以成年人的视角重新看看那个场景。那个批评是不是被放大了？","下次别人追问你\"到底想要什么\"时，试着说出一个字——\"我想试试这个\"。不需要完美答案，只需要一个起点。","和一个你信任的人约定：这周由你来决定一次出行计划。可以很小——去哪家咖啡、走哪条路。重点是：你来做决定，TA来跟。感受一下\"被跟随而不是被评判\"是什么感觉。"],
+       reminder:"你做过的那些\"错\"的选择，大多数只是不够完美——不是错。你不需要每一顿饭都选到最好吃的那家，也不需要每一部电影都精准命中对方的口味。你不是在为选择负责——你是在为\"万一不完美\"的恐惧负责。"
+    },
+    B:{name:"不知道自己想要什么",tag:"你说\"随便\"，不是因为迁就——是你从来没问过自己的答案",icon:"🧭",
+       score:"不知道自己想要什么 倾向 83%",
+       conclusion:"你的\"随便\"之下藏着的，是一片真正的空白——不是你不愿意选，是你真的不知道。从小到大，你的每一个选择几乎都被别人替你做了：吃什么、穿什么、学什么、做什么。你没有练习过\"问自己想要什么\"这种能力，就像一块从来没有被用过的肌肉。你说随便不是敷衍——是你的内在雷达真的没有信号。",
+       evidence_note:"你在Q1里翻了一圈菜单确实没感觉，Q2去哪都差不多没想法，Q3里大家的方案你都能接受——你的随便来自真正的无偏好状态。Q6追溯到根源：爸妈一直替你决定，你没有练习过选择。Q8里你怕对方真随便选一个——然后你发现你不喜欢，但说不清自己喜欢什么。Q12里你最大的恐惧不是被否定，是\"大脑一片空白\"——这印证了核心问题不是怕，是不知道。",
+       quote:"你曾经被照顾得太好了——好到你的\"我想要\"还没来得及发出声音就被满足了。现在你需要重新练习的，不是勇敢——是听见自己。",
+       modules:[
+         {title:"你的\"随便\"类型：偏好缺失型",content:"你的\"随便\"不是社交策略——是真的没有偏好。别人问你想吃什么的时候，你的大脑里没有跳出一个答案，而是跳出了一片空白的待选区。这不是你的错——你成长在一个替你安排好一切的环境里，你的\"偏好肌肉\"从来没有被使用过。就像一个从来没有运动过的人，突然被要求跑一千米——不是不愿意，是真的跑不动。"},
+         {title:"你说\"随便\"时心里真正在想什么",content:"在想：\"等一下，我想吃什么来着？……火锅？不对，好像也还好。日料？也行。川菜？都可以。算了，真的不知道——随便吧。\"你的随便不是在给对方施压，是你的确没有偏好。你不是不愿意花精力去想——你是想了半天发现确实分不出高低。"},
+         {title:"为什么你不敢直接说你想要什么",content:"严格来说不是\"不敢\"——是\"不会\"。你没有被训练过向内看、问自己\"我想要什么\"的能力。这种能力需要两个条件：一是有机会自己选，二是有空间试错。但你的成长环境可能两个都不够——有人帮你想好了、有人替你准备了，你只需要接受。在这套系统里，\"知道想要什么\"这个能力确实不重要——直到你开始被问到。"},
+         {title:"最容易让人误判你的场合",content:"在恋爱或亲密关系里，伴侣可能会觉得你\"不投入\"\"不用心\"——但其实你是真的没有偏好，不是不愿意表达。久而久之，对方可能会觉得\"什么事都要我来定，很累\"。而在职场上，你可能被误判为缺乏判断力或没有立场——但实际上你有立场，你只是不习惯用\"我要\"来表达。"},
+         {title:"怎么从\"随便\"走到\"我要这个\"",content:"先不要急着找\"我最想要什么\"——从更小的问题开始：\"这个好吃吗？\"\"这个让我舒服吗？\"\"这个让我有一点点开心吗？\"给自己一周时间，每天记录三个微小的偏好：我更喜欢晴天还是雨天、我更喜欢咖啡还是茶、我更喜欢早起还是晚睡。不需要评价好坏——只需要观察自己有没有倾向。积累到一定数量之后，你会发现：哦，原来我确实是有偏好的。"}
+       ],
+       advice:["这周每天做一个小练习：点餐时至少排除一样你不想要的——\"不想吃辣的\"\"不想吃太油腻的\"——用排除法帮自己找到一个轮廓。","准备一个笔记，每天睡前写下一件\"今天让我觉得还不错\"的事情——不需要是大事，一杯好喝的饮料也算。连续做两周，看看你的偏好开始浮现什么规律。","下次有人说\"你选吧\"时，不要在脑子里搜索正确答案——问自己的身体：哪个让我觉得轻松一点？哪个让我想再多看一眼？身体往往比大脑更早知道答案。","一個人逛一次超市，不设目的地逛，逛到某样东西让你停下来多看两秒——那就拿起来看看。不需要买，只需要练习\"注意到自己为什么会被吸引\"。"],
+       reminder:"你不是没有自己——你是你的自己在很久以前就学会了沉默。它没有消失，它只是音量被调到了最小。你需要做的不是重新创造一个有主见的自己——是把它调到你能听见的频率。"
+    },
+    C:{name:"怕说出来被否定",tag:"你说\"随便\"，不是没有答案——是你早就学会了把答案藏起来最安全",icon:"🛡️",
+       score:"怕说出来被否定 倾向 86%",
+       conclusion:"你的\"随便\"之下压着的，是一个被你反复确认过的答案——但你不敢说出来。不是怕做决定，是怕你做决定的理由被别人审视。你曾经在某个时刻，兴奋地、期待地说出你的想法，然后对面的人用一个表情、一句话、一阵沉默——让你觉得自己做了一件很蠢的事。从那以后，你把\"随便\"当成了盾牌：我不出招，就不会被挡回来。",
+       evidence_note:"你在Q1里心里有答案但不敢说，怕被问\"你怎么想吃这个\"；Q2里有个地方想去很久了但怕显得无聊；Q4里想看的类型怕被觉得品位奇怪；Q6追溯到童年——兴冲冲说了想法被笑得很惨，从此不说真话。Q10是你整个人的愤怒释放——\"我会把憋了二十年的话全说出来\"。你的随便不是没答案，是你的答案经过了太多道自我审查，最后只剩下一个安全的\"随便\"。",
+       quote:"你藏起来的不是随便——是一整个被否认过的自己。但那些让你心动的选项，才是你真正活着的证据。",
+       modules:[
+         {title:"你的\"随便\"类型：自我保护型",content:"你的\"随便\"是一套你亲手搭建的防御工事。你不是不知道自己喜欢什么——你在Q3里有偏向、Q4里有想看的、Q5里有想吃的。但你的每一个偏好出口，都预设了一个\"被驳回\"的结局。你已经演练过太多次这个场景：你说出A，对方回以惊讶、不解、或一个微妙的表情——然后你后悔了，觉得还不如说\"随便\"。"},
+         {title:"你说\"随便\"时心里真正在想什么",content:"在想：\"我想吃日料。但万一TA想吃火锅怎么办——我说了会让TA觉得我在扫兴吧。算了，随便。\"或者：\"其实我觉得方案B更好。但上次我说了一个想法之后气氛很尴尬——还是别说了。\"你心里有一个完整的、被压制住的答案。你的\"随便\"是一个减速带——你希望对方能慢下来、注意到你、主动接住你，而不是你递出去再被退回来。"},
+         {title:"为什么你不敢直接说你想要什么",content:"因为你的表达经验里充满了\"被否决\"的记忆。那些记忆可能不是恶意的——可能只是一次随口说的\"你好奇怪哦\"、一个短暂的迟疑、或者对方根本没意识到在否定你。但你的敏感度比一般人高——你捕捉到了那些微表情、微语气，然后你的大脑把它标记成了一种危险信号：说出真实想法 = 可能被疏远 / 被觉得奇怪 / 被拒绝。"},
+         {title:"最容易让人误判你的场合",content:"在比较亲近的关系里，你的\"随便\"会被误读为\"不上心\"或\"不在乎\"——但事实恰恰相反，你是太在乎了所以不敢轻易出牌。更矛盾的是：你其实最渴望被\"猜中\"——你希望对方在你说了随便之后还能察觉到你的真实偏好，然后选到那个你不敢说的答案。但现实中对方往往选了你不喜欢的，然后你默默失望，觉得\"果然不该说随便\"——陷入了双向循环。"},
+         {title:"怎么从\"随便\"走到\"我要这个\"",content:"换一个说法试试：不说\"随便\"，改说\"我有个想法——但你先说\"。这等于给你的偏好加了一个缓冲垫。对方说了之后，如果恰好和你想的一致，你可以接住；如果不一样，你可以练习说\"其实我也在想另一个选项\"。这不是说谎——是给你的勇气搭建一个脚手架。等你说多了之后，脚手架可以拆掉，直到你习惯直接用\"我想\"开头。"}
+       ],
+       advice:["这周找一个不太熟的人——奶茶店员、快递小哥、不认识的网友——对他们说出一个明确的偏好：\"我要这个\"。这个练习是零风险的，因为对方不会否定你——TA只会按你说的做。让身体先习惯\"说了就会得到\"的因果。","回忆一次你说出真实想法后被否定或嘲笑的具体经历，写下来——然后问自己：那个人当时的反应，有多少是你不小心放大的？如果现在再发生一次，你还会有同样的感受吗？","下次想说\"随便\"时，改成说——\"我有两个方向，A和B，你觉得呢？\"你不是暴露了全部底牌，但你已经比\"随便\"多出了50%的真实。","和你最信任的那个人做一次坦白：\"其实我经常说随便的时候心里是有答案的，但我怕说出来你不喜欢。\"看看TA的反应——大概率不是你以为的嫌弃，而是心疼。"],
+       reminder:"你不是太敏感——你是在用敏感保护自己不受伤害。但敏感不该用来拦截你的真实想法——它应该用来筛选：那些会因为你的真实而否定你的人，本来就不值得你用\"随便\"去讨好。"
+    },
+    D:{name:"觉得自己的需求不重要",tag:"你说\"随便\"，不是真的随便——是你真心相信别人比你更值得被优先考虑",icon:"🕯️",
+       score:"觉得自己的需求不重要 倾向 81%",
+       conclusion:"你的\"随便\"之下压着的，是一个被你自己长期忽略的结论：\"我的需求不重要。\"你从小被教成了一个\"懂事\"的人——\"你小，你让着点\"\"人家是客人，你先别挑\"\"你看别的小朋友多乖\"。你在\"把选择让给别人\"这件事上得到了太多夸奖，以至于你把它内化成了一种身份认同：我是一个把别人的需求放在前面的人。你确实不觉得憋屈——但你也确实不觉得自己的需求值得争取。",
+       evidence_note:"你在Q1里认为对方吃什么比你重要，Q2觉得陪TA在一起去哪都行，Q3觉得自己的意见不重要不想拖慢进度，Q4认为TA开心比你选什么重要。Q6追到源头：家里有人说\"你小，你先选\"——你学会了把选择让给别人。Q11里你的随便伤害过关系——对方慢慢不再问你的意见了，反正你都是\"随便\"。Q12里你最大的恐惧不是被否定——是\"我的需求成了别人的负担\"。",
+       quote:"你每一次把选择让给别人，都是在确认一个旧信念：我不重要。但你忘了——真正爱你的人，最想要的不是\"随便\"，是你真心地说一次\"我想要这个\"。",
+       modules:[
+         {title:"你的\"随便\"类型：自我忽视型",content:"你的\"随便\"是一种被美德化的自我边缘化。你不是没有偏好——Q3里你有意见、Q4里你有想看的方向、Q5里你有想吃的。但你的操作系统里有一个优先级规则：只要对方的偏好和我的偏好冲突，对方优先。这个规则如此根深蒂固，以至于你甚至不会把\"对方的偏好\"和\"我的偏好\"放到一起比较——你直接跳过了自己的那一栏。"},
+         {title:"你说\"随便\"时心里真正在想什么",content:"在想：\"TA上次好像说过想吃辣的，那我选火锅吧——等等，万一TA这次不想吃辣了呢？还是让TA自己选吧。\"你的思考过程是从对方的需求开始的，然后到对方的可能需求，再到怎么满足对方的需求——你全程没有把自己的需求加入过公式。你不是故意忽略自己——你是真的觉得这个公式里不需要这个变量。"},
+         {title:"为什么你不敢直接说你想要什么",content:"不是因为不敢——是因为你觉得\"我想要\"这三个字本身就带着一种不合理。在你的认知里，\"我想要\"=自私、不懂事、给别人添麻烦。你被夸\"懂事\"太多次了，以至于你把它当成了获得认可的默认模式。但你没有意识到的是：当你把所有选择权都交出去之后，你自己也变得越来越透明了。"},
+         {title:"最容易让人误判你的场合",content:"在亲密关系里，对方可能会以为你\"没有需求\"——因为你是真的一直在说\"随便\"，然后也真的看起来挺开心的。但越是这样，对方越不会发现你其实也有没被满足的部分。更危险的是：你隐藏得太好了，好到连你自己都忘了——\"我是不是真的没有需求？\"你不会抱怨，不会发脾气，不会说\"其实我想\"——你把自己活成了一个完美的、不需要被照顾的人。"},
+         {title:"怎么从\"随便\"走到\"我要这个\"",content:"先不要一下子跳到\"我要这个\"——从\"今天我可以不可以先选一次\"开始。给自己一个特权时刻：今天这顿饭，由我来选。不是因为我要变成自私的人——是因为我需要练习\"我的需求也是需求\"这个事实。然后观察：对方其实没有失望、没有觉得你自私、甚至可能因为你终于说了\"我要\"而松了一口气。你需要一套新的反馈信号来覆盖旧的\"懂事=好\"的公式。"}
+       ],
+       advice:["这周挑一天——一整天——所有的小决定都由你来做。点餐、选座位、选路线。你可能会觉得不习惯、像在做一件错事——但不习惯不等于错。","给一个你最在乎的人发一条消息：\"其实有时候我说随便不是因为没想法——是因为我觉得你的想法比我重要。\"看看TA怎么回。这个回应，可能是你重新理解\"被在乎\"的起点。","在手机备注里写一句话，每天早上看一遍：\"我喜欢的，就是重要的。不需要被任何人批准。\"不需要说服自己——先看，看到有一天你不觉得这句话是骗人的为止。","找出你最近三次说\"随便\"但心里其实有偏好的场景，写下你当时咽回去的那个答案。然后问自己：如果我说出来，最坏的结果是什么？那个结果真的有那么坏吗？"],
+       reminder:"你不是不重要——你是在太早太早的时候就被教会了：重要的人会把选择让给别人。但那个标准是用来保护小孩的——你已经不是那个需要用\"懂事\"来换取认可的小孩了。你配拥有你的偏好，你也配为你自己选一次。"
+    }
+  },
+
+  productModules:[
+    "你的\"随便\"类型",
+    "你说随便时心里真正在想什么",
+    "为什么你不敢直接说你想要什么",
+    "最容易让人误判你的场合",
+    "怎么从\"随便\"走到\"我要这个\""
+  ],
+
+  disclaimer:"本测试仅为自我探索参考，不构成任何诊断、治疗建议或效果承诺。每个人的成长经历都是独特的，请结合自己的实际感受判断。"
+};
+
+// ========== 引擎 ==========
+let answers=[],currentQ=0,paid=false;
+
+function $(id){return document.getElementById(id)}
+const app = document.getElementById('app');
+
+function cover(){
+  app.innerHTML=`
+    <div class="screen active cover">
+      <div class="icon">💬</div>
+      <h1>${DATA.title}</h1>
+      <div class="sub">${DATA.subtitle}</div>
+      <button class="btn-start" onclick="start(true)">开始测试</button>
+      <div class="trust">前5题免费 · 记下答案左滑查看报告预览</div>
+    </div>`;
+}
+
+function start(free){answers=[];currentQ=0;paid=!free;renderQ()}
+
+function renderQ(){
+  if(currentQ>=DATA.questions.length){showResult();return;}
+  if(currentQ===5 && !paid){showGate();return;}
+  const q=DATA.questions[currentQ];
+  const pct=Math.round((currentQ/DATA.questions.length)*100);
+  const letters=['A','B','C','D'];
+  app.innerHTML=`
+    <div class="screen active">
+      <div class="progress-wrap">
+        <div class="progress-bar"><div class="progress-fill" style="width:${pct}%"></div></div>
+        <div class="progress-label">第 ${currentQ+1}/${DATA.questions.length} 题</div>
+      </div>
+      <div class="q-area">
+        <div class="q-num">${currentQ<5?'免费测试 · 第'+(currentQ+1)+'题':'深度解锁 · 第'+(currentQ+1)+'题'}</div>
+        <div class="q-text">${q.scene}</div>
+        <div class="options">
+          ${letters.map(l=>`<div class="opt" onclick="pick('${l}')"><div class="letter">${l}</div><div class="txt">${q[l]}</div></div>`).join('')}
+        </div>
+      </div>
+      ${currentQ===4?'<div style="text-align:center;font-size:13px;color:#6a6558;padding:8px 0">记下5个答案，左滑查看报告预览 →</div>':''}
+    </div>`;
+}
+
+function pick(letter){
+  answers.push(letter);
+  currentQ++;
+  renderQ();
+  window.scrollTo(0,0);
+}
+
+function showGate(){
+  app.innerHTML=`
+    <div class="screen active gate-screen">
+      <div class="lock-icon">🔓</div>
+      <h2>前5题只是倾向<br>完整12题才能看清全貌</h2>
+      <div class="gate-desc">后7题继续拆解：你为什么说随便、什么时候开始学会的、你的随便在保护什么</div>
+      <ul class="unlock-list">
+        ${DATA.productModules.map(m=>`<li>${m}</li>`).join('')}
+      </ul>
+      <button class="btn-gate" onclick="unlock()">继续完成12题 · 解锁完整报告</button>
+      <div class="price">完整12题报告 · 做完自动解锁</div>
+    </div>`;
+}
+
+function unlock(){paid=true;renderQ()}
+
+function showResult(){
+  const counts={A:0,B:0,C:0,D:0};
+  for(let i=5;i<answers.length;i++){counts[answers[i]]++}
+  const sorted=Object.entries(counts).sort((a,b)=>b[1]-a[1]);
+  let typeKey=sorted[0][0];
+  if(sorted[0][1]===sorted[1][1]&&sorted[0][0]==='A'&&(sorted[1][0]==='C'||sorted[1][0]==='D'))typeKey=sorted[1][0];
+  if(sorted[0][1]===sorted[1][1]&&sorted[0][0]==='B'&&sorted[1][0]==='D')typeKey='D';
+  const type=DATA.types[typeKey];
+
+  const freeAnswers=answers.slice(0,5);
+  const freeLabels=['被问想吃什么','被问想去哪','被问意见','被问看什么','选餐厅场景'];
+  const freeDesc=[
+    ['你其实有答案但怕对方不喜欢','你是真的不确定想吃什么','你心里有数但不敢说出来','你觉得对方的需求比你更重要'],
+    ['你怕推荐的地方不好玩要担责','你真的去哪都行没有偏好','你有想去的地方但怕显得无聊','你觉得陪TA在一起比去哪更重要'],
+    ['你怕方案出问题变成你的责任','你确实没有特别倾向的方案','你怕自己的想法太奇怪被否定','你觉得自己的意见不重要'],
+    ['你怕再次推荐失败被埋怨','你真的没有特别想看的电影','你怕品位被否定不敢说出口','你觉得TA开心比你选什么重要'],
+    ['你怕选错被埋怨所以不选最安全','你真的吃什么都行已成习惯','你有想吃的但怕扫别人的兴','你觉得别人的口味优先于自己']
+  ];
+
+  let evidenceHTML='<h3>📋 答案证据</h3><p>';
+  for(let i=0;i<5;i++){
+    const a=freeAnswers[i];
+    const descIdx=a==='A'?0:a==='B'?1:a==='C'?2:3;
+    evidenceHTML+=`<strong>Q${i+1}「${DATA.questions[i].scene.slice(0,18)}…」</strong>你选了${a}——${freeDesc[i][descIdx]}。<br><br>`;
+  }
+  evidenceHTML+=type.evidence_note+'</p>';
+
+  let modulesHTML='';
+  for(const m of type.modules){
+    modulesHTML+=`<div class="module"><h3>${m.title}</h3><p>${m.content}</p></div>`;
+  }
+
+  let adviceHTML='';
+  for(let i=0;i<type.advice.length;i++){
+    adviceHTML+=`<div class="advice-item"><span class="n">0${i+1}</span><span>${type.advice[i]}</span></div>`;
+  }
+
+  app.innerHTML=`
+    <div class="screen active result">
+      <div class="badge">你的\"随便\"人格</div>
+      <div class="type-name">${type.name}</div>
+      <div class="type-sub">${type.tag}</div>
+
+      <div style="font-size:15px;color:#d4b87a;margin-bottom:4px">${type.icon} ${type.score}</div>
+      <p style="font-size:15px;color:#b8b0a0;line-height:1.75;margin-bottom:20px">${type.conclusion}</p>
+
+      <div class="evidence-box">${evidenceHTML}</div>
+      ${modulesHTML}
+
+      <div class="summary-box">
+        <div class="q-mark">"</div>
+        <p>${type.quote}</p>
+      </div>
+
+      <div class="advice-box">
+        <h3>📅 未来30天建议</h3>
+        ${adviceHTML}
+      </div>
+
+      <div class="reminder-box">
+        <h3>⚠️ 关键提醒</h3>
+        <p>${type.reminder}</p>
+      </div>
+
+      <div style="font-size:13px;color:#6a6558;line-height:1.6;text-align:center;margin-bottom:24px">${DATA.disclaimer}</div>
+      <div class="footer">以上结果为自我探索参考 · 每个选择都是了解自己的线索</div>
+    </div>`;
+  window.scrollTo(0,0);
+}
+
+// start
+cover();
+</script>
+</body>
+</html>

@@ -1,0 +1,318 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
+<title>隐秘吸引力测试</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:"PingFang SC","Microsoft YaHei",sans-serif;background:#0f0f1a;color:#e8e0d0;min-height:100vh;display:flex;justify-content:center}
+.app{width:100%;max-width:500px;min-height:100vh;position:relative;overflow:hidden}
+.screen{display:none;flex-direction:column;min-height:100vh;padding:28px 22px 40px}
+.screen.active{display:flex}
+
+.cover{justify-content:center;align-items:center;text-align:center;gap:20px}
+.cover .icon{font-size:52px}
+.cover h1{font-size:29px;font-weight:900;line-height:1.4;letter-spacing:1.5px;padding:0 6px}
+.cover h1 .hl{color:#c9a96e}
+.cover .sub{font-size:15px;color:#8a8070;line-height:1.7;max-width:300px}
+.cover .btn-start{margin-top:10px;padding:15px 50px;font-size:18px;font-weight:700;background:linear-gradient(135deg,#c9a96e,#a6844d);color:#0f0f1a;border:none;border-radius:40px;cursor:pointer;letter-spacing:2px}
+.cover .btn-start:active{transform:scale(.96)}
+.cover .trust{font-size:12px;color:#4a4538;margin-top:6px}
+
+.progress-wrap{padding:4px 0 14px}
+.progress-bar{height:3px;background:#1e1e2e;border-radius:2px;overflow:hidden}
+.progress-fill{height:100%;background:linear-gradient(90deg,#c9a96e,#d4b87a);border-radius:2px;transition:width .3s}
+.progress-label{font-size:13px;color:#5a5548;margin-top:6px;text-align:right}
+
+.q-area{flex:1;display:flex;flex-direction:column;gap:16px}
+.q-area .q-num{font-size:13px;color:#6a6558;letter-spacing:2px}
+.q-area .q-text{font-size:23px;font-weight:700;line-height:1.5}
+.options{display:flex;flex-direction:column;gap:10px}
+.opt{padding:18px 16px;border-radius:14px;background:#16162a;border:1.5px solid #252540;cursor:pointer;transition:all .2s;display:flex;align-items:flex-start;gap:13px}
+.opt:active{transform:scale(.98);border-color:#c9a96e;background:#1e1e34}
+.opt .letter{width:33px;height:33px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:15px;font-weight:700;flex-shrink:0;background:rgba(201,169,110,.12);color:#c9a96e}
+.opt .txt{font-size:15px;line-height:1.55;color:#c8c0b0;flex:1}
+
+.gate-screen{justify-content:center;align-items:center;text-align:center;gap:24px}
+.gate-screen .lock-icon{font-size:48px}
+.gate-screen h2{font-size:26px;font-weight:800;line-height:1.4}
+.gate-screen .gate-desc{font-size:15px;color:#a09880;line-height:1.7;max-width:300px}
+.gate-screen .unlock-list{text-align:left;background:#16162a;border-radius:16px;padding:20px 24px;width:100%;max-width:320px}
+.gate-screen .unlock-list li{font-size:14px;color:#b8b0a0;line-height:2;list-style:none}
+.gate-screen .unlock-list li::before{content:"✓ ";color:#c9a96e;font-weight:700}
+.gate-screen .btn-gate{margin-top:8px;padding:14px 44px;font-size:18px;font-weight:700;background:linear-gradient(135deg,#c9a96e,#a6844d);color:#0f0f1a;border:none;border-radius:40px;cursor:pointer;letter-spacing:2px}
+.gate-screen .btn-gate:active{transform:scale(.96)}
+.gate-screen .price{font-size:14px;color:#6a6558;margin-top:4px}
+
+.loading{justify-content:center;align-items:center;text-align:center;gap:24px}
+.loading .spinner{width:52px;height:52px;border:3px solid #1e1e2e;border-top-color:#c9a96e;border-radius:50%;animation:spin .8s linear infinite}
+@keyframes spin{to{transform:rotate(360deg)}}
+.loading .msg{font-size:16px;color:#a09880;letter-spacing:1px}
+
+.result{padding:28px 22px 48px}
+.result .badge{display:inline-block;padding:7px 16px;border:1px solid rgba(201,169,110,.25);border-radius:16px;font-size:13px;color:#c9a96e;letter-spacing:2px;margin-bottom:14px}
+.result .type-name{font-size:36px;font-weight:900;margin-bottom:6px;line-height:1.2}
+.result .type-sub{font-size:18px;color:#d4b87a;margin-bottom:20px;line-height:1.4}
+
+.evidence-box{background:#16162a;border-radius:16px;padding:20px;margin-bottom:22px;border-left:3px solid #c9a96e}
+.evidence-box h3{font-size:14px;color:#c9a96e;letter-spacing:2px;margin-bottom:10px}
+.evidence-box p{font-size:14px;color:#b8b0a0;line-height:1.7}
+
+.module{margin-bottom:20px}
+.module h3{font-size:16px;color:#a09880;letter-spacing:1.5px;margin-bottom:10px;padding-bottom:8px;border-bottom:1px solid #1e1e2e}
+.module p{font-size:14px;color:#b8b0a0;line-height:1.75;margin-bottom:6px}
+
+.summary-box{background:linear-gradient(135deg,#1a1a2e,#1f1f34);border-radius:16px;padding:24px;margin:24px 0;text-align:center;border:1px solid rgba(201,169,110,.15)}
+.summary-box .q-mark{font-size:28px;color:#c9a96e;margin-bottom:8px}
+.summary-box p{font-size:17px;color:#d4b87a;line-height:1.7;letter-spacing:.5px}
+
+.advice-box{margin-bottom:24px}
+.advice-box h3{font-size:16px;color:#a09880;letter-spacing:2px;margin-bottom:12px}
+.advice-box .advice-item{padding:12px 14px;margin-bottom:8px;background:#16162a;border-radius:12px;font-size:14px;color:#b8b0a0;line-height:1.6;display:flex;gap:10px}
+.advice-box .advice-item .n{color:#c9a96e;font-weight:700;flex-shrink:0}
+
+.reminder-box{background:#16162a;border-radius:16px;padding:20px;margin-bottom:28px;border:1px solid #2a2a40}
+.reminder-box h3{font-size:15px;color:#c9a96e;letter-spacing:2px;margin-bottom:8px}
+.reminder-box p{font-size:14px;color:#a09880;line-height:1.7}
+
+.footer{text-align:center;padding:16px;font-size:11px;color:#3a3a48;border-top:1px solid #16162a;margin-top:auto}
+</style>
+</head>
+<body>
+<div class="app" id="app"></div>
+<script>
+// ========== 内容数据 ==========
+const DATA = {
+  title:"你最容易被哪种<br><span class='hl'>"不起眼"的人</span><br>吸引",
+  subtitle:"不是测你喜欢什么类型——<br>是测你潜意识里被哪些\"不显眼\"的特质击中过",
+
+  questions:[
+    {scene:"在一个聚会上，你注意力最容易被什么样的人拉走？",A:"角落里一个安静做自己事情的人——不迎合、不讨好、但也不冷漠",B:"那个聊天时看着你眼睛、点头之后还会追问细节的人",C:"不小心说错话之后自己先笑了的人——尴尬但没掩饰",D:"晚到的那个人——进来不声张，但你注意到TA扫了一圈才坐下"},
+    {scene:"别人跟你讲一件事，哪种反应会让你对TA突然多看一眼？",A:"TA不急着接话，停了两秒才说——那两秒里TA是真的在想",B:"过了几天TA突然提起你上次说的那个细节——你都快忘了",C:"TA说\"我也不太会安慰人\"——然后默默给你倒了杯水",D:"TA用一种很准的方式说出了你自己没总结出来的感受"},
+    {scene:"回想一下你曾经crush过的人，他们最常出现的地方是？",A:"图书馆、咖啡馆、自习室——那种不需要说话但各自专注的空间",B:"不那么热闹的聚会角落——你们聊了几句，后来发现聊了很久",C:"一个不太从容的场合——TA出了点小状况但处理得很真实",D:"一个你不常去的圈子——TA身上有一种\"这里困不住TA\"的气场"},
+    {scene:"一个人身上哪种\"不完美\"最容易让你觉得可爱？",A:"TA好像不太会社交，但每次开口都说到点子上——没废话",B:"TA会认真到有点\"轴\"——答应你的事会记在备忘录里",C:"TA紧张的时候说话会变快——但你听得出来TA在努力说清楚",D:"TA讲到自己喜欢的东西时会突然变了一个人——眼睛里有光"},
+    {scene:"哪种场景最可能让你对一个人产生\"想多了解一点\"的念头？",A:"看到TA一个人专注做事的侧脸——那种\"不需要观众\"的状态",B:"你跟TA说了一件小事，TA的反应让你觉得\"TA真的听懂了\"",C:"TA在众人面前承认自己不懂——没有防御、没有逞强",D:"TA推荐了一本书或一首歌——你从那个推荐里看到了TA的世界"},
+    {scene:"你后来意识到，那些吸引你的人有一个共同点：他们让你感觉到什么？",A:"他们不慌。世界很吵，但他们身上有一种\"不需要证明什么\"的安静",B:"他们让你觉得自己说话是值得被记住的——不是客套，是认真",C:"他们把\"不完美\"活成了一种让人想靠近的真实——你不用在他们面前端着",D:"他们不随便给别人开门——但一旦开了，你会觉得自己的进入是被认真对待的"},
+    {scene:"朋友问你喜欢什么类型，你说\"没什么特别的\"。但你心里知道你在等什么？",A:"一个不需要用\"酷\"来证明自己存在的人——稳，但不炫耀",B:"一个听完你说话之后会说\"然后呢\"的人——不是礼貌，是真的想知道",C:"一个在别人眼里\"不够精致\"但跟你在一起时不需要人设的人",D:"一个内心极其丰富但不急着展示的人——你每发现一层都觉得赚了"},
+    {scene:"你身边那些你最珍惜的朋友，最初是怎么走进你心里的？",A:"TA没有刻意靠近——只是某天你发现，你们一直在同一个频率上",B:"TA记得你半年前随口说过的一句话——那一刻你觉得被认真对待了",C:"TA在你面前哭过一次或者狼狈过一次——然后你就知道这个人是真的",D:"TA分享了一个很私人的习惯或回忆——你意识到TA把你放进了自己的世界"},
+    {scene:"你有没有过这种感觉：一个人什么都没做，但你就是想靠近TA？",A:"有的。TA身上有一种\"不争不抢但什么都知道\"的气场——让人安心",B:"有的。TA听人说话的样子让你觉得——这个人应该被好好对待",C:"有的。TA笑得不太好看但很真——那种真让你觉得自己也可以不用装",D:"有的。TA身上有一种\"我跟你们不一样但我不需要你们同意\"的笃定"},
+    {scene:"哪种人的夸奖会让你记得最久？",A:"平时不怎么说话的人——某天淡淡说了一句\"你做得很好\"",B:"把你做过的所有努力都数了一遍之后再夸你的人——不是客套",C:"夸完之后自己先不好意思了的人——好像不太习惯表达但忍不住想夸",D:"夸的不是结果而是你\"为什么这么做\"的人——他看到了你的动机"},
+    {scene:"一段关系中，哪个瞬间会让你觉得\"就是这个人了\"？",A:"你们沉默地坐了半小时——不尴尬，反而觉得被陪伴了",B:"TA在你没开口之前递过来你需要的东西——不是巧合，是TA一直在注意",C:"TA做了一件很笨的事——你不但没嫌弃反而觉得\"真好，TA不是演出来的\"",D:"TA给你看了一个TA从未给别人看过的东西——那一刻你知道自己进去了"},
+    {scene:"如果让你用一句话总结\"你最容易对什么样的人动心\"，最接近的是？",A:"一个不需要观众的人——但如果你愿意看，TA会在自己的节奏里让你看到全部",B:"一个让你觉得自己说话有人听的人——不是\"被喜欢\"，是\"被听见\"",C:"一个没打算吸引任何人但就是吸引了你的人——因为TA没在表演",D:"一个你一开始没注意到、后来发现每多了解一层就更舍不得走的人"}
+  ],
+
+  types:{
+    A:{name:"安静的力量",tag:"你被\"安静但知道自己在做什么\"的人吸引——他们不争不抢，但每一步都踩在自己选的路上了",icon:"🌿",
+       score:"安静吸引力 倾向 84%",
+       conclusion:"你不是被\"沉默\"吸引——你是被\"不需要用声音证明存在\"的那种稳吸引。你生活里见过太多急于表达的人：急着证明自己、急着被喜欢、急着站队。但那个人不——他们身上有一种\"你们吵你们的，我有我的节奏\"的笃定。这种安静不是空白——是密度。你靠近之后发现他们什么都知道，只是不觉得需要挂在嘴边。",
+       evidence_note:"你最先注意到的是角落里的安静（Q1），你欣赏那种\"不急著接话\"的反应（Q2），你的crush出现在不需要说话的空间里（Q3），你对\"不完美\"的定义是\"不太会社交但开口就说到点子上\"（Q4）。这些选择都指向同一个深层需求：你在找一个不需要用音量证明价值的人——因为你自己可能也被\"说很多话才能被看见\"这件事累过。",
+       quote:"你不是喜欢安静的人——你是喜欢那种\"安静里有东西\"的人。他们不需要聚光灯，但他们本身是光源。",
+       modules:[
+         {title:"你的隐秘吸引力类型：安静但知道自己要什么",content:"你被一种\"安静的确定性\"吸引——不是内向，是内收。这类人不需要通过社交来确认自己的价值，他们的能量来自内在。你可能在某个下午、某个角落、某个不经意的瞬间被打动过：比如一个专注的侧脸，比如一段不急不缓的对话。吸引你的不是\"安静\"本身——是那种安静里藏着的\"我知道自己在干什么\"。这种吸引力之所以强烈，是因为你生活在一个太吵的时代里——安静成了一种稀缺品，而稀缺品总是致命的。"},
+         {title:"你为什么总被这种\"不起眼\"的人吸引",content:"因为你自己的价值排序里，\"靠谱\"排在\"有趣\"前面。你可能经历过——也可能正在经历——被太多\"说得很好听但做不了什么事\"的人消耗过。所以当一个\"不怎么说但每次都做到\"的人出现时，你的系统会自动标记为\"安全\"。更深一层：你被他们吸引，是因为他们活出了你可能想成为但还没完全做到的状态——不被外界评价牵着走，不需要观众也能专注。"},
+         {title:"这种吸引力在告诉你关于自己的什么",content:"它在告诉你：你渴望一种\"不费力\"的存在方式。你可能在很多时候需要解释自己——解释你的选择、你的沉默、你的边界。但那个人不用——他们天然就活成了\"不被误解也懒得解释\"的样子。这种吸引在提醒你：你内心有一部分，想要从\"表演\"里退休。不是躺平，是不再把能量浪费在不需要的人身上。"},
+         {title:"你容易误判对方什么",content:"你容易被安静的表面迷惑，以为安静就等于靠谱。但有些人的安静是空洞——不说话是因为真的没什么可说的。你需要分辨的是：TA的安静是\"有内容但不急着输出\"，还是\"确实没什么内容\"。一个简单的判断方式：你看TA独处时在做什么。真正有东西的人，一个人的时候也在构建什么——而不是在等待被填满。"},
+         {title:"怎么让这种吸引走向健康的关系",content:"第一步是打破\"安静=安全\"的自动联想——不是所有的安静都值得你靠近。第二步是学会主动表达：被这类人吸引的人，往往自己也不太主动。但安静的他们可能更不主动——你们需要至少有一个人先开口。第三步：不要把他们理想化为\"不需要回应\"的人。安静的人也需要被回应——只是他们不习惯开口要。"}
+       ],
+       advice:["这周注意你身边那个\"最不张扬\"的人——试着跟TA聊一次，不是寒暄，是问一个你真的好奇的问题。","记录一个让你觉得\"好稳\"的瞬间——是某个人的某种反应、某句话、还是某个沉默。找到之后问自己：你在渴望什么？","下次遇到\"安静但不确定有没有内容\"的人，多等一轮对话再下结论。内容型安静通常需要三句话才能浮出来。","练习成为那个\"不需要证明什么\"的人——从删掉朋友圈里那条你其实不想发但觉得\"应该发\"的内容开始。"],
+       reminder:"你容易被安静吸引，是因为你内心有一部分也需要安静下来。但别忘了：安静的人也需要被找到——如果你不动，他们也不会动。这一次，你可以是那个先走过去的人。"
+    },
+    B:{name:"被听见的感觉",tag:"你被\"认真听你说话然后记住细节\"的人吸引——他们让你觉得自己说的话是重要的",icon:"👂",
+       score:"被听见吸引力 倾向 86%",
+       conclusion:"你不是被\"会聊天\"的人吸引——你是被\"会听\"的人吸引。大多数人在你说话时已经在想下一句要回什么了，但那个人不是。他们在听——用眼神、用追问、用隔了很久之后突然提起你某句话的行动。这种被认真对待的感觉对你来说比任何浪漫的情节都致命。因为你不是需要被夸——你是需要被\"接住\"。",
+       evidence_note:"你被会追问细节的人拉走注意力（Q1），你因为别人记得你的细节而多看一眼（Q2），你的crush出现在聊了很久才发现时间过了的角落（Q3），你喜欢\"轴\"到把答应你的事记在备忘录里的人（Q4）。这些选择的底层逻辑一致：你渴望被认真对待——不是被喜欢的形式，是被\"真的在听\"的实质。",
+       quote:"你不是需要一个人说很多话——你需要一个人让你觉得：你说的每一句，都落地了。",
+       modules:[
+         {title:"你的隐秘吸引力类型：被认真倾听的渴望",content:"你最容易对\"会听\"的人动心——不是会接话，是会听。这类人有一种稀缺的能力：他们听你说话的时候，不是在等自己说话的间隙，是在真的处理你的信息。他们会追问、会回忆、会在隔了很久之后突然拿出你某句话——仿佛你的话被他们收进了某个重要的抽屉里。吸引你的不是对方说了什么——是对方让你觉得你说话是有分量的。在一个大多数人都在\"等自己说\"的时代里，这种人极其稀有。"},
+         {title:"你为什么总被这种\"不起眼\"的人吸引",content:"因为你可能在表达这件事上受过忽视。也许你的家庭里你的声音不太被当回事，也许你在之前的感情里习惯了\"说了也白说\"，也许你在职场里经常被抢话或被总结。当一个人竟然真的听、真的记、真的在意你说的细节时，你的身体会先于理智产生反应——那是一种\"被看见\"的震动。这种吸引本质上不是浪漫的——是补偿性的：你在找那些曾经缺席的倾听。"},
+         {title:"这种吸引力在告诉你关于自己的什么",content:"它在告诉你：你有话想说，你希望被听懂，而且你值得被认真对待。你可能一直低估了自己表达的价值——以为自己的事\"没什么好说的\"。但你的潜意识不这么想：它一直在寻找证据，证明你说的话是重要的。这种吸引是你内心在说：\"我没有放弃被听懂的可能性——我在等一个足够认真的人。\""},
+         {title:"你容易误判对方什么",content:"你容易把\"倾听技巧\"当成真心。有些人的\"认真听\"是一种社交技能——他们会对每个人这样做，你并不特殊。你需要分辨的是：TA是只对你这么认真，还是对所有人都这么\"到位\"？另一个误判：你可能会把\"不说话\"当成\"在听\"——但有些人沉默是因为走神。真正的倾听者会回应、会追问、会引用——有互动痕迹的才是真在听。"},
+         {title:"怎么让这种吸引走向健康的关系",content:"首先，不要把\"被倾听\"当成爱情的唯一燃料——倾听是关系的基础设施，不是关系的目的地。其次，学会在关系里也倾听对方——被倾听型吸引的人有时候会不自觉地\"索要倾听\"而忘了对方也需要被听。最后：确认对方听懂了之后，你需要表达感激——不是因为你卑微，是因为这种品质太珍贵，值得被确认。"}
+       ],
+       advice:["这周注意一个人——谁在听完你的话之后追问了第二个问题？记下来。追问是比点头更高级的倾听。","试着跟你信任的人说一句：\"上次你说的那个……后来怎么样了？\"主动做一次那个\"记住细节的人\"。","写下来：哪一次被认真倾听的经历让你到现在还记得？那个人的什么动作、什么话让你觉得\"我被接住了\"？","练习在发现自己没在听的时候诚实地问：\"对不起，能再说一遍吗？\"——这本身也是一种认真。"],
+       reminder:"你不是孤独——你是还没被充分听懂过。那个会记住你随口一句话的人，可能已经在路上了。但在TA来之前，你需要先练习一件事：认真听自己说话。你在说什么？你听了吗？"
+    },
+    C:{name:"真实的笨拙",tag:"你被\"有一点笨拙但很真诚\"的人吸引——他们把不完美活成了一种让人想靠近的真实",icon:"🫧",
+       score:"真诚吸引力 倾向 82%",
+       conclusion:"你不是被\"笨\"吸引——你是被\"不演\"吸引。你见过太多\"精致的人设\"了——社交媒体上、职场里、甚至约会第一面。每个人都在扮演一个更完美的版本。但那个人不是——他们会说错话然后自己先笑，他们紧张的时候语速变快但不掩饰，他们承认不懂的时候没有防御。这种不设防让你觉得：跟TA在一起，我也不用装。",
+       evidence_note:"你在意那些说错话后自己先笑了的人（Q1），你喜欢那种\"不太会安慰但默默给你倒水\"的真实反应（Q2），你的crush出现在对方出了小状况但处理得很真实的场合（Q3），你觉得紧张时说话变快但努力说清楚的样子很可爱（Q4）。你的所有选择都在说同一句话：真实比完美更让你想靠近。",
+       quote:"你被吸引的不是笨拙——是笨拙下面的\"没有在演\"。在一个所有人都在表演的时代，不表演本身就是一种光芒。",
+       modules:[
+         {title:"你的隐秘吸引力类型：被不设防的真实打动",content:"你被一种\"没准备好被看但也不怕被看\"的状态吸引。这类人不是不知道自己的缺点——他们知道，但不觉得需要藏。他们紧张了就是紧张、不懂了就是不懂、说错了就自己先笑——这种\"不自洽也活得下去\"的坦然，对你来说是致命的。你曾经喜欢上的人可能不是最帅最美的——但一定是最\"放得下包袱\"的。他们的笨拙不是笨——是一种\"我不需要在你面前完美\"的信任。"},
+         {title:"你为什么总被这种\"不起眼\"的人吸引",content:"因为你可能在\"表演\"这件事上累了太久。你可能需要在很多人面前维持一个\"没问题\"的形象——在工作中、在家庭里、在朋友圈。当一个\"不需要维持\"的人出现时，你的神经系统会自动放松。更深一层：你可能经历过被\"完美人设\"欺骗的时刻——一个看起来很完美的人，后来发现全是表演。从那之后，\"不够完美\"反而成了信任的起点——因为至少你看得到底牌。"},
+         {title:"这种吸引力在告诉你关于自己的什么",content:"它在告诉你：你渴望一个可以卸下盔甲的空间。你可能在大部分时间里都在\"管理自己的形象\"——管理得还不错，但很累。你对\"真实笨拙\"的吸引力，是你内心在渴望许可——许可自己不完美、可以犯错、可以紧张、可以不懂。你被他们吸引，本质上是被\"做自己的许可\"吸引。"},
+         {title:"你容易误判对方什么",content:"你容易把\"不会社交\"当成\"真诚\"。但有些人的笨拙是策略——\"我先示弱了，你就不好攻击我了\"。另一些人的真实可能是\"懒得在意别人\"——不是真诚，是自我中心。你需要分辨的是：TA的真实是让你觉得\"被尊重\"了，还是让你觉得\"被无视\"了？真正的真诚会考虑你的感受，只是不用虚假的方式。"},
+         {title:"怎么让这种吸引走向健康的关系",content:"先确认一件事：TA的\"真实\"有没有把你变得更好。如果跟TA在一起后你更放松了、更敢说真话了、更不焦虑\"是否完美\"了——那就是对的。如果跟TA在一起后你反而需要更多地为TA的\"真实\"善后——那可能是成熟度的问题而不是真诚的问题。健康的真实是双向的：TA让你不用装，你也能让TA不用装。"}
+       ],
+       advice:["这周做一件\"不太完美但很真实\"的事——说一次\"我不懂\"，发一条不修图的动态，约一个你可以素颜见的人。","观察一个人：TA尴尬的时候第一反应是什么？是掩饰还是坦率？这个细节比你想象的更能说明问题。","翻一下你过去的感情记录——那些最让你心动的瞬间，是不是都和\"不设防\"有关？如果是，你需要感谢自己的品味。","练习区分\"真实\"和\"不尊重\"：真实的人会照顾你的感受但不表演，不尊重的人不会照顾你的感受也不掩饰。"],
+       reminder:"你在一群精致的人里唯独被那个笨拙的人吸引——这不是你的品位出了问题，这是你的直觉在保护你。它一直在告诉你：真的比对的更重要。所以请相信它。"
+    },
+    D:{name:"隐秘的深度",tag:"你被\"有自己的小世界但愿意让你进去\"的人吸引——他们的注意力不是谁都给，所以你觉得自己被选中了",icon:"🌙",
+       score:"深度吸引力 倾向 80%",
+       conclusion:"你不是被\"神秘\"吸引——你是被\"有选择性的开放\"吸引。这类人不是对谁都很热情、什么都分享、什么都参与——他们有自己的世界，不随便让人进去。但一旦他们愿意跟你说点什么、分享点什么、给你看点什么——你会觉得那不是信息，是礼物。吸引你的不是他们藏了什么——是他们愿意为你打开的那部分，让你觉得自己的存在被认真对待了。",
+       evidence_note:"你注意到进门前先扫一圈的人（Q1），你被\"用一种很准的方式说出了你自己没总结出来的感受\"击中（Q2），你的crush出现在\"有一种这里困不住TA的气场\"的场合（Q3），你觉得讲到自己喜欢的东西时眼睛里发光的人可爱（Q4）。你被吸引的底层逻辑是：深度——不是表面的热闹，是下面那层\"别人看不到但你能看到\"的东西。",
+       quote:"你不是喜欢神秘的人——你是喜欢那种\"不是所有人都能走进TA的世界，但你可以\"的确认感。被选中，是最古老的吸引力。",
+       modules:[
+         {title:"你的隐秘吸引力类型：被\"有选择性的开放\"吸引",content:"你被一种\"不是谁都能进\"的气场吸引。这类人有自己的世界——可能是一个爱好、一份热爱、一种思考方式——他们在这个世界里自给自足，不急着向外界展览。但当他们愿意让你进去时——比如分享一首歌、推荐一本书、告诉你一个从未跟别人说过的习惯——你会感到一种\"被选中\"的荣幸。吸引你的不是他们有多少东西——是他们愿意给你看多少。"},
+         {title:"你为什么总被这种\"不起眼\"的人吸引",content:"因为你可能经历过太多\"表面热情但深入不了\"的关系。那些一开始就对你热情似火的人，后来发现他们对所有人都这样——你并不特殊。而那些一开始有距离感、但慢慢为你打开的人，让你感觉到了一种\"被认真选择\"的安全感。更深一层：你可能自己也是一个有深度但不随便展示的人——你在他们身上看到了自己。你不是在找互补——你是在找认同。"},
+         {title:"这种吸引力在告诉你关于自己的什么",content:"它在告诉你：你是一个看重\"稀缺性\"的人。你不容易被随便的好意打动——你需要的是\"对别人不这样，但对你这样\"的区别对待。这种需求不是自私——是你知道真正有价值的东西从来不是随便给人的。它也告诉你：你的感情不是批发的——你会认真选择，也希望被认真选择。"},
+         {title:"你容易误判对方什么",content:"你容易把\"冷淡\"误认为\"深度\"。有些人不是有东西藏着——是真的没什么东西。他们的\"不热情\"可能是因为匮乏，而不是因为选择。另一个误判：你可能会把\"不愿意沟通\"当成\"有自己世界\"。真正有自己世界的人，会在邀请你进入时很具体——给你看的是\"东西\"，不是一个模糊的\"氛围\"。"},
+         {title:"怎么让这种吸引走向健康的关系",content:"第一步：确认TA的世界对你开放了多少。如果一直是你自己在猜、在等、在试探——那可能不是\"选择性开放\"，是\"不开放\"。第二步：你也需要展示自己的世界——因为被\"有深度\"的人吸引的你，自己多半也有一个丰富的内在。单向的\"探索TA\"会变成一种不平等的迷恋。第三步：学会享受\"两个人各自有世界、偶尔互相串门\"的关系模式——这不是疏远，这是成熟。"}
+       ],
+       advice:["这周邀请一个人进入你的世界——分享一首你反复听但从不推荐的歌，或者一个你一直想聊但没找到合适人的话题。","观察你身边那个\"看起来不太好接近\"的人——试着找到一个\"入口\"：一个TA可能愿意聊的兴趣、经历或观点。","写下来：你上一次觉得自己\"被选中\"是什么时候？那个人对你做了什么，让你有这种感觉？","练习接受一个事实：不是所有深度都值得你潜入。有些人的世界像深海——很美，但氧气不够。你需要学会辨认。"],
+       reminder:"你不是在等一个神秘的人——你是在等一个愿意为你开门的人。但在那个时刻到来之前，请先把自己的世界建好。因为真正值得探索的人，也只会对另一个已经不需要被拯救的人开门。"
+    }
+  },
+
+  productModules:[
+    "你的隐秘吸引力类型",
+    "你为什么总被这种\"不起眼\"的人吸引",
+    "这种吸引力在告诉你关于自己的什么",
+    "你容易误判对方什么",
+    "怎么让这种吸引走向健康的关系"
+  ],
+
+  disclaimer:"本测试仅为自我探索参考，不构成任何诊断、关系建议或效果承诺。吸引力是复杂的个人感受，请结合自己的实际经历判断。"
+};
+
+// ========== 引擎 ==========
+let answers=[],currentQ=0,paid=false;
+
+function $(id){return document.getElementById(id)}
+const app = document.getElementById('app');
+
+function cover(){
+  app.innerHTML=`
+    <div class="screen active cover">
+      <div class="icon">🕯️</div>
+      <h1>${DATA.title}</h1>
+      <div class="sub">${DATA.subtitle}</div>
+      <button class="btn-start" onclick="start(true)">开始测试</button>
+      <div class="trust">前5题免费 · 记下答案左滑查看报告预览</div>
+    </div>`;
+}
+
+function start(free){answers=[];currentQ=0;paid=!free;renderQ()}
+
+function renderQ(){
+  if(currentQ>=DATA.questions.length){showResult();return;}
+  if(currentQ===5 && !paid){showGate();return;}
+  const q=DATA.questions[currentQ];
+  const pct=Math.round((currentQ/DATA.questions.length)*100);
+  const letters=['A','B','C','D'];
+  app.innerHTML=`
+    <div class="screen active">
+      <div class="progress-wrap">
+        <div class="progress-bar"><div class="progress-fill" style="width:${pct}%"></div></div>
+        <div class="progress-label">第 ${currentQ+1}/${DATA.questions.length} 题</div>
+      </div>
+      <div class="q-area">
+        <div class="q-num">${currentQ<5?'免费测试 · 第'+(currentQ+1)+'题':'深度解锁 · 第'+(currentQ+1)+'题'}</div>
+        <div class="q-text">${q.scene}</div>
+        <div class="options">
+          ${letters.map(l=>`<div class="opt" onclick="pick('${l}')"><div class="letter">${l}</div><div class="txt">${q[l]}</div></div>`).join('')}
+        </div>
+      </div>
+      ${currentQ===4?'<div style="text-align:center;font-size:13px;color:#6a6558;padding:8px 0">记下5个答案，左滑查看报告预览 →</div>':''}
+    </div>`;
+}
+
+function pick(letter){
+  answers.push(letter);
+  currentQ++;
+  renderQ();
+  window.scrollTo(0,0);
+}
+
+function showGate(){
+  app.innerHTML=`
+    <div class="screen active gate-screen">
+      <div class="lock-icon">🔓</div>
+      <h2>前5题只是倾向<br>完整12题才能看清全貌</h2>
+      <div class="gate-desc">后7题继续拆解：为什么这些特质会击中你、你的选择在告诉你什么、怎么让吸引走向健康</div>
+      <ul class="unlock-list">
+        ${DATA.productModules.map(m=>`<li>${m}</li>`).join('')}
+      </ul>
+      <button class="btn-gate" onclick="unlock()">继续完成12题 · 解锁完整报告</button>
+      <div class="price">完整12题报告 · 做完自动解锁</div>
+    </div>`;
+}
+
+function unlock(){paid=true;renderQ()}
+
+function showResult(){
+  const counts={A:0,B:0,C:0,D:0};
+  for(let i=5;i<answers.length;i++){counts[answers[i]]++}
+  const sorted=Object.entries(counts).sort((a,b)=>b[1]-a[1]);
+  let typeKey=sorted[0][0];
+  if(sorted[0][1]===sorted[1][1]&&sorted[0][0]==='A'&&(sorted[1][0]==='C'||sorted[1][0]==='D'))typeKey=sorted[1][0];
+  if(sorted[0][1]===sorted[1][1]&&sorted[0][0]==='B'&&sorted[1][0]==='D')typeKey='D';
+  const type=DATA.types[typeKey];
+
+  const freeAnswers=answers.slice(0,5);
+  const freeLabels=['最先注意的特质','被击中的反应','crush出现的场景','对不完美的感觉','想了解的契机'];
+  const freeDesc=[
+    ['你被\"不需要证明什么\"的安静击中','你被\"真的在听\"的认真打动','你被\"不掩饰尴尬\"的真实吸引','你被\"不急着融入\"的笃定吸引'],
+    ['你竟然注意到了那两秒的停顿——说明你在听','你被\"记住了连你自己都快忘了的细节\"打动','你被\"不会安慰但会倒水\"的笨拙温暖','你被\"说出了你自己都没总结出来的感受\"击中'],
+    ['你的crush在不需要说话的安静空间里发生','你的crush在\"聊了很久才发现时间过了\"的深度对话里','你的crush在对方\"出状况但处理得很真实\"的瞬间','你的crush在\"不属于这里但偏偏在这里\"的反差感里'],
+    ['你欣赏\"不太会社交但说到点子上\"的效率型真实','你欣赏\"认真到有点轴\"的承诺型认真','你欣赏\"紧张也努力说清楚\"的努力型可爱','你欣赏\"讲自己热爱的东西时眼睛发光\"的投入型魅力'],
+    ['你看中了\"不需要观众\"的独立状态','你看中了\"真的听懂了\"的被理解感','你看中了\"当众承认不懂\"的坦诚勇气','你看中了\"从推荐里看到世界\"的深度信号']
+  ];
+
+  let evidenceHTML='<h3>📋 答案证据</h3><p>';
+  for(let i=0;i<5;i++){
+    const a=freeAnswers[i];
+    const descIdx=a==='A'?0:a==='B'?1:a==='C'?2:3;
+    evidenceHTML+=`<strong>Q${i+1}「${DATA.questions[i].scene.slice(0,18)}…」</strong>你选了${a}——${freeDesc[i][descIdx]}。<br><br>`;
+  }
+  evidenceHTML+=type.evidence_note+'</p>';
+
+  let modulesHTML='';
+  for(const m of type.modules){
+    modulesHTML+=`<div class="module"><h3>${m.title}</h3><p>${m.content}</p></div>`;
+  }
+
+  let adviceHTML='';
+  for(let i=0;i<type.advice.length;i++){
+    adviceHTML+=`<div class="advice-item"><span class="n">0${i+1}</span><span>${type.advice[i]}</span></div>`;
+  }
+
+  app.innerHTML=`
+    <div class="screen active result">
+      <div class="badge">你的隐秘吸引力</div>
+      <div class="type-name">${type.name}</div>
+      <div class="type-sub">${type.tag}</div>
+
+      <div style="font-size:15px;color:#d4b87a;margin-bottom:4px">${type.icon} ${type.score}</div>
+      <p style="font-size:15px;color:#b8b0a0;line-height:1.75;margin-bottom:20px">${type.conclusion}</p>
+
+      <div class="evidence-box">${evidenceHTML}</div>
+      ${modulesHTML}
+
+      <div class="summary-box">
+        <div class="q-mark">"</div>
+        <p>${type.quote}</p>
+      </div>
+
+      <div class="advice-box">
+        <h3>📅 未来30天建议</h3>
+        ${adviceHTML}
+      </div>
+
+      <div class="reminder-box">
+        <h3>⚠️ 关键提醒</h3>
+        <p>${type.reminder}</p>
+      </div>
+
+      <div style="font-size:13px;color:#6a6558;line-height:1.6;text-align:center;margin-bottom:24px">${DATA.disclaimer}</div>
+      <div class="footer">以上结果为自我探索参考 · 每个选择都是了解自己的线索</div>
+    </div>`;
+  window.scrollTo(0,0);
+}
+
+// start
+cover();
+</script>
+</body>
+</html>

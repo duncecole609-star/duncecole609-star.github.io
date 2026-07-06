@@ -1,0 +1,318 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
+<title>独处心理测试</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:"PingFang SC","Microsoft YaHei",sans-serif;background:#0f0f1a;color:#e8e0d0;min-height:100vh;display:flex;justify-content:center}
+.app{width:100%;max-width:500px;min-height:100vh;position:relative;overflow:hidden}
+.screen{display:none;flex-direction:column;min-height:100vh;padding:28px 22px 40px}
+.screen.active{display:flex}
+
+.cover{justify-content:center;align-items:center;text-align:center;gap:20px}
+.cover .icon{font-size:52px}
+.cover h1{font-size:29px;font-weight:900;line-height:1.4;letter-spacing:1.5px;padding:0 6px}
+.cover h1 .hl{color:#c9a96e}
+.cover .sub{font-size:15px;color:#8a8070;line-height:1.7;max-width:300px}
+.cover .btn-start{margin-top:10px;padding:15px 50px;font-size:18px;font-weight:700;background:linear-gradient(135deg,#c9a96e,#a6844d);color:#0f0f1a;border:none;border-radius:40px;cursor:pointer;letter-spacing:2px}
+.cover .btn-start:active{transform:scale(.96)}
+.cover .trust{font-size:12px;color:#4a4538;margin-top:6px}
+
+.progress-wrap{padding:4px 0 14px}
+.progress-bar{height:3px;background:#1e1e2e;border-radius:2px;overflow:hidden}
+.progress-fill{height:100%;background:linear-gradient(90deg,#c9a96e,#d4b87a);border-radius:2px;transition:width .3s}
+.progress-label{font-size:13px;color:#5a5548;margin-top:6px;text-align:right}
+
+.q-area{flex:1;display:flex;flex-direction:column;gap:16px}
+.q-area .q-num{font-size:13px;color:#6a6558;letter-spacing:2px}
+.q-area .q-text{font-size:23px;font-weight:700;line-height:1.5}
+.options{display:flex;flex-direction:column;gap:10px}
+.opt{padding:18px 16px;border-radius:14px;background:#16162a;border:1.5px solid #252540;cursor:pointer;transition:all .2s;display:flex;align-items:flex-start;gap:13px}
+.opt:active{transform:scale(.98);border-color:#c9a96e;background:#1e1e34}
+.opt .letter{width:33px;height:33px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:15px;font-weight:700;flex-shrink:0;background:rgba(201,169,110,.12);color:#c9a96e}
+.opt .txt{font-size:15px;line-height:1.55;color:#c8c0b0;flex:1}
+
+.gate-screen{justify-content:center;align-items:center;text-align:center;gap:24px}
+.gate-screen .lock-icon{font-size:48px}
+.gate-screen h2{font-size:26px;font-weight:800;line-height:1.4}
+.gate-screen .gate-desc{font-size:15px;color:#a09880;line-height:1.7;max-width:300px}
+.gate-screen .unlock-list{text-align:left;background:#16162a;border-radius:16px;padding:20px 24px;width:100%;max-width:320px}
+.gate-screen .unlock-list li{font-size:14px;color:#b8b0a0;line-height:2;list-style:none}
+.gate-screen .unlock-list li::before{content:"✓ ";color:#c9a96e;font-weight:700}
+.gate-screen .btn-gate{margin-top:8px;padding:14px 44px;font-size:18px;font-weight:700;background:linear-gradient(135deg,#c9a96e,#a6844d);color:#0f0f1a;border:none;border-radius:40px;cursor:pointer;letter-spacing:2px}
+.gate-screen .btn-gate:active{transform:scale(.96)}
+.gate-screen .price{font-size:14px;color:#6a6558;margin-top:4px}
+
+.loading{justify-content:center;align-items:center;text-align:center;gap:24px}
+.loading .spinner{width:52px;height:52px;border:3px solid #1e1e2e;border-top-color:#c9a96e;border-radius:50%;animation:spin .8s linear infinite}
+@keyframes spin{to{transform:rotate(360deg)}}
+.loading .msg{font-size:16px;color:#a09880;letter-spacing:1px}
+
+.result{padding:28px 22px 48px}
+.result .badge{display:inline-block;padding:7px 16px;border:1px solid rgba(201,169,110,.25);border-radius:16px;font-size:13px;color:#c9a96e;letter-spacing:2px;margin-bottom:14px}
+.result .type-name{font-size:36px;font-weight:900;margin-bottom:6px;line-height:1.2}
+.result .type-sub{font-size:18px;color:#d4b87a;margin-bottom:20px;line-height:1.4}
+
+.evidence-box{background:#16162a;border-radius:16px;padding:20px;margin-bottom:22px;border-left:3px solid #c9a96e}
+.evidence-box h3{font-size:14px;color:#c9a96e;letter-spacing:2px;margin-bottom:10px}
+.evidence-box p{font-size:14px;color:#b8b0a0;line-height:1.7}
+
+.module{margin-bottom:20px}
+.module h3{font-size:16px;color:#a09880;letter-spacing:1.5px;margin-bottom:10px;padding-bottom:8px;border-bottom:1px solid #1e1e2e}
+.module p{font-size:14px;color:#b8b0a0;line-height:1.75;margin-bottom:6px}
+
+.summary-box{background:linear-gradient(135deg,#1a1a2e,#1f1f34);border-radius:16px;padding:24px;margin:24px 0;text-align:center;border:1px solid rgba(201,169,110,.15)}
+.summary-box .q-mark{font-size:28px;color:#c9a96e;margin-bottom:8px}
+.summary-box p{font-size:17px;color:#d4b87a;line-height:1.7;letter-spacing:.5px}
+
+.advice-box{margin-bottom:24px}
+.advice-box h3{font-size:16px;color:#a09880;letter-spacing:2px;margin-bottom:12px}
+.advice-box .advice-item{padding:12px 14px;margin-bottom:8px;background:#16162a;border-radius:12px;font-size:14px;color:#b8b0a0;line-height:1.6;display:flex;gap:10px}
+.advice-box .advice-item .n{color:#c9a96e;font-weight:700;flex-shrink:0}
+
+.reminder-box{background:#16162a;border-radius:16px;padding:20px;margin-bottom:28px;border:1px solid #2a2a40}
+.reminder-box h3{font-size:15px;color:#c9a96e;letter-spacing:2px;margin-bottom:8px}
+.reminder-box p{font-size:14px;color:#a09880;line-height:1.7}
+
+.footer{text-align:center;padding:16px;font-size:11px;color:#3a3a48;border-top:1px solid #16162a;margin-top:auto}
+</style>
+</head>
+<body>
+<div class="app" id="app"></div>
+<script>
+// ========== 内容数据 ==========
+const DATA = {
+  title:"你一个人待着时<br>最常做的事，<br>暴露了你想被<span class='hl'>怎样爱</span>",
+  subtitle:"不是测你孤不孤独——<br>是测你的独处方式在替你说什么爱的需求",
+
+  questions:[
+    {scene:"周末下午一个人在家，你最可能在做什么？",A:"窝在沙发看书追剧，不说话也没关系——安静就是最好的陪伴",B:"收拾房间、整理衣柜，动手做点什么——让周围的一切变整齐才踏实",C:"写日记、发呆、听歌，脑子里过一遍最近的事——像在跟自己开会",D:"列下周计划、研究感兴趣的领域——一个人也要把日子安排得清清楚楚"},
+    {scene:"一个人待着时，什么样的时刻让你觉得\"这样就很好\"？",A:"外面下雨，手里一杯热的，屏幕里放着喜欢的剧——谁也别来打扰",B:"刚收拾完房间，看着一切井井有条——那种满足感别人不一定懂",C:"想通了一个之前卡住的事，突然顺了——自己把自己理顺了的感觉",D:"把未来一周都安排好了，心里有了底——不用临时慌乱就是安全感"},
+    {scene:"独处时你最容易被什么东西吸进去，一抬头几小时就过去了？",A:"一部好剧或一本好书——进入别人的故事，忘了自己的时间在走",B:"一个需要动手的项目——拼图、做饭、修东西，手上的专注让人平静",C:"翻旧照片、看聊天记录——在记忆里重走一遍，情绪跟着起起伏伏",D:"研究一个新工具或方法——怎么让生活更高效、让决策更清楚，停不下来"},
+    {scene:"一个人待太久之后，最先让你觉得\"需要一个人出现\"的瞬间是？",A:"剧看完了、书翻到最后一页——安静下来，觉得有个人在旁边呼吸也好",B:"做了一桌子菜或收拾完一切——想有人看一眼，说一句\"你弄得真好\"",C:"想通了一件事，特别想说给谁听——不需要建议，需要\"我懂\"的表情",D:"计划做好了、事情都安排了——发现空出来的时间，不知道留给谁"},
+    {scene:"如果有人想进入你的独处时间，你最希望TA怎么做？",A:"不用说话，拿本书在旁边坐着就好——陪我但不打扰我，是最好的温柔",B:"注意到我做了什么，问一句\"这个你怎么弄的\"——看见我的用心就够了",C:"不问\"你怎么了\"也不说\"别想太多\"——安静听我说完，不急着给答案",D:"主动说\"今天我来安排，你歇着\"——被接住的感觉比什么都让人安心"},
+    {scene:"你一个人时反复做的事，其实是想跟谁说一句什么话？",A:"我在这里很安全——但如果你愿意来，我的世界有你的位置",B:"你看不见的地方我也在认真生活——希望有一天你能看见这些细节",C:"我不需要你懂我所有想法——但我需要你知道，我一直在认真想",D:"我习惯了什么都自己安排好——但偶尔也希望有个人说\"交给我\""},
+    {scene:"一个人待着时，你最容易因为什么事感到失落？",A:"好剧好书没人一起讨论——不是非要聊，是觉得可惜没有共享的人",B:"收拾得再好也没人看到——偶尔会问自己：做这些到底是给谁看",C:"写了一整页的话，发现没有可以发的人——表达之后没有回应的空",D:"所有事情都自己完成了——习惯了，但偶尔也会觉得有点累"},
+    {scene:"你曾在哪次独处之后，对自己有了一个重要发现？",A:"看完一本书哭得停不下来——才发现平时积了多少没表达出来的情绪",B:"整理旧物时发现自己默默做了那么多——原来我一直在用行动说在意",C:"翻到三年前的日记，发现当时纠结的事后来都自己解开了——我比自己想的更有答案",D:"一个人安排好了一次旅行——发现我需要的不一定是帮助，是有人主动说想和我一起"},
+    {scene:"你觉得独处时养成的习惯，在关系里最容易被误解成什么？",A:"容易被当成\"不需要对方\"——其实需要，只是表达方式是沉默的陪伴而非热烈",B:"容易被当成\"太在意细节\"——其实在意的是那些被忽略的用心，不是挑剔",C:"容易被当成\"太敏感想太多\"——其实习惯了先自己消化，不是没事找事",D:"容易被当成\"太独立太高冷\"——其实一直在等一个能让自己不用那么独立的人"},
+    {scene:"如果独处时的你是一本书，你最想被翻开的那一页写了什么？",A:"\"我一个人的时候也在想你，只是没有发出声音\"",B:"\"我做了很多你看不到的事，每一件都和你有关\"",C:"\"我所有的自言自语里，有一半是想说给你听但还没开口的话\"",D:"\"我把一切都安排好了，只差你来说一句：今天我来\""},
+    {scene:"你最想让未来的那个人，看过你独处时的哪一面？",A:"看我窝在沙发追剧的样子——不是谁的谁，就是最放松最真实的我",B:"看我认真做一件事的样子——专注的时候，那才是我真正在乎什么的样子",C:"看我写日记或发呆的样子——那些没说出口的话，都藏在这些安静的时刻里",D:"看我对着日历和清单的样子——不是控制狂，只是想给两个人最好的安排"},
+    {scene:"如果独处方式就是你写给未来的情书，它最想被怎么读？",A:"慢慢地读，不用急着翻页——陪着的人不需要做任何事，在就好",B:"认真地读，看到每一行的细节——我需要你看见我，连我没说的那部分一起",C:"不用出声地读，读完不用总结也别给建议——理解就够了，不用解释",D:"第一个翻开它——不是被邀请才来，是主动想了解，是比我更早伸出手的那个人"}
+  ],
+
+  types:{
+    A:{name:"安静地陪在我身边",tag:"你不需要做什么——你在，就已经是最好的爱了",icon:"📖",
+       score:"安静陪伴 倾向 84%",
+       conclusion:"你的独处方式在替你说一句不太大声但很认真的话：\"陪着我，但不用填满我。\"你一个人时读的书、追的剧、沉浸的世界，不是用来逃避——是用来充电。你最想要的不是一个人全程参与你的生活，而是在你想分享的时候，有个人在旁边。这种爱不需要热烈，不需要频繁，只需要稳定地存在：你在，我就安心。",
+       evidence_note:"你一个人时选择沉浸式独处——看书追剧不被打扰（Q1），下雨天一杯热饮一部剧就是满分时刻（Q2），容易被故事吸进去忘了时间（Q3）。你在内容结束后的安静中最想念另一个人的存在（Q4），你希望对方进入的方式是不说话、在旁边的陪伴（Q5）。这些选择在说同一件事：你想要的爱不是索取注意力的，而是尊重你空间的——在你需要的时候出现，在你沉浸的时候不打扰。",
+       quote:"你一个人待着时读过的每一本书、看过的每一部剧，都在等一个人——不用说话，在旁边坐一会儿就好。最好的爱不是填满你的时间，是尊重你的世界。",
+       modules:[
+         {title:"你的独处语言类型：沉浸式充电型",content:"你一个人的时候，不是\"一个人\"——你身边有故事、有角色、有你不说话但投入了全部注意力的世界。你看书追剧的时候不是\"杀时间\"，是在用别人的故事整理自己的情绪。你比任何人都清楚：安静不等于无聊，不说话不等于没有交流。你的独处是一种充电——充够了，才能温柔地对待外面的世界和里面的人。"},
+         {title:"你一个人时真正在做什么",content:"你在建立一座自己的避难所——里面有你看过的所有书、追完的所有剧、反复播放的那些音乐。这座避难所不是用来拒绝别人的，是用来保护自己的。你知道怎么让自己安静下来、怎么让自己被别人的故事治愈、怎么在不需要说话的情况下完成情绪的循环。这种能力很珍贵——不是谁都能在独处时和自己的情绪和平共处。"},
+         {title:"你的独处方式在向伴侣喊什么话",content:"它在喊：\"别以为我不需要你——我只是不需要时时刻刻都有人在我旁边验证这件事。\"你想要的陪伴是背景音式的：知道你在、感觉到你的存在、偶尔抬头看到你就在附近——不需要对话，不需要互动，不需要任何人刻意做什么。你的爱语是\"共处\"——两个人在同一个空间里各做各的事，偶尔交换一个眼神，就是一天里最好的时刻。"},
+         {title:"最容易在关系里被误解的需求",content:"你的伴侣可能会以为你\"不需要\"TA，因为你看起来太擅长一个人了——一个人追剧、一个人看书、一个人待着也不喊无聊。但这是最大的误解：你不是不需要，你是不需要被\"填满\"。你需要的是一份不焦虑的爱——不会因为你一两个小时没回消息就觉得你不爱了，不会因为你沉浸在自己的世界里就觉得被冷落。如果对方不懂这种\"安静的爱\"，你会觉得解释起来很累。"},
+         {title:"怎么让别人用你想要的方式爱你",content:"你需要直接告诉对方：\"我不需要你一直说话或一直注意我——你坐在那里做你的事，就已经是陪我了。\"很多人以为爱一定要有声音、有动作、有回应——但你的爱语是\"在\"。你可以邀请对方和你一起做\"平行独处\"——两个人在同一个空间，各看各的书各追各的剧，但偶尔可以碰碰脚或递一杯水。这种默契比任何热烈的表达都更让你觉得被爱。"}
+       ],
+       advice:["这周找一天，邀请一个你在意的人和你\"什么都不做\"——一起待着，各看各的书各追各的剧，感受那种\"在就好\"的陪伴。","下次对方因为你不回消息而焦虑时，温和地告诉TA：\"我不回消息的时候不是在拒绝你——是在充电。充好电的我比任何时候都更愿意和你在一起。\"","写下来你理想中\"被陪伴\"的画面——是一个怎样的空间、什么时间、两个人在做什么。然后把这个画面说给对方听，不说\"你应该\"，只说\"我喜欢\"。","练习在独处和共处之间切换——一个人待着的时候允许自己想一个人，和那个人在一起的时候允许自己偶尔不说话。你不需要在两个模式之间选一个。"],
+       reminder:"你不是不需要爱——你是需要一种不被爱打扰的爱。那个对的人不会在你追剧时不停问你\"在干嘛\"，TA会在你看完一集之后问一句\"好看吗\"——这两个字就够了。"
+    },
+    B:{name:"认真地看见我",tag:"你注意到的每一个细节，都是我被爱的证据",icon:"🔍",
+       score:"被认真看见 倾向 82%",
+       conclusion:"你的独处方式在替你说一句一直没敢直接说的话：\"请看看我在你看不见的地方做了什么——那才是我真正在意的东西。\"你一个人时整理、动手、创造的那些事，不是打发时间——是你把自己对生活的在乎，一针一线地缝进了每一个细节里。你最想要的不是赞美，是\"被发现\"：有人能注意到你花了心思的地方，问一句\"这个你怎么想到的\"——那就是你心里最好的情话。",
+       evidence_note:"你一个人时选择动手型独处——收拾房间、整理衣柜、做点什么让周围变整齐（Q1），收拾完看着井井有条的一切最让你满足（Q2），你容易被需要动手的项目吸进去（Q3）。你在成果无人分享时最失落——做了一桌子菜或收拾完一切，想有人看一眼（Q4），你希望对方进入的方式是注意细节——问一句\"你怎么弄的\"（Q5）。你的爱语是\"被看见\"——不是被赞美，是被注意到。",
+       quote:"你一个人做的所有事都不是\"顺便\"——你在替未来的那个人，先把日子过成值得被看见的样子。最好的爱不是夸你，是注意到你花了心思的地方。",
+       modules:[
+         {title:"你的独处语言类型：动手型创造者",content:"你一个人待着的时候，手是停不下来的——整理、收纳、做饭、修东西、做手工。你不需要说话，但你的手一直在说：我在意这个空间、在意这件事、在意把日子过成我喜欢的样子。你的独处是建设性的——你不是在\"消磨\"时间，你是在用行动一点一点地搭建自己心里的那个\"对的世界\"。这种能力让你一个人也能把生活过得有模有样，但同时也让你特别渴望有人能看到你背后花了多少心思。"},
+         {title:"你一个人时真正在做什么",content:"你在用行动表达在意。你收拾的不是房间——是你对秩序的信仰；你做的不是一道菜——是你想让吃到的人觉得\"有人在认真对待我\"。你的手是你表达爱的主要工具，但问题在于：大多数时候你是一个人做这些事，没有人看到。你最深的渴望不是被帮忙，是被注意到——有人看到你叠好的一整个衣柜、尝出你多放的那一种调料、认出你花了一个下午才弄好的那个角落。"},
+         {title:"你的独处方式在向伴侣喊什么话",content:"它在喊：\"你看啊——我不是在收拾房间，我是在给我们的日子打底。\"你希望对方能从你做的事里读出你的在意，而不是把你做的事当成理所当然的背景。你一整个下午整理好的书架、你试了三遍才调好的味道——这些不是\"顺便\"，是你用心了。如果对方从来看不到这些细节，你会觉得自己的爱被浪费了——不是因为没有回报，是因为没有被认出来。"},
+         {title:"最容易在关系里被误解的需求",content:"别人可能以为你\"太在意细节\"或\"太挑剔\"——其实你不是在要求别人做到什么标准，你是在期待有人能看到你已经做到的那些事。你从来不会当面说\"你看我把这些全整理好了\"——你觉得说出来的在意就变了味。但你又确实希望被注意到，于是陷入了\"不说但期待被发现，失望了又不怪别人\"的循环。这种安静地付出然后安静地失望的模式，是你最需要在关系里被理解的地方。"},
+         {title:"怎么让别人用你想要的方式爱你",content:"你需要学会\"指给对方看\"——不是炫耀，是邀请。说一句\"你看我把这个角落重新弄了一下，你觉得怎么样\"——这不是在邀功，是在教对方怎么看你的爱。你习惯用行动说话的人，不容易被习惯用语言说话的人看到。这不是他们不爱你，是他们没被教会怎么\"读\"你。给对方一张\"我的爱语地图\"——告诉TA：你做了饭、整理了东西、修好了什么的时候，就是你在说\"我爱你\"的时候。"}
+       ],
+       advice:["这周做一件平时只有自己知道的事，做完后拍张照发给你在意的人——不需要配文，就一张图。看看TA会不会问。","写一张\"我的在意清单\"：把你最近为别人做的事列出来（包括那些对方可能根本没注意到的）。不是算账——是让自己看看自己的爱的分量。","下次对方注意到你做的某件事时，不要只说\"没什么\"——试着说\"对，我特意弄的，你注意到了我好开心\"。让\"被发现\"这个循环完成一次。","找一天和对方一起做一件需要动手的事——一起收拾衣柜、一起做一顿饭。让TA看到你手上的用心，比你用嘴说一百句\"我在意\"都更直接。"],
+       reminder:"你做的每一件事都不是白做的——即使现在没有人看到，它们也在帮你成为那个\"把日子过得很认真\"的人。而这种认真，会被同样认真的人看到。你不是在等赞美——你是在等一双和你一样在意细节的眼睛。那个人会来的，而且来了就不会走。"
+    },
+    C:{name:"不用解释地理解我",tag:"最好的爱，是你不用我说完，就知道我在想什么",icon:"📝",
+       score:"不用解释地理解 倾向 80%",
+       conclusion:"你的独处方式在替你说一句很轻但很重的话：\"请在我开口之前，先别急着给我答案。\"你一个人时写下的那些话、发的那些呆、脑子里过的那些念头——不是在胡思乱想，是在自己消化世界。你最想要的不是有人帮你解决问题，而是有人能接住你的情绪——不问\"你怎么又想了\"，不说\"别想太多\"，就安静地坐在那里听你说完，然后点点头。那种被理解不需要解释的感觉，是你心里最深的爱的模板。",
+       evidence_note:"你一个人时选择内省型独处——写日记、发呆、听歌、过一遍最近的事（Q1），想通一件事比完成一件事更让你觉得\"这样就很好\"（Q2），你容易被回忆和情绪裹挟、在记忆里重走（Q3）。你在想通一件事后最想找人分享——不是要建议，是要\"我懂\"（Q4），你希望对方不问\"怎么了\"也不说\"别想太多\"——安静听你说完就好（Q5）。你的爱语是\"理解\"——不需要解释就能被接住的安心。",
+       quote:"你所有的自言自语里，有一半是想说给某个人听但还没开口的话。最好的爱不是帮你关掉那些声音——是坐在旁边听，然后说：\"我懂。\"",
+       modules:[
+         {title:"你的独处语言类型：内省型消化者",content:"你一个人的时候，脑子是转得最快的——你不是在发呆，你是在处理信息。你今天遇到的人、说过的话、感受到的情绪——都会在独处时被你重新过一遍。你写日记、听歌、翻旧照片——这些不是\"没事干\"，是你消化世界的方式。你需要这个空间来把今天的事情变成\"理解了\"的事情，变成可以放下的情绪。你不是一个\"想太多\"的人——你是一个需要用思考来完成情绪代谢的人。"},
+         {title:"你一个人时真正在做什么",content:"你在和自己开一场只有你懂的会——复盘今天、整理情绪、想通那些白天没空想的事。这个\"自己消化\"的过程对你来说是不可或缺的——你不是不想跟别人说，是你需要先自己理清楚了，才说得出口。但问题是：当你理清楚了想说的时候，你特别怕对方的第一反应是——\"你怎么又想了这么多\"、\"别再纠结了\"、\"我教你怎么办\"。你不是需要解决方案，你是需要一个人在你把话说完之后，说一句：\"你说的我都懂。\""},
+         {title:"你的独处方式在向伴侣喊什么话",content:"它在喊：\"别修我——我只是需要你听。\"你最怕的不是吵架，是在你说出心里话的时候，对方急着给你建议。你不需要被\"修复\"——你已经花了一个小时自己修复完了。你只是想把修复的过程讲给一个人听。如果对方能接住——不说教、不打断、不轻视——你就会觉得这就是爱了。反过来，如果每次说心里话都换来一句\"别想太多\"，你会慢慢关上这扇门——不是不信任了，是觉得说出来太累。"},
+         {title:"最容易在关系里被误解的需求",content:"别人最常对你说的话可能就是：\"你想太多了。\"但你不是\"想太多\"——你是比大多数人更在意内心的秩序。你的内省不是自我折磨，是自我照顾。误解你的人会觉得你太敏感、太情绪化、太容易陷入自己的世界——但其实你只是在做情绪维护。你最大的委屈是：你花了那么多时间理解自己，结果别人一句话就把你打回\"你就是想多了\"——这种不被理解的孤独，比你一个人的时候更孤独。"},
+         {title:"怎么让别人用你想要的方式爱你",content:"你需要提前告诉对方一句话：\"我接下来说的这些，你不需要给我建议，只需要听——听完之后如果你能说一句'我懂'，就是对我最好的爱。\"很多人不是不想理解你——是他们不知道该怎么理解你。他们习惯用\"解决问题\"来表达爱，但你需要的不是解决，是接纳。你可以教对方几个简单的话术：\"我在听\"、\"你说的这个我能理解\"、\"换我也会这样想\"——这些是魔法，用在你身上就够了。"}
+       ],
+       advice:["下次想跟一个人说心里话时，先说一句：\"我只需要你听——你不用给答案也不用帮我想办法，听完就行。\"给对方一个\"如何爱我\"的说明书。","写一封信给自己——把最近想通的那些事写下来，不发给任何人，只是确认：我理清楚了，这个理清楚的过程本身就是我的力量。","找到那个接住了你、没说\"别想太多\"的人——告诉TA：\"你上次那样听我说完，对我很重要。\"让对方知道TA做对了什么。","练习在还没理清楚的时候就去说——不是带着完美的结论去分享，是带着\"我现在就是这个感觉\"的诚实去表达。不完美的表达也值得被接住。"],
+       reminder:"你不是想太多——你是比别人多走了一步：把感受变成了理解。这是一种很深的温柔。不珍惜这种温柔的人会觉得你麻烦——珍惜的人会觉得这是你最好的部分。等那个会跟你说\"我懂\"的人，不要将就给建议的人。"
+    },
+    D:{name:"主动地选择我",tag:"我需要你在我说之前，就先伸出手",icon:"📋",
+       score:"被主动选择 倾向 78%",
+       conclusion:"你的独处方式在替你说一句一直憋着但说不出口的话：\"我什么都能自己安排好——但我真的希望有个人说'今天我来'。\"你一个人时列的计划、做的研究、安排的日程——不是控制欲，是你太早就学会了\"只能靠自己\"。你把什么都安排好了，心里才踏实。但踏实不代表不渴望被接住——你特别需要一个人，不是在你安排好之后来执行，而是在你还没开口之前就主动说：\"这件事交给我，你别操心了。\"",
+       evidence_note:"你一个人时选择规划型独处——列计划、研究领域、把日子安排清楚（Q1），把未来一周安排好了才是安全感（Q2），你容易被方法和系统吸引、停不下来（Q3）。你在计划完毕后的空白中最想念另一个人——空出来的时间不知道留给谁（Q4），你希望对方主动说\"今天我来安排，你歇着\"（Q5）。你的爱语是\"被选择\"——不需要你开口，对方就先想到了你。",
+       quote:"你把一切都安排好了，不是因为你喜欢管——是因为没人跟你说\"交给我\"。最好的爱不是加入你的计划，是偶尔让你不需要计划。",
+       modules:[
+         {title:"你的独处语言类型：规划型准备者",content:"你一个人的时候，脑子像一台永远开着的导航——下一步去哪、下一件事做什么、下周需要准备什么、下个月可能发生什么。你不是焦虑——你是习惯性地希望一切都在可控范围内。这种能力让你在工作和生活中都很靠谱——别人靠你，你靠自己。但长期\"只能靠自己\"的后果是：你不太会发出\"我需要你\"的信号——因为你太习惯开口之前就已经自己解决了。"},
+         {title:"你一个人时真正在做什么",content:"你在提前承担两个人的责任——即使另一个人还没来。你列的不是计划，是安全感；你做的不是清单，是\"我不会被任何事情打得措手不及\"的底气。你把所有事情都安排好了——然后发现，有些位置是可以给另一个人的，但没有人主动来坐。你不是不想被爱——你是不太会说\"我需要被爱\"。你更擅长的是：我先准备好一切，你来就行了——但你等的那个人，好像从来没有主动来过。"},
+         {title:"你的独处方式在向伴侣喊什么话",content:"它在喊：\"你主动一次行不行——不是因为我开口了你才做，是因为你想到了我所以你先做。\"你不在乎对方做的事有多大——你在乎的是\"主动\"本身。记住你爱吃的菜然后点好、看到你忙了一周说一句\"周末你歇着我安排\"、在你还没想到的问题上提前给出方案——这些对你来说比任何礼物都重。因为你太习惯做那个主动的人——主动安排、主动负责、主动考虑所有可能性——所以你比任何人都更渴望被\"反过来\"对待一次。"},
+         {title:"最容易在关系里被误解的需求",content:"别人可能觉得你\"太独立\"\"不需要任何人\"——你看起来什么都能自己搞定，所以别人就不觉得需要为你操心。但这是你最深的委屈：你看起来不需要，不代表你真的不需要；你只是不太会开口。另一个误解是：有人可能觉得你\"控制欲强\"——因为你什么都想安排好。但你不是想控制别人——你只是太习惯一个人扛了，扛着扛着就忘了可以把重量分出去一些。"},
+         {title:"怎么让别人用你想要的方式爱你",content:"你需要练习说三个字：\"帮帮我。\"——不是因为你真的做不到，是因为你需要让对方有机会主动为你做点什么。你太擅长把一切都安排好了再去找人，结果对方就只能\"被安排\"。试着在计划还没做好之前就说：\"这件事我还没想好怎么办，你觉得呢？\"——留一个缺口让对方进来。这不是软弱，是你给自己创造被爱的机会。你习惯了做那个\"考虑所有人\"的人——但你的爱人需要知道：你也在等有人考虑到你。"}
+       ],
+       advice:["这周找一件你本来要自己安排好的事——故意不安排。跟一个人说：\"这件事你帮我想想怎么弄吧。\"练习把缺口留给别人。","列出三件你最近默默为别人安排好但对方可能不知道的事——不是为了抱怨，是为了提醒自己：你的爱是有形式的，只是太安静了。","下次有人主动为你做了一件小事——哪怕只是帮你倒了杯水——不要只说\"谢谢\"，多加一句：\"你想到我，我好开心。\"强化那个\"主动\"的回路。","找一天完全不做计划——起床之后看心情决定干什么。让你自己知道：失控一天不会塌——被爱也不需要事事都在你的掌控之内。"],
+       reminder:"你不是控制狂——你只是太久没有人跟你说\"交给我\"。你会遇到那个人的——TA不会等你把所有事情安排好才出现，TA会在你还在列清单的时候就说：\"这个我来。\"你要做的只有一件事：学会在那一刻说——\"好。\""
+    }
+  },
+
+  productModules:[
+    "你的独处语言类型",
+    "你一个人时真正在做什么",
+    "你的独处方式在向伴侣喊什么话",
+    "最容易在关系里被误解的需求",
+    "怎么让别人用你想要的方式爱你"
+  ],
+
+  disclaimer:"本测试仅为自我探索参考，不构成任何心理健康诊断、关系建议或效果承诺。独处方式无好坏之分，请结合自己的实际感受理解结果。"
+};
+
+// ========== 引擎 ==========
+let answers=[],currentQ=0,paid=false;
+
+function $(id){return document.getElementById(id)}
+const app = document.getElementById('app');
+
+function cover(){
+  app.innerHTML=`
+    <div class="screen active cover">
+      <div class="icon">🛋️</div>
+      <h1>${DATA.title}</h1>
+      <div class="sub">${DATA.subtitle}</div>
+      <button class="btn-start" onclick="start(true)">开始测试</button>
+      <div class="trust">前5题免费 · 记下答案左滑查看报告预览</div>
+    </div>`;
+}
+
+function start(free){answers=[];currentQ=0;paid=!free;renderQ()}
+
+function renderQ(){
+  if(currentQ>=DATA.questions.length){showResult();return;}
+  if(currentQ===5 && !paid){showGate();return;}
+  const q=DATA.questions[currentQ];
+  const pct=Math.round((currentQ/DATA.questions.length)*100);
+  const letters=['A','B','C','D'];
+  app.innerHTML=`
+    <div class="screen active">
+      <div class="progress-wrap">
+        <div class="progress-bar"><div class="progress-fill" style="width:${pct}%"></div></div>
+        <div class="progress-label">第 ${currentQ+1}/${DATA.questions.length} 题</div>
+      </div>
+      <div class="q-area">
+        <div class="q-num">${currentQ<5?'免费测试 · 第'+(currentQ+1)+'题':'深度解锁 · 第'+(currentQ+1)+'题'}</div>
+        <div class="q-text">${q.scene}</div>
+        <div class="options">
+          ${letters.map(l=>`<div class="opt" onclick="pick('${l}')"><div class="letter">${l}</div><div class="txt">${q[l]}</div></div>`).join('')}
+        </div>
+      </div>
+      ${currentQ===4?'<div style="text-align:center;font-size:13px;color:#6a6558;padding:8px 0">记下5个答案，左滑查看报告预览 →</div>':''}
+    </div>`;
+}
+
+function pick(letter){
+  answers.push(letter);
+  currentQ++;
+  renderQ();
+  window.scrollTo(0,0);
+}
+
+function showGate(){
+  app.innerHTML=`
+    <div class="screen active gate-screen">
+      <div class="lock-icon">🔓</div>
+      <h2>前5题只是倾向<br>完整12题才能看清全貌</h2>
+      <div class="gate-desc">后7题继续拆解：你的独处方式在说什么、伴侣该怎样回应你、你最深的情感需求是什么</div>
+      <ul class="unlock-list">
+        ${DATA.productModules.map(m=>`<li>${m}</li>`).join('')}
+      </ul>
+      <button class="btn-gate" onclick="unlock()">继续完成12题 · 解锁完整报告</button>
+      <div class="price">完整12题报告 · 做完自动解锁</div>
+    </div>`;
+}
+
+function unlock(){paid=true;renderQ()}
+
+function showResult(){
+  const counts={A:0,B:0,C:0,D:0};
+  for(let i=5;i<answers.length;i++){counts[answers[i]]++}
+  const sorted=Object.entries(counts).sort((a,b)=>b[1]-a[1]);
+  let typeKey=sorted[0][0];
+  if(sorted[0][1]===sorted[1][1]&&sorted[0][0]==='A'&&(sorted[1][0]==='C'||sorted[1][0]==='D'))typeKey=sorted[1][0];
+  if(sorted[0][1]===sorted[1][1]&&sorted[0][0]==='B'&&sorted[1][0]==='D')typeKey='D';
+  const type=DATA.types[typeKey];
+
+  const freeAnswers=answers.slice(0,5);
+  const freeLabels=['周末独处状态','独处满足时刻','最容易沉浸的事','需要陪伴的瞬间','希望被进入的方式'];
+  const freeDesc=[
+    ['你的独处是沉浸式的——看书追剧不需要互动，安静就是满足','你的独处是动手型的——整理创造让你踏实，秩序即安全感','你的独处是内省型的——跟自己对话是你消化世界的方式','你的独处是规划型的——安排好一切才觉得心里有底'],
+    ['你的满分时刻是：被安静包围，不被任何人任何事打扰','你的满足感来自看得见的成果——做完一件事比什么都让你踏实','你的快乐是内在的：想通一件事比完成所有事更让你觉得值得','你的安全感来自确定性——计划好了，心就定了'],
+    ['你容易被故事吸进去——别人的世界是你暂时躲进去的避难所','你容易进入手工心流——手上的专注是比冥想更有效的安静','你容易被回忆和情绪裹挟——在记忆里重走是你理解自己的方式','你容易被方法和系统吸引——优化生活本身就是你的兴趣所在'],
+    ['内容结束后安静下来的那一刻让你想念另一个人的存在——不需要对话，需要共处','成果无人分享让你最失落——你做的所有事都在等一双眼睛看见','想通之后的表达欲——你需要一个不用解释就能接住你情绪的人','安排完毕后的空白——你需要一个人来填满你预留了但不知道留给谁的位置'],
+    ['你想要的是最轻的进入方式——不说话、不打扰、在旁边待着就好','你想要的是注意细节的进入——问一句\"怎么弄的\"就是你的情话','你想要的是倾听式的进入——不问为什么、不急着解决、听完就够了','你想要的是主动的进入——说\"交给我\"比说\"我爱你\"更让你心动']
+  ];
+
+  let evidenceHTML='<h3>📋 答案证据</h3><p>';
+  for(let i=0;i<5;i++){
+    const a=freeAnswers[i];
+    const descIdx=a==='A'?0:a==='B'?1:a==='C'?2:3;
+    evidenceHTML+=`<strong>Q${i+1}「${DATA.questions[i].scene.slice(0,18)}…」</strong>你选了${a}——${freeDesc[i][descIdx]}。<br><br>`;
+  }
+  evidenceHTML+=type.evidence_note+'</p>';
+
+  let modulesHTML='';
+  for(const m of type.modules){
+    modulesHTML+=`<div class="module"><h3>${m.title}</h3><p>${m.content}</p></div>`;
+  }
+
+  let adviceHTML='';
+  for(let i=0;i<type.advice.length;i++){
+    adviceHTML+=`<div class="advice-item"><span class="n">0${i+1}</span><span>${type.advice[i]}</span></div>`;
+  }
+
+  app.innerHTML=`
+    <div class="screen active result">
+      <div class="badge">你的独处语言</div>
+      <div class="type-name">${type.name}</div>
+      <div class="type-sub">${type.tag}</div>
+
+      <div style="font-size:15px;color:#d4b87a;margin-bottom:4px">${type.icon} ${type.score}</div>
+      <p style="font-size:15px;color:#b8b0a0;line-height:1.75;margin-bottom:20px">${type.conclusion}</p>
+
+      <div class="evidence-box">${evidenceHTML}</div>
+      ${modulesHTML}
+
+      <div class="summary-box">
+        <div class="q-mark">"</div>
+        <p>${type.quote}</p>
+      </div>
+
+      <div class="advice-box">
+        <h3>📅 未来30天建议</h3>
+        ${adviceHTML}
+      </div>
+
+      <div class="reminder-box">
+        <h3>⚠️ 关键提醒</h3>
+        <p>${type.reminder}</p>
+      </div>
+
+      <div style="font-size:13px;color:#6a6558;line-height:1.6;text-align:center;margin-bottom:24px">${DATA.disclaimer}</div>
+      <div class="footer">以上结果为自我探索参考 · 每个选择都是了解自己的线索</div>
+    </div>`;
+  window.scrollTo(0,0);
+}
+
+// start
+cover();
+</script>
+</body>
+</html>

@@ -1,0 +1,318 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
+<title>整理心理测试</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:"PingFang SC","Microsoft YaHei",sans-serif;background:#0f0f1a;color:#e8e0d0;min-height:100vh;display:flex;justify-content:center}
+.app{width:100%;max-width:500px;min-height:100vh;position:relative;overflow:hidden}
+.screen{display:none;flex-direction:column;min-height:100vh;padding:28px 22px 40px}
+.screen.active{display:flex}
+
+.cover{justify-content:center;align-items:center;text-align:center;gap:20px}
+.cover .icon{font-size:52px}
+.cover h1{font-size:29px;font-weight:900;line-height:1.4;letter-spacing:1.5px;padding:0 6px}
+.cover h1 .hl{color:#c9a96e}
+.cover .sub{font-size:15px;color:#8a8070;line-height:1.7;max-width:300px}
+.cover .btn-start{margin-top:10px;padding:15px 50px;font-size:18px;font-weight:700;background:linear-gradient(135deg,#c9a96e,#a6844d);color:#0f0f1a;border:none;border-radius:40px;cursor:pointer;letter-spacing:2px}
+.cover .btn-start:active{transform:scale(.96)}
+.cover .trust{font-size:12px;color:#4a4538;margin-top:6px}
+
+.progress-wrap{padding:4px 0 14px}
+.progress-bar{height:3px;background:#1e1e2e;border-radius:2px;overflow:hidden}
+.progress-fill{height:100%;background:linear-gradient(90deg,#c9a96e,#d4b87a);border-radius:2px;transition:width .3s}
+.progress-label{font-size:13px;color:#5a5548;margin-top:6px;text-align:right}
+
+.q-area{flex:1;display:flex;flex-direction:column;gap:16px}
+.q-area .q-num{font-size:13px;color:#6a6558;letter-spacing:2px}
+.q-area .q-text{font-size:23px;font-weight:700;line-height:1.5}
+.options{display:flex;flex-direction:column;gap:10px}
+.opt{padding:18px 16px;border-radius:14px;background:#16162a;border:1.5px solid #252540;cursor:pointer;transition:all .2s;display:flex;align-items:flex-start;gap:13px}
+.opt:active{transform:scale(.98);border-color:#c9a96e;background:#1e1e34}
+.opt .letter{width:33px;height:33px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:15px;font-weight:700;flex-shrink:0;background:rgba(201,169,110,.12);color:#c9a96e}
+.opt .txt{font-size:15px;line-height:1.55;color:#c8c0b0;flex:1}
+
+.gate-screen{justify-content:center;align-items:center;text-align:center;gap:24px}
+.gate-screen .lock-icon{font-size:48px}
+.gate-screen h2{font-size:26px;font-weight:800;line-height:1.4}
+.gate-screen .gate-desc{font-size:15px;color:#a09880;line-height:1.7;max-width:300px}
+.gate-screen .unlock-list{text-align:left;background:#16162a;border-radius:16px;padding:20px 24px;width:100%;max-width:320px}
+.gate-screen .unlock-list li{font-size:14px;color:#b8b0a0;line-height:2;list-style:none}
+.gate-screen .unlock-list li::before{content:"✓ ";color:#c9a96e;font-weight:700}
+.gate-screen .btn-gate{margin-top:8px;padding:14px 44px;font-size:18px;font-weight:700;background:linear-gradient(135deg,#c9a96e,#a6844d);color:#0f0f1a;border:none;border-radius:40px;cursor:pointer;letter-spacing:2px}
+.gate-screen .btn-gate:active{transform:scale(.96)}
+.gate-screen .price{font-size:14px;color:#6a6558;margin-top:4px}
+
+.loading{justify-content:center;align-items:center;text-align:center;gap:24px}
+.loading .spinner{width:52px;height:52px;border:3px solid #1e1e2e;border-top-color:#c9a96e;border-radius:50%;animation:spin .8s linear infinite}
+@keyframes spin{to{transform:rotate(360deg)}}
+.loading .msg{font-size:16px;color:#a09880;letter-spacing:1px}
+
+.result{padding:28px 22px 48px}
+.result .badge{display:inline-block;padding:7px 16px;border:1px solid rgba(201,169,110,.25);border-radius:16px;font-size:13px;color:#c9a96e;letter-spacing:2px;margin-bottom:14px}
+.result .type-name{font-size:36px;font-weight:900;margin-bottom:6px;line-height:1.2}
+.result .type-sub{font-size:18px;color:#d4b87a;margin-bottom:20px;line-height:1.4}
+
+.evidence-box{background:#16162a;border-radius:16px;padding:20px;margin-bottom:22px;border-left:3px solid #c9a96e}
+.evidence-box h3{font-size:14px;color:#c9a96e;letter-spacing:2px;margin-bottom:10px}
+.evidence-box p{font-size:14px;color:#b8b0a0;line-height:1.7}
+
+.module{margin-bottom:20px}
+.module h3{font-size:16px;color:#a09880;letter-spacing:1.5px;margin-bottom:10px;padding-bottom:8px;border-bottom:1px solid #1e1e2e}
+.module p{font-size:14px;color:#b8b0a0;line-height:1.75;margin-bottom:6px}
+
+.summary-box{background:linear-gradient(135deg,#1a1a2e,#1f1f34);border-radius:16px;padding:24px;margin:24px 0;text-align:center;border:1px solid rgba(201,169,110,.15)}
+.summary-box .q-mark{font-size:28px;color:#c9a96e;margin-bottom:8px}
+.summary-box p{font-size:17px;color:#d4b87a;line-height:1.7;letter-spacing:.5px}
+
+.advice-box{margin-bottom:24px}
+.advice-box h3{font-size:16px;color:#a09880;letter-spacing:2px;margin-bottom:12px}
+.advice-box .advice-item{padding:12px 14px;margin-bottom:8px;background:#16162a;border-radius:12px;font-size:14px;color:#b8b0a0;line-height:1.6;display:flex;gap:10px}
+.advice-box .advice-item .n{color:#c9a96e;font-weight:700;flex-shrink:0}
+
+.reminder-box{background:#16162a;border-radius:16px;padding:20px;margin-bottom:28px;border:1px solid #2a2a40}
+.reminder-box h3{font-size:15px;color:#c9a96e;letter-spacing:2px;margin-bottom:8px}
+.reminder-box p{font-size:14px;color:#a09880;line-height:1.7}
+
+.footer{text-align:center;padding:16px;font-size:11px;color:#3a3a48;border-top:1px solid #16162a;margin-top:auto}
+</style>
+</head>
+<body>
+<div class="app" id="app"></div>
+<script>
+// ========== 内容数据 ==========
+const DATA = {
+  title:"你的整理方式，<br>暴露了你对生活的<br><span class='hl'>控制欲</span>",
+  subtitle:"不是测你爱不爱干净——<br>是测你的整理在替你控制什么",
+
+  questions:[
+    {scene:"打开衣柜的第一秒，你的眼睛最先落在哪里？",A:"颜色跳出来的那件——色系一乱我心里就跟着乱了",B:"脑子已经在分类——上衣裤子外套，各就各位没有",C:"那件带着故事的——它在帮我想起一个人、一段日子",D:"空着的那块区域——东西太满会让我觉得透不过气"},
+    {scene:"朋友说半小时后到你家，你第一个动作是什么？",A:"扫一眼所有平面——不在原位的东西会让我的血压立刻上来",B:"脑子开始列清单——按区域和类别，系统性地排查一遍",C:"先把那堆'有来头'的东西藏好——不想解释背后的故事",D:"不慌——东西本来就少，十分钟就能让一切像什么都没发生过"},
+    {scene:"你最近一次断舍离，扔掉的是什么？",A:"三个颜色打架的收纳盒——功能没问题但破坏整体感让我难受",B:"一抽屉的旧数据线——按品类整理后发现同样的线我有六根",C:"和前任的合照相框——不是恨那个人，是那段回忆不需要实物保管了",D:"那件一年没穿的'说不定哪天会穿'——终于承认它只是在浪费我的空间"},
+    {scene:"你的桌面（电脑桌面或书桌）更接近哪种状态？",A:"图标按颜色排列，壁纸是干净的渐变色——不超过两列图标",B:"分文件夹管理：工作、个人、待处理、归档——桌面就是我的管理系统入口",C:"有几样'暂时放在那里'的东西——明信片、手写便签、某天的票根",D:"几乎是空的——只有回收站和一个临时文件夹，壁纸纯黑，没有任何多余的东西"},
+    {scene:"搬家时，什么东西让你最犹豫要不要带走？",A:"那套很漂亮但和新家风格不搭的餐具——单品很好但会破坏整体感",B:"一堆散落的文件笔记——不是没用，是我还没给它们设计好分类规则",C:"一个旧盒子装着没寄出的信和没送出的礼物——丢掉像删除了一段自己",D:"一套完整的工具箱——大部分用不到，但'万一需要'的念头让人犹豫"},
+    {scene:"以下哪种场景最容易让你心里咯噔一下？",A:"别人动了我的东西没放回原位——连角度都不对，我一眼就能看出来",B:"东西被放到了不属于它类别的地方——遥控器在书架上，书在厨房台面上",C:"有人问我'这东西为什么还留着'——有些东西不需要功能，它的存在就是功能",D:"家里多了一件'没有明确用途'的东西——它没有岗位，会一直占着我的注意力"},
+    {scene:"如果整理是一种行为，它对你来说最像什么？",A:"像给房间拍一张'正确'的证件照——每个东西都在对的位置，画面不出错",B:"像给世界建一个数据库——万物都有标签、有类别、有自己那一层文件夹",C:"像和自己对话——每次整理都在问：这东西还代表我吗？这段关系还在我身上吗？",D:"像系统升级——删掉冗余、优化路径、减少能耗。每少一件东西就少一个需要管理的变量"},
+    {scene:"你觉得自己在哪个方面最容易'整理过度'？",A:"视觉可见的一切——桌面、衣柜、书架、手机首屏。看不见的地方可以乱，看得见的必须对",B:"分类体系本身——我花在建立和优化分类规则上的时间，可能比实际整理的时间还多",C:"回忆——反复整理照片、聊天记录、纪念品，像定期给自己的过去存档和清理缓存",D:"日常流程——不是整理物品，是整理时间：每一段时间都要有效率、每一个动作都要有目的"},
+    {scene:"你有没有因为整理习惯和别人闹过不愉快？",A:"室友说我'太讲究了'——我只希望公共区域保持它被设计出来的样子，这很难吗",B:"我妈说我'太爱分门别类'——她随手放的东西被我归到了系统里，她找不到了",C:"前任说我'扔东西的时候太狠'——但留着一件已经结束的东西，比扔掉它更让我难受",D:"朋友说我家'空得像样板间'——他们觉得没有生活痕迹，但我觉得没有痕迹就是最好的痕迹"},
+    {scene:"大整理结束后的那一刻，你心里最多的感受是什么？",A:"终于对了——像把散掉的拼图拼回去了，世界回到了它该有的样子",B:"清晰了——不只是房间清晰了，连脑子里那堆乱七八糟的想法都跟着排整齐了",C:"轻了——像把一段不再属于我的关系轻轻放下了，身体变轻了，呼吸变深了",D:"安全了——可控的变量减少到了我的管理范围内，意外发生的概率大幅降低了"},
+    {scene:"当生活失控的时候，整理对你来说变成了什么？",A:"一种物理性的祷告——把看得见的秩序建立起来，好像看不见的问题也会被归位",B:"一种掌控感的代偿——至少我可以决定这个文件夹叫什么、那个抽屉放什么",C:"一种仪式化的告别——整理掉不属于'现在的我'的东西，像在帮自己重新划分边界",D:"一种降噪——关掉所有不重要的进程，只保留核心功能。生活太吵，先管好最简单的变量"},
+    {scene:"如果整理是一种语言，你最希望它替你说什么？",A:"我希望它是安静的——不需要开口解释，看到的人自然感受到秩序，像一首无声的诗",B:"我希望它是被读懂的——不是整齐本身，而是整齐背后的那套逻辑。懂的人会说：你是一个有系统的人",C:"我希望它是诚实的——我在整理的不是房间，是我和这个世界的关系。有些留着，有些流走",D:"我希望它是看不见的——最好的整理是不需要整理的。东西少到不需要管理，空间空到不会被填满"}
+  ],
+
+  types:{
+    A:{name:"视觉秩序型",tag:"你用眼睛管理焦虑——每一件东西的位置，都是你在混乱世界里落下的安静坐标",icon:"👁️",
+       score:"视觉秩序 倾向 83%",
+       conclusion:"你的整理方式暴露了一种对\"可见秩序\"的深层需求。对你来说，视觉上的混乱就是心理上的混乱——当房间看起来对了，你的内心才会跟着对。你整理的首要目的不是实用，是让眼睛安静下来。一个颜色不协调的收纳盒、一个被挪动了角度的摆件，都会在你的神经系统里触发微小的警报。你不是强迫症——你只是比大多数人更需要\"视觉证据\"来确认：一切都在掌控之中。",
+       evidence_note:"你最先注意到的是颜色和视觉上的不和谐（Q1），朋友临时来访时你的第一焦虑是\"看起来对不对\"（Q2），你淘汰东西的首要理由是\"破坏了整体感\"（Q3），你的桌面像一张精心构图的照片（Q4），搬家时你最纠结的是单品是否会破坏新空间的美感（Q5）。你的整理逻辑是视觉先行的——眼睛安静了，心就安静了。",
+       quote:"你把房间整理成一首无声的诗——每一个物品的位置，都是你在混乱世界里落下的一枚安静的棋子。",
+       modules:[
+         {title:"你的整理人格：视觉秩序型",content:"你用眼睛管理世界。对你来说，视觉上的整洁不是一种审美偏好——它是一种心理防御机制。当外界环境看起来井然有序时，你的内心会自动调低焦虑指数。你可能有一个色系分明、按颜色深浅排列的衣柜；一个图标不超过两列、按功能分区的电脑桌面；一个被朋友评价为\"像杂志样板间\"的书架。你整理的从来不是物品——你整理的是自己面对世界时的安全感。"},
+         {title:"你整理的真正动机是什么",content:"你的核心动机是：用可见的秩序来补偿不可见的失控。生活中的不确定感——工作上的变动、关系里的模糊地带、未来方向的迷茫——这些你无法用肉眼\"整理\"的东西，会通过整理看得见的物品得到一种象征性的缓解。你整理书桌，可能是在整理一团乱麻的工作思路；你重新排列衣柜，可能是在应对一段让你失去掌控感的关系。视觉秩序是你给自己开的\"安定\"。"},
+         {title:"整理对你来说是治愈还是在逃避",content:"答案是：两者都有——而且它们之间的边界比你想象的更模糊。治愈的一面是：用整理来给大脑一个\"降压阀\"，在混乱中建立一个小小的可控空间，这是一种健康的自我调节。逃避的一面是：当你花两个小时调整书架上每一本书的角度，却回避了那个真正让你焦虑的电话时——整理就从一个工具变成了一个避难所。问问自己：我是\"整理好了就去面对\"，还是\"一直在整理所以不用面对\"？"},
+         {title:"最容易过度整理的领域",content:"你的过度整理几乎全部集中在\"视觉可达范围\"：电脑桌面和手机首屏（图标的位置和颜色必须符合你的秩序标准）、衣柜（按色系或季节排列，乱了任何一件都能一眼发现）、书架或展示柜（每一件摆件的角度和间距都经过测量式的摆放）、餐桌和茶几（平面上不能有多余的东西，每一件物品都有固定的\"位置坐标\"）。你看不见的抽屉可能很乱——但你在意的从来不是\"乱不乱\"，是\"看不看得见\"。"},
+         {title:"怎么让整理帮你而不是控制你",content:"首先，允许自己偶尔\"不对\"——刻意让某一个视觉区域保持一天的不完美（比如茶几上留一本书不归位），观察天有没有塌下来。其次，区分\"视觉秩序\"和\"心理秩序\"——当你想整理的时候，先问自己：我真正想整理的是什么？如果是某个让你焦虑的决定，就用写下来的方式去\"整理\"它，而不是用整理房间来代替。最后，把审美标准从\"正确\"调整到\"舒服\"——不是每个角落都需要像证件照那样精准，有些\"不完美\"的摆放反而是生活感的来源。"}
+       ],
+       advice:["这周故意让一个平面保持\"不完美\"一天——茶几上放一本不归位的书，或让书架上有一本倒着的书。观察：你的焦虑是真的因为那个平面乱了，还是因为别的事在焦虑？","下次整理时先停下来问自己：我是想整理房间，还是想整理某个让我不安的决定？如果是后者，拿一张纸写下来——用写的方式整理思绪，而不是用整理房间来替代。","在你的视觉秩序里刻意留一个\"例外区域\"——比如一个抽屉允许乱、一个角落允许不按色系排列。让这个例外提醒你：你不是秩序的奴隶。","拍一张\"整理前\"的照片，一个月后回看。你会发现：当时的\"乱\"其实没有那么糟——你只是把对生活的焦虑投射到了那个平面上。"],
+       reminder:"你不是在追求完美——你是在用看得见的秩序对抗看不见的不安。这没有错。但请记得：有些东西不需要\"归位\"，它们的存在本身就是对的。你的价值不取决于你的房间看起来有多正确。"
+    },
+    B:{name:"系统分类型",tag:"你用逻辑管理失控——把世界分类、命名、归档，像在给混乱的生活建一个可搜索的数据库",icon:"🗂️",
+       score:"系统分类 倾向 81%",
+       conclusion:"你的整理方式暴露了一种对\"认知掌控\"的深层需求。对你来说，混乱不是视觉问题——是逻辑问题。当一个东西被放到了\"不属于它的类别\"里，你会有一种轻微的不适感，就像代码里出现了一个未定义的变量。你整理的快感来自\"归位的准确性\"——文件夹命名规范、标签体系清晰、每一件物品都能在分类树里找到唯一的坐标。你不是在收拾房间，你是在给世界写索引。",
+       evidence_note:"你看到衣柜时脑子已经在自动分类（Q1），朋友来访时你立刻启动按类别排查的系统流程（Q2），你清理东西前必须先建立分类规则（Q3），你的桌面是一个多层级的文件夹管理系统（Q4），你搬家的卡点是\"还没给这些东西设计好归属体系\"（Q5）。你的整理逻辑是系统驱动的——万物都要有标签、有位置、有逻辑链。",
+       quote:"你不是在整理房间——你是在给世界建索引。懂你的人，会在你的分类体系里读到你的思维方式。",
+       modules:[
+         {title:"你的整理人格：系统分类型",content:"你有一张脑海中看不见的\"分类地图\"。打开任何空间，你的第一反应不是\"乱不乱\"，而是\"这些东西的类别归属对不对\"。你可能有一个按\"工作-个人-待处理-归档\"分层的电脑桌面；一个按品类、使用频率、季节三维交叉分类的衣柜；一套只有你自己能看懂的但极其高效的收纳逻辑。朋友会说你的东西\"太有条理了\"——但你知道，这种条理不是给别人看的，是你自己离不开的思维方式。"},
+         {title:"你整理的真正动机是什么",content:"你的核心动机是：用认知上的秩序来对抗世界的不可预测性。生活中有太多东西在你掌控之外——别人的行为、公司的决策、市场的变化——但你可以决定\"这个文件夹叫什么\"\"那个抽屉放什么\"\"这些书按什么体系排列\"。在你自己建立的分类系统里，你是绝对的规则制定者。每一个准确归位的物品都在向你确认：你还是可以对某些事情拥有百分之百的控制权。这种确认，比整理本身更重要。"},
+         {title:"整理对你来说是治愈还是在逃避",content:"这是一个值得警惕的问题。治愈的一面是：系统性整理是一种高效的问题解决方法——当你的物理空间和数字空间都井井有条时，你的认知负荷确实降低了，你确实能更快地找到东西、更高效地工作。逃避的一面是：当你花了三个小时优化一个\"完美\"的文件夹命名体系，而真正需要处理的那份报告一个字还没写时——系统本身就成了拖延的合法借口。你需要区分：我是在建设系统来解决实际问题，还是在建设系统来躲开实际问题？"},
+         {title:"最容易过度整理的领域",content:"你的过度整理往往集中在\"分类体系\"本身——你会花大量时间设计、调整、优化分类规则，而不是实际使用这些分类。数字文件管理（文件夹层级越来越深，标签体系越来越复杂）、笔记和知识库（无限优化Notion或Obsidian的结构，但内容没有增加）、待办清单系统（更换了五种GTD工具，每一个都配了完美的分类，但任务完成率没有变化）、邮件和消息的分类归档（归档规则精密得像法典，但未读消息一直在涨）。你整理的是方法论，不是内容。"},
+         {title:"怎么让整理帮你而不是控制你",content:"第一条原则：系统服务于行动，而不是取代行动。一个好的分类系统应该帮你更快地找到东西、做出决策——如果它在消耗你的时间而不是节省时间，它就是一个伪装成效率的负担。第二条原则：给每个分类系统设一个\"停止优化\"的时间点。比如：文件夹层级不要超过三层，标签数量不要超过二十个。超过这些数字，你不是在整理——你是在建造一个只有你自己愿意参观的分类博物馆。第三条原则：定期问自己——\"这个系统是在帮我做更多的事，还是在帮我做更少的决定？\"好的系统应该减少决策成本，而不是增加。"}
+       ],
+       advice:["这周给你的分类系统设一个硬上限——文件夹不超过三层、标签不超过二十个、抽屉里的分类不超过五种。超出的部分——合并。让系统变薄一点。","挑一个你已经花了大量时间优化但产出很少的系统（比如那个完美的Notion模板），问自己：如果我现在停止优化它，我会失去什么？如果答案只是'失去完美的感觉'——就停下来。","找一个你信任但和你思维方式不同的人，让他用一下你的整理系统。他的困惑就是你的过度设计的证据——把这些地方简化。","下周开始，每当你想要\"先整理好再开始做\"时，给自己五分钟的整理时间，然后必须在未完全整理好的状态下开始做。完成比完美更重要——这个道理对你的分类系统也适用。"],
+       reminder:"你建立的不是整理系统——是你在这个不可控世界里的最后一块自治领地。这值得尊重。但请记住：系统是为你服务的，不是反过来。当分类本身变成了负担，那个系统就不再是你的工具——它成了你的管理者。"
+    },
+    C:{name:"情感整理型",tag:"你用整理来处理关系——每扔掉一件东西，都是在给一段过去一个交代",icon:"💌",
+       score:"情感整理 倾向 79%",
+       conclusion:"你的整理方式暴露了一种对\"情感闭环\"的深层需求。你整理的不是物品——是你和世界的关系。对你来说，每一件物品都携带着一段情绪记忆：一张电影票根是一整个下午的心情，一件旧T恤是一个人曾经存在的证据，一个空了很久的首饰盒是一个还没走完的告别。你清理物品的过程，本质上是在清理自己的情感边界：哪些人和事还属于\"现在的我\"，哪些已经该被温柔地归档或果断地删除了。你是在用双手处理那些语言处理不了的东西。",
+       evidence_note:"你第一眼注意到的是有故事的物品（Q1），朋友来访时你藏的不是乱而是\"背后有故事的东西\"（Q2），你扔掉的往往是和某个人或某段生活有关的东西（Q3），你的桌面上有情感纪念品（Q4），你搬家时最卡住的是那些装满回忆却不知道该怎么归类的东西（Q5）。你的整理逻辑是情感导航的——你整理的从来不是物品，是你和这个世界的连接方式。",
+       quote:"你整理的从来不是物品——是那些还没说完的话、还没放下的人和还在愈合的自己。",
+       modules:[
+         {title:"你的整理人格：情感整理型",content:"你和物品之间有一种特殊的对话关系。别人看到的是\"东西好多\"或\"东西好乱\"——你看到的是一个一个的锚点：这件衣服是分手前最后一起逛街买的，这个杯子是第一次独居时在超市随手拿的，这封信一直没有寄出去。你不一定会每天想起它们，但你知道它们在那里，像一本摊开的日记。你整理不是为了让房间变干净——你是定期在检查自己的情感库存：哪些还有效，哪些已经过期，哪些需要被正式地告别。"},
+         {title:"你整理的真正动机是什么",content:"你的核心动机是：通过控制物品的去留，来获得对自己情感世界的掌控感。当你无法决定一段关系要不要继续、一个回忆该不该放下、一种情绪值不值得保留时——你可以决定那件和它有关的物品要不要留。扔掉一件东西比放下一个人容易得多。所以在你的潜意识里：丢东西成了一种情感代理——用物品的\"删除\"来象征关系或回忆的\"结算\"。每一次清理都是一次小型的仪式：你在用自己的方式对过去说——\"好了，可以了。\""},
+         {title:"整理对你来说是治愈还是在逃避",content:"这是一个需要你对自己诚实的问题。治愈的一面是：有意识地处理旧物确实是一种有效的心理整理术——当你把不再代表\"现在的你\"的东西清理出去时，你是在给新的自己腾出物理和心理空间。逃避的一面是：你是不是在用\"扔掉东西\"来替代\"面对感受\"？扔掉前任的东西比承认你还在想TA容易；清理相册比接受那段时间已经回不去了容易。真正的治愈需要在扔东西之外，还有一个情感处理的环节——不是只有Delete键，还有感受键。"},
+         {title:"最容易过度整理的领域",content:"你的情感整理最容易过度集中在\"记忆载体\"上：照片和相册（反复筛选、分类、删除，像是在编辑一部关于自己人生的纪录片）、聊天记录（定期清理对话，却会在删除前反复翻看某一段）、礼物和纪念品（每次搬家或换季都要重新判断一遍哪些还值得留）、社交媒体内容（删过又恢复又删的帖子、反复整理的好友列表）。你不是在整理数据——你是在反复确认\"现在的我到底是谁\"，而每一次清理都是一次自我定义的投票。"},
+         {title:"怎么让整理帮你而不是控制你",content:"最重要的是：学会区分\"整理情感\"和\"回避情感\"。当你拿起一件旧物时，不要立刻就决定扔还是不扔——先让自己感受三分钟：它让你想到什么？那个感觉现在还重要吗？如果扔了，你是在释放自己还是在逃避自己？其次，给情感物品设一个\"仪式空间\"——一个特定的盒子或抽屉，专门放那些\"还没准备好处理但知道会处理\"的东西。不用现在就做决定，但也不要让它散布在整个房间里随时戳你。最后，记住：扔掉物件不等于处理完了情感——有时候，恰恰是留着它，才证明你已经不需要它了。"}
+       ],
+       advice:["下次整理旧物时，给每一件让你犹豫的东西三分钟——不是用来决定扔不扔，是用来感受它让你想到什么。感受完了，决定自然会出现。","准备一个'情感暂存盒'——把那些还没准备好处理但知道有一天会处理的东西放进去。盒子关上之后，你不需要每天都面对它们。","写一封信给某件你要扔掉的东西——写完不需要寄也不需要留。只是让那些附着在物品上的话有一个被说出来的机会。","留一件'已经不需要但就是不想扔'的东西——不是为了留着它，是为了证明：你已经不需要通过扔掉它来证明自己走出来了。"],
+       reminder:"你扔掉的不是垃圾——是那些还没来得及被命名的情绪。这不可耻。但请记住：不是所有情感都需要被'整理'掉。有些东西值得一直带着，不是因为它还痛，是因为它曾经真实。"
+    },
+    D:{name:"功能性极简型",tag:"你用减少变量来控制生活——东西越少，需要管理的就越少，失控的可能性就越低",icon:"⚡",
+       score:"功能性极简 倾向 86%",
+       conclusion:"你的整理方式暴露了一种对\"系统精简\"的极致追求。对你来说，整理不是目的——消除整理的需求本身才是目的。你的理想状态不是所有的东西都整整齐齐，而是东西少到根本不需要整理。你追求的不是收纳技巧，是\"根本不需要收纳\"的自由。每一件没有明确功能的物品都是一个待处理的变量——而变量，在你的世界观里，等同于潜在的失控。你整理的终极目标是：让生活变成一个只有核心进程在运行的干净系统。",
+       evidence_note:"你第一眼注意到的是空白区域——空比满更让你安心（Q1），朋友临时来访时你不焦虑因为东西本来就少（Q2），你扔掉的是'万一有用'的幻觉而非实物（Q3），你的桌面几乎是空的（Q4），你搬家时在和所有的'万一'谈判（Q5）。你的整理逻辑是做减法——每减少一个变量，失控的概率就降低一分。",
+       quote:"你拥有的越少，被拥有的就越少。每一件被你留下的东西，都值得它占据的那一立方厘米。",
+       modules:[
+         {title:"你的整理人格：功能性极简型",content:"你不是那种会买一百种收纳工具的人——你觉得那是用更多的东西来管理东西，是一种逻辑上的死循环。你的整理哲学是效率导向的：每一件物品都必须有明确的、不可替代的功能；如果有两件东西能做同一件事，只保留更好的那一件；如果一件东西的功能一年用不到一次，它就不是功能——是负担。你的空间往往被朋友评价为'干净得像随时要搬走'或'像样板间没有人住'——但你知道，这不是因为没有生活痕迹，是因为每一件留下东西都通过了你的效率审查。"},
+         {title:"你整理的真正动机是什么",content:"你的核心动机是：通过最小化变量来最大化控制感。你比大多数人更早地意识到一个残酷的事实——\"拥有\"本身就是一种成本。每一件你拥有的东西都会反过来拥有你的一部分：需要清洁、需要收纳、需要维护、需要搬家时被处理、需要在使用时被找到。当你减少拥有的东西时，你减少的不是物品——是无数个潜在的决策点、焦虑源和时间黑洞。你不是不喜欢东西——你是不喜欢被东西\"拥有\"的感觉。你控制生活的方式，是让可被控制的对象数量降到最低。"},
+         {title:"整理对你来说是治愈还是在逃避",content:"这个问题对你来说尤其重要，因为极简和回避之间的界限非常微妙。治愈的一面是：减少物质负担确实能降低焦虑、提高专注力、释放心理带宽——这些都是被验证过的真实好处。逃避的一面是：你是不是在用'丢掉'来避免'投入'？每当你对一件事物、一段关系、一个爱好产生了依赖感，你的第一反应是不是'那就不要了'？如果是——极简就从一种生活哲学变成了一种防御机制。你在保护自己不被占有，但你也在阻止自己被真正地连接。"},
+         {title:"最容易过度整理的领域",content:"你的过度整理往往表现为'过度削减'：物品方面——衣柜精简到只剩下功能性单品，但偶尔会发现自己少了一件能让你在特殊场合感到特别的东西；社交方面——你会\"整理\"社交圈，删除长期不联系的人，但可能删掉了一个未来需要的人；兴趣爱好方面——你把爱好也视为'变量'，只保留最有'产出'的那一两项，却忘了有些快乐不需要有产出；日程安排方面——你把每一天都优化到分钟级别，留下极少的空白时间，因为你把空白当成'浪费'。但空白不是浪费——空白是可能性。"},
+         {title:"怎么让整理帮你而不是控制你",content:"第一个练习：允许自己拥有三件'无用但喜欢'的东西——没有任何功能标准、没有任何效率理由、纯粹因为拥有它们让你开心。这件练习不是关于物品——是关于你能不能允许自己拥有'非理性的快乐'。第二个练习：一个月不做任何清理和整理。不删任何东西、不扔任何东西、不优化任何流程。观察：你的焦虑是真的来自物品过多，还是来自对'管理'这件事的上瘾？第三个练习：让某个东西留在你生活里久到它变旧——感受一下，当一件东西不再新鲜时，你还能不能接受它。这个练习考验的是：你能不能容忍不完美、不高效、不完全被控制的人事物存在。"}
+       ],
+       advice:["这周故意买一件'完全没用但让你开心'的东西——一个好看但装不了什么的摆件、一双不舒服但让你一看到就笑的袜子。不审视、不质疑、不后悔。","一个月不要做任何清理——不丢东西、不删文件、不优化系统。看看你的焦虑会不会自己降下来——也许它不是因为'东西太多'，是因为你一直在告诉自己要'管理'。","留一件旧东西超过它'过了保质期'的时间——一件穿旧了的T恤、一本翻烂了的书。感受它变旧的过程——不是所有东西都需要被替换。","在日程表里每周留两小时的'无目的时间'——不规划、不优化、不产出。这两小时唯一的规则是：没有规则。让空白留在那里，不去填满它。"],
+       reminder:"你不是在逃避生活——你是在用最少的装备轻装上阵。这很好。但请记住：有些最好的东西是在你不计算效率的时候走进你生活的。它们不占用空间——它们创造空间。"
+    }
+  },
+
+  productModules:[
+    "你的整理人格类型",
+    "你整理的真正动机是什么",
+    "整理对你来说是治愈还是在逃避",
+    "最容易过度整理的领域",
+    "怎么让整理帮你而不是控制你"
+  ],
+
+  disclaimer:"本测试仅为自我探索参考，不构成任何诊断、心理建议或效果承诺。整理习惯因人而异，请结合自己的实际感受判断。"
+};
+
+// ========== 引擎 ==========
+let answers=[],currentQ=0,paid=false;
+
+function $(id){return document.getElementById(id)}
+const app = document.getElementById('app');
+
+function cover(){
+  app.innerHTML=`
+    <div class="screen active cover">
+      <div class="icon">🗃️</div>
+      <h1>${DATA.title}</h1>
+      <div class="sub">${DATA.subtitle}</div>
+      <button class="btn-start" onclick="start(true)">开始测试</button>
+      <div class="trust">前5题免费 · 记下答案左滑查看报告预览</div>
+    </div>`;
+}
+
+function start(free){answers=[];currentQ=0;paid=!free;renderQ()}
+
+function renderQ(){
+  if(currentQ>=DATA.questions.length){showResult();return;}
+  if(currentQ===5 && !paid){showGate();return;}
+  const q=DATA.questions[currentQ];
+  const pct=Math.round((currentQ/DATA.questions.length)*100);
+  const letters=['A','B','C','D'];
+  app.innerHTML=`
+    <div class="screen active">
+      <div class="progress-wrap">
+        <div class="progress-bar"><div class="progress-fill" style="width:${pct}%"></div></div>
+        <div class="progress-label">第 ${currentQ+1}/${DATA.questions.length} 题</div>
+      </div>
+      <div class="q-area">
+        <div class="q-num">${currentQ<5?'免费测试 · 第'+(currentQ+1)+'题':'深度解锁 · 第'+(currentQ+1)+'题'}</div>
+        <div class="q-text">${q.scene}</div>
+        <div class="options">
+          ${letters.map(l=>`<div class="opt" onclick="pick('${l}')"><div class="letter">${l}</div><div class="txt">${q[l]}</div></div>`).join('')}
+        </div>
+      </div>
+      ${currentQ===4?'<div style="text-align:center;font-size:13px;color:#6a6558;padding:8px 0">记下5个答案，左滑查看报告预览 →</div>':''}
+    </div>`;
+}
+
+function pick(letter){
+  answers.push(letter);
+  currentQ++;
+  renderQ();
+  window.scrollTo(0,0);
+}
+
+function showGate(){
+  app.innerHTML=`
+    <div class="screen active gate-screen">
+      <div class="lock-icon">🔓</div>
+      <h2>前5题只是倾向<br>完整12题才能看清全貌</h2>
+      <div class="gate-desc">后7题继续拆解：你整理的真正动机、整理对你的心理功能、以及如何让整理为你服务而不是控制你</div>
+      <ul class="unlock-list">
+        ${DATA.productModules.map(m=>`<li>${m}</li>`).join('')}
+      </ul>
+      <button class="btn-gate" onclick="unlock()">继续完成12题 · 解锁完整报告</button>
+      <div class="price">完整12题报告 · 做完自动解锁</div>
+    </div>`;
+}
+
+function unlock(){paid=true;renderQ()}
+
+function showResult(){
+  const counts={A:0,B:0,C:0,D:0};
+  for(let i=5;i<answers.length;i++){counts[answers[i]]++}
+  const sorted=Object.entries(counts).sort((a,b)=>b[1]-a[1]);
+  let typeKey=sorted[0][0];
+  if(sorted[0][1]===sorted[1][1]&&sorted[0][0]==='A'&&(sorted[1][0]==='C'||sorted[1][0]==='D'))typeKey=sorted[1][0];
+  if(sorted[0][1]===sorted[1][1]&&sorted[0][0]==='B'&&sorted[1][0]==='D')typeKey='D';
+  const type=DATA.types[typeKey];
+
+  const freeAnswers=answers.slice(0,5);
+  const freeLabels=['第一眼注意','突发来访反应','断舍离选择','桌面状态','搬家纠结'];
+  const freeDesc=[
+    ['你先用眼睛判断——颜色和位置比功能更早触发你的注意','你下意识在分类——大脑比眼睛更快，先建好系统再看内容','你有情感雷达——物品背后的故事比物品本身更快进入你的意识','你在扫描冗余——空白和效率是你的第一优先级'],
+    ['你焦虑的是"看起来对不对"——视觉秩序被打破会让你失去安全感','你立刻启动检查清单——按类别排查，系统化应对突发','你在保护你的故事——不是怕乱，是怕别人看到你还没准备好展示的那一面','你不慌——东西本来就不多，极简给了你随时"接客"的底气'],
+    ['你淘汰的是"不和谐"——功能没问题但破坏整体感的东西最让你难受','你先分类再清理——按品类整理之后才发现重复的东西比想象中多得多','你扔掉的是关系——每一件被放弃的物品都代表一段已经结束的章节','你在消灭"万一"——终于承认那些"说不定会用"的东西永远不会被用到'],
+    ['你追求视觉上的干净——图标要按规律排列，壁纸不能干扰注意力','你把桌面当系统入口——每个文件夹是一个类别，打开桌面等于打开管理体系','桌面是你的记忆锚点——那些暂时放着的小物件在帮你记住某一天某个人','你保持极致的简洁——桌面几乎是空的，多一个图标都会让你觉得该清理了'],
+    ['你纠结的是"整体感"——单品再好，放进新空间破坏和谐就会让你不舒服','你卡在"分类规则还没建好"——不是东西没用，是你还没给它们设计好归属','你面对的是情感重量——没有功能但装满回忆的东西是最难回答的判断题','你在和所有的"万一"谈判——工具箱可以不留，但"万一需要"的念头本身就是消耗']
+  ];
+
+  let evidenceHTML='<h3>📋 答案证据</h3><p>';
+  for(let i=0;i<5;i++){
+    const a=freeAnswers[i];
+    const descIdx=a==='A'?0:a==='B'?1:a==='C'?2:3;
+    evidenceHTML+=`<strong>Q${i+1}「${DATA.questions[i].scene.slice(0,18)}…」</strong>你选了${a}——${freeDesc[i][descIdx]}。<br><br>`;
+  }
+  evidenceHTML+=type.evidence_note+'</p>';
+
+  let modulesHTML='';
+  for(const m of type.modules){
+    modulesHTML+=`<div class="module"><h3>${m.title}</h3><p>${m.content}</p></div>`;
+  }
+
+  let adviceHTML='';
+  for(let i=0;i<type.advice.length;i++){
+    adviceHTML+=`<div class="advice-item"><span class="n">0${i+1}</span><span>${type.advice[i]}</span></div>`;
+  }
+
+  app.innerHTML=`
+    <div class="screen active result">
+      <div class="badge">你的整理人格</div>
+      <div class="type-name">${type.name}</div>
+      <div class="type-sub">${type.tag}</div>
+
+      <div style="font-size:15px;color:#d4b87a;margin-bottom:4px">${type.icon} ${type.score}</div>
+      <p style="font-size:15px;color:#b8b0a0;line-height:1.75;margin-bottom:20px">${type.conclusion}</p>
+
+      <div class="evidence-box">${evidenceHTML}</div>
+      ${modulesHTML}
+
+      <div class="summary-box">
+        <div class="q-mark">"</div>
+        <p>${type.quote}</p>
+      </div>
+
+      <div class="advice-box">
+        <h3>📅 未来30天建议</h3>
+        ${adviceHTML}
+      </div>
+
+      <div class="reminder-box">
+        <h3>⚠️ 关键提醒</h3>
+        <p>${type.reminder}</p>
+      </div>
+
+      <div style="font-size:13px;color:#6a6558;line-height:1.6;text-align:center;margin-bottom:24px">${DATA.disclaimer}</div>
+      <div class="footer">以上结果为自我探索参考 · 每个选择都是了解自己的线索</div>
+    </div>`;
+  window.scrollTo(0,0);
+}
+
+// start
+cover();
+</script>
+</body>
+</html>

@@ -1,0 +1,318 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
+<title>周末心理测试</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:"PingFang SC","Microsoft YaHei",sans-serif;background:#0f0f1a;color:#e8e0d0;min-height:100vh;display:flex;justify-content:center}
+.app{width:100%;max-width:500px;min-height:100vh;position:relative;overflow:hidden}
+.screen{display:none;flex-direction:column;min-height:100vh;padding:28px 22px 40px}
+.screen.active{display:flex}
+
+.cover{justify-content:center;align-items:center;text-align:center;gap:20px}
+.cover .icon{font-size:52px}
+.cover h1{font-size:29px;font-weight:900;line-height:1.4;letter-spacing:1.5px;padding:0 6px}
+.cover h1 .hl{color:#c9a96e}
+.cover .sub{font-size:15px;color:#8a8070;line-height:1.7;max-width:300px}
+.cover .btn-start{margin-top:10px;padding:15px 50px;font-size:18px;font-weight:700;background:linear-gradient(135deg,#c9a96e,#a6844d);color:#0f0f1a;border:none;border-radius:40px;cursor:pointer;letter-spacing:2px}
+.cover .btn-start:active{transform:scale(.96)}
+.cover .trust{font-size:12px;color:#4a4538;margin-top:6px}
+
+.progress-wrap{padding:4px 0 14px}
+.progress-bar{height:3px;background:#1e1e2e;border-radius:2px;overflow:hidden}
+.progress-fill{height:100%;background:linear-gradient(90deg,#c9a96e,#d4b87a);border-radius:2px;transition:width .3s}
+.progress-label{font-size:13px;color:#5a5548;margin-top:6px;text-align:right}
+
+.q-area{flex:1;display:flex;flex-direction:column;gap:16px}
+.q-area .q-num{font-size:13px;color:#6a6558;letter-spacing:2px}
+.q-area .q-text{font-size:23px;font-weight:700;line-height:1.5}
+.options{display:flex;flex-direction:column;gap:10px}
+.opt{padding:18px 16px;border-radius:14px;background:#16162a;border:1.5px solid #252540;cursor:pointer;transition:all .2s;display:flex;align-items:flex-start;gap:13px}
+.opt:active{transform:scale(.98);border-color:#c9a96e;background:#1e1e34}
+.opt .letter{width:33px;height:33px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:15px;font-weight:700;flex-shrink:0;background:rgba(201,169,110,.12);color:#c9a96e}
+.opt .txt{font-size:15px;line-height:1.55;color:#c8c0b0;flex:1}
+
+.gate-screen{justify-content:center;align-items:center;text-align:center;gap:24px}
+.gate-screen .lock-icon{font-size:48px}
+.gate-screen h2{font-size:26px;font-weight:800;line-height:1.4}
+.gate-screen .gate-desc{font-size:15px;color:#a09880;line-height:1.7;max-width:300px}
+.gate-screen .unlock-list{text-align:left;background:#16162a;border-radius:16px;padding:20px 24px;width:100%;max-width:320px}
+.gate-screen .unlock-list li{font-size:14px;color:#b8b0a0;line-height:2;list-style:none}
+.gate-screen .unlock-list li::before{content:"✓ ";color:#c9a96e;font-weight:700}
+.gate-screen .btn-gate{margin-top:8px;padding:14px 44px;font-size:18px;font-weight:700;background:linear-gradient(135deg,#c9a96e,#a6844d);color:#0f0f1a;border:none;border-radius:40px;cursor:pointer;letter-spacing:2px}
+.gate-screen .btn-gate:active{transform:scale(.96)}
+.gate-screen .price{font-size:14px;color:#6a6558;margin-top:4px}
+
+.loading{justify-content:center;align-items:center;text-align:center;gap:24px}
+.loading .spinner{width:52px;height:52px;border:3px solid #1e1e2e;border-top-color:#c9a96e;border-radius:50%;animation:spin .8s linear infinite}
+@keyframes spin{to{transform:rotate(360deg)}}
+.loading .msg{font-size:16px;color:#a09880;letter-spacing:1px}
+
+.result{padding:28px 22px 48px}
+.result .badge{display:inline-block;padding:7px 16px;border:1px solid rgba(201,169,110,.25);border-radius:16px;font-size:13px;color:#c9a96e;letter-spacing:2px;margin-bottom:14px}
+.result .type-name{font-size:36px;font-weight:900;margin-bottom:6px;line-height:1.2}
+.result .type-sub{font-size:18px;color:#d4b87a;margin-bottom:20px;line-height:1.4}
+
+.evidence-box{background:#16162a;border-radius:16px;padding:20px;margin-bottom:22px;border-left:3px solid #c9a96e}
+.evidence-box h3{font-size:14px;color:#c9a96e;letter-spacing:2px;margin-bottom:10px}
+.evidence-box p{font-size:14px;color:#b8b0a0;line-height:1.7}
+
+.module{margin-bottom:20px}
+.module h3{font-size:16px;color:#a09880;letter-spacing:1.5px;margin-bottom:10px;padding-bottom:8px;border-bottom:1px solid #1e1e2e}
+.module p{font-size:14px;color:#b8b0a0;line-height:1.75;margin-bottom:6px}
+
+.summary-box{background:linear-gradient(135deg,#1a1a2e,#1f1f34);border-radius:16px;padding:24px;margin:24px 0;text-align:center;border:1px solid rgba(201,169,110,.15)}
+.summary-box .q-mark{font-size:28px;color:#c9a96e;margin-bottom:8px}
+.summary-box p{font-size:17px;color:#d4b87a;line-height:1.7;letter-spacing:.5px}
+
+.advice-box{margin-bottom:24px}
+.advice-box h3{font-size:16px;color:#a09880;letter-spacing:2px;margin-bottom:12px}
+.advice-box .advice-item{padding:12px 14px;margin-bottom:8px;background:#16162a;border-radius:12px;font-size:14px;color:#b8b0a0;line-height:1.6;display:flex;gap:10px}
+.advice-box .advice-item .n{color:#c9a96e;font-weight:700;flex-shrink:0}
+
+.reminder-box{background:#16162a;border-radius:16px;padding:20px;margin-bottom:28px;border:1px solid #2a2a40}
+.reminder-box h3{font-size:15px;color:#c9a96e;letter-spacing:2px;margin-bottom:8px}
+.reminder-box p{font-size:14px;color:#a09880;line-height:1.7}
+
+.footer{text-align:center;padding:16px;font-size:11px;color:#3a3a48;border-top:1px solid #16162a;margin-top:auto}
+</style>
+</head>
+<body>
+<div class="app" id="app"></div>
+<script>
+// ========== 内容数据 ==========
+const DATA = {
+  title:"你周末最爱做的事，<br>暴露了你周一到周五<br><span class='hl'>在忍什么</span>",
+  subtitle:"不是测你周末过得好不好——<br>是测你的周末在替你补什么",
+
+  questions:[
+    {scene:"周末快到了，你脑子里最先冒出来的念头是什么？",A:"\"终于可以不用回消息了——48小时谁都别找我\"",B:"\"这周总算熬完了——周末得干点有意思的，不然下周怎么熬\"",C:"\"终于可以做自己了——不用假装对工作充满热情\"",D:"\"先把周末计划列出来——不然两天一晃就过去了\""},
+    {scene:"周末的某个下午，你一个人待着，最接近你真实状态的是什么？",A:"手机静音，窗帘拉一半，窝在沙发里——世界终于安静了",B:"刷着各种新奇活动——密室、展览、新店——总得有一个值得出门",C:"放着喜欢的音乐，穿着最舒服的衣服——这才是我该有的样子",D:"在整理下周的工作清单，或者学一个拖了一周的课——不能浪费"},
+    {scene:"别人对你周末生活做过最多的评价是什么？",A:"\"你怎么周末又在家宅着？\"——但你一点都不觉得无聊",B:"\"你周末也太能折腾了吧？\"——但你觉得不折腾的周末才叫浪费",C:"\"你周末和上班时候像两个人\"——这句话你听了不知道是夸还是骂",D:"\"你周末也不闲着啊？\"——但你不是不想闲着，是闲着会焦虑"},
+    {scene:"你周末花钱花时间最多的地方，其实是在补什么？",A:"补独处。五天的社交和协作已经把社交电量耗到负数了",B:"补刺激。五天重复的工作已经让大脑进入了自动驾驶模式",C:"补真实。五天里说了太多\"应该说的话\"，周末想把面具摘掉",D:"补掌控感。五天里太多事不由自己说了算，周末想把进度追回来"},
+    {scene:"如果这个周末完全由你支配，没有任何必须做的事，你会怎么安排？",A:"什么都不安排。空白才是最好的安排，谁也别来填满它",B:"临时决定一切。睡到自然醒再看心情——最讨厌周末还要按计划走",C:"做五件工作日做不了的事。不是为了发朋友圈，是为了确认\"我还活着\"",D:"先把那些\"等周末再说\"的事清掉一半——清完了才有资格休息"},
+    {scene:"周日晚上躺在床上，你脑子里最常出现的是什么？",A:"\"48小时怎么过得这么快——明天又要开始回应所有人的需求了\"",B:"\"这个周末好像也没干什么特别的——下周又要开始循环了\"",C:"\"明天又要戴上那个'专业靠谱情绪稳定'的面具了——好累\"",D:"\"这周末还有三件事没做完——下周一开始就已经落后了\""},
+    {scene:"你有没有一个\"嘴上说想去但从来没去成\"的周末活动？",A:"一个人去山里住两天。每年都说，每年都被各种\"必须要做的事\"挤掉",B:"跳伞、冲浪、或者学一门完全没用的手艺。刺激的事永远排在\"等有时间\"后面",C:"去一个没人认识我的城市待两天。想穿什么穿什么，想说什么说什么",D:"真正什么都不做地躺两天。不是看剧不是刷手机——是真正的放空"},
+    {scene:"你的周末和社交媒体的关系，最接近哪种？",A:"周末几乎不看——连点赞都不想点，假装自己不在线",B:"周末反而更活跃——因为终于有值得发的内容了",C:"周末发的东西和工作日完全不是一个画风——不像同一个人",D:"周末也在刷——看别人做了什么、学了什么、去了哪里"},
+    {scene:"如果连续三个周末都被安排了非做不可的事，你会怎样？",A:"第四周直接失联——不接电话不回消息，谁也别想找到我",B:"第三周就开始烦躁——觉得生命在被\"必须做的事\"一点点吃掉",C:"第二周就开始觉得\"这不是我的生活\"——像在替别人活",D:"第一周就把第四周的周末也规划好了——把失去的时间抢回来"},
+    {scene:"周末最让你感到\"对，这才是活着\"的瞬间是什么？",A:"一个人待着，没有任何声音——不是孤独，是被自己接住了",B:"做了一件工作日完全不会做的事——比如凌晨四点去看日出",C:"说了一句工作日不会说的话，穿了一件工作日不会穿的衣服",D:"完成了一件拖了很久的事——那种\"终于清掉了\"的爽感"},
+    {scene:"你的周末和手机/屏幕的关系，最接近哪种？",A:"我把手机扔在另一个房间——谁也别想在这48小时里找到我",B:"手机是用来找好玩的事的——周末的屏幕是通往冒险的入口",C:"周末我刷手机不是为了看别人——是为了搜\"我想成为什么样\"",D:"手机永远在身边——不是娱乐，是怕错过重要的信息或进度"},
+    {scene:"如果有一个\"周末替身\"可以替你做一件事，你最想让TA替你做什么？",A:"替我应付所有周末的社交邀约——用最体面的理由帮我拒绝",B:"替我安排一个不用动脑但足够新鲜的周末——我只负责出现在那里",C:"替我维持工作日的人设——这样我周末就不用切换回去",D:"替我把那些\"等有空再做\"的事全部做完——然后告诉我可以休息了"}
+  ],
+
+  types:{
+    A:{name:"一直被需要",tag:"你的周末是用来\"退场\"的——五天的社交输出后，独处不是逃避，是自救",icon:"🏕️",
+       score:"独处充电 需求 88%",
+       conclusion:"你周一到周五在忍的，是\"一直被需要\"。你可能是团队里那个随叫随到的人、家庭里那个什么都要管的人、朋友圈里那个永远好说话的人。五天下来，你的社交电量被消耗到负数——所以周末你只想消失。不是你不爱这些人，是你需要先把自己充满电，才能继续照亮别人。",
+       evidence_note:"你周末的第一反应是\"不用回消息\"（Q1），你一个人待着时最想做的事是\"世界安静下来\"（Q2），别人说你宅但你一点都不觉得无聊（Q3），你花钱花时间补的是\"独处\"（Q4），理想周末是\"什么都不安排\"（Q5）。这五个选择连起来就是一条清晰的线：你在用周末赎回被工作日高密度社交消耗掉的自己。",
+       quote:"你不是在躲谁——你是在找自己。独处不是社交失败的证据，是你在和五天没见的自己说：\"好久不见。\"",
+       modules:[
+         {title:"你的周末补偿类型：撤退型独处者",content:"你对周末的核心需求不是\"做什么\"，而是\"可以不做什么\"。五天里你需要不停地回应——回消息、回复需求、回应期待——你的大脑一直处在\"接收模式\"。周末你要切换到\"关闭模式\"：不回应、不输出、不配合任何人的节奏。这不是懒，是你本能地在保护自己的心理边界。你觉得充电最好的方式不是去做什么，而是让所有\"必须\"暂时消失。"},
+         {title:"你周一到周五真正在忍什么",content:"你在忍的是\"一直被需要\"带来的角色疲劳。你是别人的同事、下属、领导、伴侣、父母、朋友、子女——每个角色都有一堆期待。你做得很好，甚至好到别人习惯了你的好。但\"一直被需要\"的另一面是：你自己的需要被挤到了最末位。周末是你唯一的反击——你用沉默和消失告诉世界：我也需要不需要任何人的时候。这不是冷漠，是你终于把\"自己的需求\"排到了第一行。"},
+         {title:"周末充电为什么有时候越充越累",content:"因为你有时候连\"独处\"都会给自己定KPI——看了几本书、学了多少东西、收拾了多少房间。当独处也变成一种\"要产出\"的时间，它就失去了充电的意义。另一种情况是：你独处的时候其实在焦虑——想着下周的事、想着没回的消息、想着\"我应该做点什么\"。你的身体在休息，但你的大脑还在加班。真正的充电不是物理隔离——是心理上的\"允许自己下线\"。"},
+         {title:"最容易误判自己的休息需求",content:"你有时候会觉得自己\"太宅了应该多出去\"——然后强迫自己出门社交，回来累到不行。这不是你需要的生活，是你觉得\"应该这样\"。另一个误判是：你以为只要一个人待着就是在休息，但其实你一个人待着的时候也在刷手机回消息——那只是换了个场景继续回应世界。真正的休息对你来说不是\"一个人\"，而是\"不被需要\"。"},
+         {title:"怎么让周末真的补到你最累的地方",content:"不是延长独处时间，是提高独处的质量。试着在周末的某个时段，做一个\"零响应实验\"：两个小时不碰手机、不接电话、不看消息。不用做什么特别的事——躺着、发呆、听音乐、翻一本和你的工作毫无关系的书。你要补的不是睡眠，是\"不被任何人需要的自由感\"。当你允许自己什么都不对任何人负责的时候，充电才会真正发生。"}
+       ],
+       advice:["这个周末，找半天时间把手机关机或者放在另一个房间。不用告诉任何人——这不是对抗，是实验。看看两小时后你感觉如何。","在日历上提前锁定下个月的某一个周末——什么都不安排，不答应任何邀约。把这天标成\"已预订\"——被你自己预订了。","跟一个你信任的人说一次实话：\"我需要一段时间不被需要。\"不是说你要消失——是让至少一个人知道，你的沉默不是因为不在乎。","整理过去一个月的周末：哪些周末结束的时候你觉得\"真的休息到了\"？哪些觉得\"好像更累了\"？找到区别点——那才是你真正的充电密码。"],
+       reminder:"你不欠任何人你所有的注意力。那些真正在意你的人，不会因为你一个周末没回消息就觉得你变了。但你如果一直不给自己留白，你会先变得不认识自己。"
+    },
+    B:{name:"没什么意义感",tag:"你的周末是用来\"找刺激\"的——五天重复劳动后，你需要确认生活还有别的可能性",icon:"🪂",
+       score:"意义补偿 需求 84%",
+       conclusion:"你周一到周五在忍的，是\"没什么意义感\"。你的工作日被重复、流程、他人安排填满——做了很多事，但说不上来哪一件让自己觉得\"值了\"。所以你周末拼命找不一样的体验：新的地方、新的活动、新的人、新的刺激。你不是贪玩——你是在用周末的新鲜感对冲工作日的机械重复，向自己证明：生活不止流水线上的五天。",
+       evidence_note:"你周末的第一反应是\"得干点有意思的\"（Q1），你一个人待着时在刷各种新奇活动（Q2），别人说你\"能折腾\"而你确实不觉得折腾是负担（Q3），你花钱花时间补的是\"刺激\"（Q4），理想周末是\"临时决定一切\"讨厌按计划走（Q5）。你的周末像个侦察兵——在不断探索中确认：这个世界还有我不了解的部分，我也还有没被激活的一面。",
+       quote:"你不是闲不住——你是怕停下来之后发现，周一到周五的自己，和\"活着\"这件事之间，隔了一整个周末的距离。",
+       modules:[
+         {title:"你的周末补偿类型：探索型刺激者",content:"你的周末有一个隐形逻辑：工作日剥夺了我的新鲜感，周末必须还回来。你像是一个感官被搁置了五天的人，周末要报复性地打开所有触角——吃没吃过的、去没去过的、试没试过的。你不是在玩，你是在用新体验喂养一个被日常耗干的自己。当你在周末的某个瞬间感受到\"原来生活还能这样\"——那是你这周最好的充电。"},
+         {title:"你周一到周五真正在忍什么",content:"你在忍的是\"意义感的缺失\"。不是工作本身多糟糕——是工作里缺少让你眼睛亮起来的东西。你可能在做一个能胜任但谈不上热爱的工作，或者在一个效益不错但找不到成就感的岗位。每天做的事情像在给一个看不见底的容器添水——添了，但不知道添给谁、添到什么时候。周末的刺激成了你的意义补给站：至少这两天，我是为自己活的。"},
+         {title:"周末充电为什么有时候越充越累",content:"当你把周末当成\"意义补偿器\"的时候，会陷入一个陷阱：越觉得工作日没意思，周末就越要安排得满满当当——结果周末结束的时候比上班还累。这不是充电，是用一种消耗替代另一种消耗。另一个问题是：如果周末的活动不够\"精彩\"，你会有一种\"浪费了周末\"的愧疚感——周末变成了另一个需要达标的任务。"},
+         {title:"最容易误判自己的休息需求",content:"你有时候会以为\"只要周末够精彩，周一就能扛过去\"——但这其实是一种逃避。你在用周末的刺激感掩盖一个更深的问题：你的工作日缺少的不只是刺激，是意义。如果周一早上的你依然觉得\"又要开始了\"——那周末的精彩只是在帮你忍耐，而不是帮你改变。另一个误判是：你以为你需要更多刺激，但其实你可能只是需要一个\"停下来\"的空间。"},
+         {title:"怎么让周末真的补到你最累的地方",content:"最累的地方不是\"无聊\"——是\"看不到意义\"。周末的冒险帮你确认了\"生活还有别的可能性\"，但你还需要把这种可能性引回工作日。试着在周末做完一件冒险的事之后，写下：\"这件事让我觉得活着，是因为______\"。填这个空，你填的往往不是\"刺激\"——是自由、好奇、新的可能性。然后问自己：这些感觉，有没有可能在工作日里也放进一点？哪怕只是一点点。"}
+       ],
+       advice:["下个周末，只安排一件事。不是\"最刺激\"的那件——是\"不做会惦记\"的那件。然后剩下的时间，让自己体验一下\"什么也不刻意安排\"的感觉。","在工作日里植入一个\"周末才做的事\"——比如周三晚上去看一场午夜电影，或者周四早上走一条没走过的路去上班。让新鲜感不只属于周末。","做一个\"意义清单\"：写下过去一个月里让你觉得\"值了\"的瞬间。看看它们大多发生在周末还是工作日。如果全在周末——你可能需要重新审视你周一做什么。","下一次周末结束后，不要问自己\"玩够了吗\"，问\"我带了什么回周一\"。不是带疲惫——是带一种\"原来还可以这样\"的余味。"],
+       reminder:"你的周末不是为了让你更好地忍受下周——而是提醒你，你不必忍受。如果你每周都在等周末来救命，那可能需要调整的不是周末的安排，而是你周一的选择。"
+    },
+    C:{name:"不能做自己",tag:"你的周末是用来\"卸妆\"的——五天角色扮演后，真实的你需要一个出口",icon:"🎭",
+       score:"自我回归 需求 86%",
+       conclusion:"你周一到周五在忍的，是\"不能做自己\"。你在工作里扮演一个专业、稳定、不犯错的人——说该说的话、做该做的反应、保持该有的表情。五天的\"表演\"之后，你的真实自我被挤压到了一个很小的角落。所以周末你拼命做一些\"工作日不会做\"的事——不是为了好玩，是为了确认：那个真实的自己还在，没有被角色吃掉。",
+       evidence_note:"你周末的第一反应是\"终于可以做自己\"（Q1），你一个人待着时才敢放出真正的状态（Q2），别人说你和上班\"像两个人\"——你听了心情复杂（Q3），你补的是\"真实\"（Q4），理想周末是做工作日做不了的事来确认\"我还活着\"（Q5）。你的周末像个出口——五天里被关起来的那个自己，需要出来透透气。",
+       quote:"你周末和上班时像两个人——不是因为你在装，是因为真实的你太庞大，一个工位装不下。周末是你从角色里走出来，把自己重新装回身体的过程。",
+       modules:[
+         {title:"你的周末补偿类型：卸妆型回归者",content:"你有两个版本——工作日的\"专业版\"和周末的\"真实版\"。两个版本都是你，但只有周末的那一个让你觉得\"没在演\"。周末你穿不一样的风格、说不一样的话、去不一样的场合、接触不一样的人——不是因为工作日的那个人是假的，是因为你不想让任何一个版本定义你的全部。你需要周末这个空间来告诉自己：我还有不被人设定义的部分。"},
+         {title:"你周一到周五真正在忍什么",content:"你在忍的是\"自我表达的压抑\"。你可能在一个看重统一胜过差异的环境里，或在一个需要你保持某种形象的角色里。每一次你咽下一句想说的话、收敛一个真实的反应、收起一个\"不合时宜\"的表情——你都在做自我管理。这些管理不是错的，但积累五天之后，你会觉得心里压了一层灰。周末的\"做自己\"不是放纵——是清理。你把五天的灰擦掉，重新看到自己原来的颜色。"},
+         {title:"周末充电为什么有时候越充越累",content:"当周末的\"做自己\"变成一种压力——\"周末必须要做最真实的自己，不然就浪费了\"——它就失去了自由的本质。你在周末也可能掉进另一种表演：为了证明自己\"不装\"而刻意反着来。另一个问题是：周末太真实了，周日晚上要切回工作模式的时候会有一种撕裂感。这种切换的痛，有时候比一直带着面具还累。"},
+         {title:"最容易误判自己的休息需求",content:"你有时候会以为\"只要周末够放飞，周一就能回去继续演\"——但这本质上是在把你的生活劈成两半。你不是在两个版本之间切换，而是在两个版本之间撕裂。你需要的可能不是更多的\"放飞\"——而是在工作日里也放进一点真实的自己。哪怕只是一句不加修饰的话，一件不太\"得体\"但穿着舒服的衣服，一次不那么\"专业\"但发自内心的反应。"},
+         {title:"怎么让周末真的补到你最累的地方",content:"最累的不是表演本身——是\"不能停\"的表演。周末的卸妆帮你确认了'真实的自己还在'，但你需要的不只是周末的确认。试着在工作日里找一件小事，让'真实版'的自己不需要等到周末才能出现。可能是在周三月会上说一句真实的想法，可能是周四穿一件\"不够职业但这就是我\"的衣服，可能是周五中午不跟同事吃饭而是自己去一个喜欢的地方。让真实不再被限制在周末——周末就不用背负那么重的期待。"}
+       ],
+       advice:["下个工作日，找一天做一件\"有点不像平时的自己但却是真的想做的事\"——哪怕只是中午去一个平时不会去的地方散步。看看天有没有塌下来。","把周末做的某件\"很自己\"的事，写下来，然后问自己：这件事里的哪个特质，能不能偷偷放进工作日的某个缝隙里？哪怕只是多一点点。","这周末，不刻意做\"真实的自己\"——就自然地过。不安排、不计划怎么卸妆、不证明什么。让真实以最不刻意的方式发生——那才是真的真实。","找到一个你工作日和周末都会保持的微小习惯——一双从不换的袜子、一杯永远一样的咖啡、一首通勤路上必听的歌。它是你两个版本之间的桥。"],
+       reminder:"你不是两个人——你是同一个人，只是在不同空间里被允许被看见的部分不一样。试着让这两部分靠得近一点，不是要你放弃职业素养——是让你不用等到周末才能喘那口气。"
+    },
+    D:{name:"停不下来的焦虑",tag:"你的周末是用来\"追进度\"的——五天被支配后，你连休息都要找个\"值得\"的理由",icon:"⏳",
+       score:"焦虑驱动 需求 82%",
+       conclusion:"你周一到周五在忍的，是\"停不下来的焦虑\"。你的工作日可能被各种紧急但不重要的事填满，你一直在响应、在处理、在救火——但没有多少事是你\"选择\"去做的。这种失控感蔓延到了周末：你不敢真正停下来，因为你总觉得\"还有事没做完\"。你周末做的事，本质上不是在休息，是试图把失控感追回来——用完成来换取一点点\"我可以对自己说OK了\"的资格。",
+       evidence_note:"你周末的第一反应是\"先把计划列出来\"（Q1），你一个人待着时也在处理待办（Q2），别人说你周末也不闲着而你承认\"闲着会焦虑\"（Q3），你补的是\"掌控感\"（Q4），理想周末是先清掉待办才\"有资格休息\"（Q5）。你的周末不是休息时间，是你用来追赶进度的第二份工作——你在用一个\"必须\"替换另一个\"必须\"，只是名义上\"是我自己安排的\"。",
+       quote:"你连休息都需要一个理由——好像只有把所有事情做完，你才有资格对自己说：\"现在可以放松了。\"但那张清单永远做不完，而你也不会因此变成一个\"不值得休息\"的人。",
+       modules:[
+         {title:"你的周末补偿类型：效率型追进度者",content:"你的周末有一套隐形的KPI——要看几本书、学多少课、收拾哪些角落、处理哪些拖延事项。你在用工作日的效率逻辑管理周末：时间不能浪费、产出要有交代、做完才能放松。但你有没有发现——你从来没有一次真正\"有资格\"休息过？总有一件事还没做、总有一项进度没追完。周末变成了另一个赛场，你依然在跑，只是换了个跑道。"},
+         {title:"你周一到周五真正在忍什么",content:"你在忍的是\"失控感\"。工作日里你的时间被切割、被分配、被别人的节奏带着走——你没有多少真正能\"说了算\"的时刻。这种失控感积累起来会变成一种底层的焦虑：如果我不主动掌控，事情就会失控。你周末的忙碌本质上是一种\"夺回控制权\"的行为——我在安排、我在推进、我在完成——这些感觉让你短暂地觉得\"我还是有掌控的\"。但你控的不是生活，是焦虑。"},
+         {title:"周末充电为什么有时候越充越累",content:"因为你根本没有在充电——你在继续放电。你在周末做的事情大部分还是在消耗：整理房间是体力消耗、学习是精力消耗、处理拖延事项是情绪消耗。你的周末和你的工作日遵循同一个逻辑：\"先完成，再休息\"。问题是这个循环永远不会结束——因为你永远能找到下一件事。周末结束的时候，你比周五还累，因为你连\"至少这两天是我安排\"的安慰都没得到。"},
+         {title:"最容易误判自己的休息需求",content:"你以为你需要的是\"更高效地把事情做完\"——但其实你需要的是\"接受有些事情不做也没关系\"。你以为你缺的是时间管理能力——但其实你缺的是\"允许自己什么都不做\"的权限。你给自己的休息加了很多条件：做完这个就休息、处理完那个就放松——但条件是无穷的。真正的休息是不需要条件的——不是\"做完了才能休息\"，是\"休息本身就是一件值得做的事\"。"},
+         {title:"怎么让周末真的补到你最累的地方",content:"最累的不是事情多——是那种\"永远做不完\"的焦虑感。你需要的是一个\"不可再填充\"的休息时段——比如周六下午两点到六点，这段时间不安排任何事，也不允许事后往里面塞东西。不是\"做完事再休息\"——是\"先休息，剩下的看情况\"。你第一次试的时候会非常不安——觉得\"什么事都没做\"就是浪费。但你需要累积足够多的\"浪费\"来证明一个事实：天不会塌。那张待办清单不是你的价值说明书——你的存在本身就值得休息。"}
+       ],
+       advice:["这个周末，故意留一件事不做。不是忘了——是选择性地放弃。然后观察：这件事没做，对你下周有任何实质影响吗？（大概率答案：没有。）","每天给自己一个\"不做任何事\"的30分钟窗口。不限周末——工作日也加上。不是午休、不是通勤——是专门空出来的\"不产出时间\"。","把你的待办清单拆成两列：\"必须做\"和\"做完了会很开心但不做也可以\"。周末只处理第一列。第二列的事，等\"想做的时候\"再做——而不是\"有空的时候\"。","找一个你信任的人，跟他说一句：\"我需要有人告诉我——不做事也没关系。\"有时候你需要从别人的嘴里听到这句话，才能允许自己相信。"],
+       reminder:"你的价值不需要用完成的事项来证明。那些真正重要的事——你开心、你的身体、你和一个人的关系——不在任何一张待办清单上。周末也不是用来追进度的——它是用来提醒你，你不是一个无限输出的人，你是一个需要被照顾的人。"
+    }
+  },
+
+  productModules:[
+    "你的周末补偿类型",
+    "你周一到周五真正在忍什么",
+    "周末充电为什么有时候越充越累",
+    "最容易误判自己的休息需求",
+    "怎么让周末真的补到你最累的地方"
+  ],
+
+  disclaimer:"本测试仅为自我探索参考，不构成任何诊断、职业建议或效果承诺。每个人的生活状态都是独特的，请结合自己的实际感受判断。"
+};
+
+// ========== 引擎 ==========
+let answers=[],currentQ=0,paid=false;
+
+function $(id){return document.getElementById(id)}
+const app = document.getElementById('app');
+
+function cover(){
+  app.innerHTML=`
+    <div class="screen active cover">
+      <div class="icon">🌙</div>
+      <h1>${DATA.title}</h1>
+      <div class="sub">${DATA.subtitle}</div>
+      <button class="btn-start" onclick="start(true)">开始测试</button>
+      <div class="trust">前5题免费 · 记下答案左滑查看报告预览</div>
+    </div>`;
+}
+
+function start(free){answers=[];currentQ=0;paid=!free;renderQ()}
+
+function renderQ(){
+  if(currentQ>=DATA.questions.length){showResult();return;}
+  if(currentQ===5 && !paid){showGate();return;}
+  const q=DATA.questions[currentQ];
+  const pct=Math.round((currentQ/DATA.questions.length)*100);
+  const letters=['A','B','C','D'];
+  app.innerHTML=`
+    <div class="screen active">
+      <div class="progress-wrap">
+        <div class="progress-bar"><div class="progress-fill" style="width:${pct}%"></div></div>
+        <div class="progress-label">第 ${currentQ+1}/${DATA.questions.length} 题</div>
+      </div>
+      <div class="q-area">
+        <div class="q-num">${currentQ<5?'免费测试 · 第'+(currentQ+1)+'题':'深度解锁 · 第'+(currentQ+1)+'题'}</div>
+        <div class="q-text">${q.scene}</div>
+        <div class="options">
+          ${letters.map(l=>`<div class="opt" onclick="pick('${l}')"><div class="letter">${l}</div><div class="txt">${q[l]}</div></div>`).join('')}
+        </div>
+      </div>
+      ${currentQ===4?'<div style="text-align:center;font-size:13px;color:#6a6558;padding:8px 0">记下5个答案，左滑查看报告预览 →</div>':''}
+    </div>`;
+}
+
+function pick(letter){
+  answers.push(letter);
+  currentQ++;
+  renderQ();
+  window.scrollTo(0,0);
+}
+
+function showGate(){
+  app.innerHTML=`
+    <div class="screen active gate-screen">
+      <div class="lock-icon">🔓</div>
+      <h2>前5题只是倾向<br>完整12题才能看清全貌</h2>
+      <div class="gate-desc">后7题深入拆解：你的周末在补什么、周日晚上在焦虑什么、你的周末补偿模式是否真的有效</div>
+      <ul class="unlock-list">
+        ${DATA.productModules.map(m=>`<li>${m}</li>`).join('')}
+      </ul>
+      <button class="btn-gate" onclick="unlock()">继续完成12题 · 解锁完整报告</button>
+      <div class="price">完整12题报告 · 做完自动解锁</div>
+    </div>`;
+}
+
+function unlock(){paid=true;renderQ()}
+
+function showResult(){
+  const counts={A:0,B:0,C:0,D:0};
+  for(let i=5;i<answers.length;i++){counts[answers[i]]++}
+  const sorted=Object.entries(counts).sort((a,b)=>b[1]-a[1]);
+  let typeKey=sorted[0][0];
+  if(sorted[0][1]===sorted[1][1]&&sorted[0][0]==='A'&&(sorted[1][0]==='C'||sorted[1][0]==='D'))typeKey=sorted[1][0];
+  if(sorted[0][1]===sorted[1][1]&&sorted[0][0]==='B'&&sorted[1][0]==='D')typeKey='D';
+  const type=DATA.types[typeKey];
+
+  const freeAnswers=answers.slice(0,5);
+  const freeLabels=['第一反应','真实状态','外界评价','真正的补偿','理想安排'];
+  const freeDesc=[
+    ['你想\"消失\"——不是社交恐惧，是社交电量耗尽','你需要\"刺激\"——不是贪玩，是五天太枯燥','你需要\"卸下角色\"——不是不想扮演，是演了五天累了','你需要\"掌控\"——不是焦虑，是被支配了五天'],
+    ['你的独处不是孤独——是充电。安静对你来说是必需品','你的探索不是折腾——是确认生活不止一种活法','你的切换不是分裂——是真实的自己需要透气','你的待办不是努力——是不做完就不敢停下来'],
+    ['\"宅\"不是问题——是别人不懂\"不被需要\"对你来说是奖励','\"折腾\"不是问题——是别人不懂重复对你来说有多消耗','\"像两个人\"让你心情复杂——因为工作日的你不是假的，但周末的才是完整的','\"不闲着\"让你无奈——你不是不想停，是停下来会焦虑'],
+    ['你补的是独处——不是逃避关系，是关系的另一头也需要休息','你补的是刺激——五天自动驾驶后，你需要新鲜感来叫醒自己','你补的是真实——五天\"得体\"之后，你想把面具摘掉','你补的是掌控——五天被安排后，你想决定自己的时间'],
+    ['\"什么都不安排\"对你来说就是最好的安排——这是你的充电模式','\"临时决定一切\"是你的自由宣言——不想被任何计划控制','\"做工作日做不了的事\"是你在确认——我还是我','\"先清掉待办\"是你在争取——\"我都做完了，现在可以休息了吗？\"']
+  ];
+
+  let evidenceHTML='<h3>📋 答案证据</h3><p>';
+  for(let i=0;i<5;i++){
+    const a=freeAnswers[i];
+    const descIdx=a==='A'?0:a==='B'?1:a==='C'?2:3;
+    evidenceHTML+=`<strong>Q${i+1}「${DATA.questions[i].scene.slice(0,18)}…」</strong>你选了${a}——${freeDesc[i][descIdx]}。<br><br>`;
+  }
+  evidenceHTML+=type.evidence_note+'</p>';
+
+  let modulesHTML='';
+  for(const m of type.modules){
+    modulesHTML+=`<div class="module"><h3>${m.title}</h3><p>${m.content}</p></div>`;
+  }
+
+  let adviceHTML='';
+  for(let i=0;i<type.advice.length;i++){
+    adviceHTML+=`<div class="advice-item"><span class="n">0${i+1}</span><span>${type.advice[i]}</span></div>`;
+  }
+
+  app.innerHTML=`
+    <div class="screen active result">
+      <div class="badge">你的周末补偿模式</div>
+      <div class="type-name">${type.name}</div>
+      <div class="type-sub">${type.tag}</div>
+
+      <div style="font-size:15px;color:#d4b87a;margin-bottom:4px">${type.icon} ${type.score}</div>
+      <p style="font-size:15px;color:#b8b0a0;line-height:1.75;margin-bottom:20px">${type.conclusion}</p>
+
+      <div class="evidence-box">${evidenceHTML}</div>
+      ${modulesHTML}
+
+      <div class="summary-box">
+        <div class="q-mark">"</div>
+        <p>${type.quote}</p>
+      </div>
+
+      <div class="advice-box">
+        <h3>📅 未来30天建议</h3>
+        ${adviceHTML}
+      </div>
+
+      <div class="reminder-box">
+        <h3>⚠️ 关键提醒</h3>
+        <p>${type.reminder}</p>
+      </div>
+
+      <div style="font-size:13px;color:#6a6558;line-height:1.6;text-align:center;margin-bottom:24px">${DATA.disclaimer}</div>
+      <div class="footer">以上结果为自我探索参考 · 每个选择都是了解自己的线索</div>
+    </div>`;
+  window.scrollTo(0,0);
+}
+
+// start
+cover();
+</script>
+</body>
+</html>

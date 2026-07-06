@@ -1,0 +1,318 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
+<title>收藏心理测试</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:"PingFang SC","Microsoft YaHei",sans-serif;background:#0f0f1a;color:#e8e0d0;min-height:100vh;display:flex;justify-content:center}
+.app{width:100%;max-width:500px;min-height:100vh;position:relative;overflow:hidden}
+.screen{display:none;flex-direction:column;min-height:100vh;padding:28px 22px 40px}
+.screen.active{display:flex}
+
+.cover{justify-content:center;align-items:center;text-align:center;gap:20px}
+.cover .icon{font-size:52px}
+.cover h1{font-size:29px;font-weight:900;line-height:1.4;letter-spacing:1.5px;padding:0 6px}
+.cover h1 .hl{color:#c9a96e}
+.cover .sub{font-size:15px;color:#8a8070;line-height:1.7;max-width:300px}
+.cover .btn-start{margin-top:10px;padding:15px 50px;font-size:18px;font-weight:700;background:linear-gradient(135deg,#c9a96e,#a6844d);color:#0f0f1a;border:none;border-radius:40px;cursor:pointer;letter-spacing:2px}
+.cover .btn-start:active{transform:scale(.96)}
+.cover .trust{font-size:12px;color:#4a4538;margin-top:6px}
+
+.progress-wrap{padding:4px 0 14px}
+.progress-bar{height:3px;background:#1e1e2e;border-radius:2px;overflow:hidden}
+.progress-fill{height:100%;background:linear-gradient(90deg,#c9a96e,#d4b87a);border-radius:2px;transition:width .3s}
+.progress-label{font-size:13px;color:#5a5548;margin-top:6px;text-align:right}
+
+.q-area{flex:1;display:flex;flex-direction:column;gap:16px}
+.q-area .q-num{font-size:13px;color:#6a6558;letter-spacing:2px}
+.q-area .q-text{font-size:23px;font-weight:700;line-height:1.5}
+.options{display:flex;flex-direction:column;gap:10px}
+.opt{padding:18px 16px;border-radius:14px;background:#16162a;border:1.5px solid #252540;cursor:pointer;transition:all .2s;display:flex;align-items:flex-start;gap:13px}
+.opt:active{transform:scale(.98);border-color:#c9a96e;background:#1e1e34}
+.opt .letter{width:33px;height:33px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:15px;font-weight:700;flex-shrink:0;background:rgba(201,169,110,.12);color:#c9a96e}
+.opt .txt{font-size:15px;line-height:1.55;color:#c8c0b0;flex:1}
+
+.gate-screen{justify-content:center;align-items:center;text-align:center;gap:24px}
+.gate-screen .lock-icon{font-size:48px}
+.gate-screen h2{font-size:26px;font-weight:800;line-height:1.4}
+.gate-screen .gate-desc{font-size:15px;color:#a09880;line-height:1.7;max-width:300px}
+.gate-screen .unlock-list{text-align:left;background:#16162a;border-radius:16px;padding:20px 24px;width:100%;max-width:320px}
+.gate-screen .unlock-list li{font-size:14px;color:#b8b0a0;line-height:2;list-style:none}
+.gate-screen .unlock-list li::before{content:"✓ ";color:#c9a96e;font-weight:700}
+.gate-screen .btn-gate{margin-top:8px;padding:14px 44px;font-size:18px;font-weight:700;background:linear-gradient(135deg,#c9a96e,#a6844d);color:#0f0f1a;border:none;border-radius:40px;cursor:pointer;letter-spacing:2px}
+.gate-screen .btn-gate:active{transform:scale(.96)}
+.gate-screen .price{font-size:14px;color:#6a6558;margin-top:4px}
+
+.loading{justify-content:center;align-items:center;text-align:center;gap:24px}
+.loading .spinner{width:52px;height:52px;border:3px solid #1e1e2e;border-top-color:#c9a96e;border-radius:50%;animation:spin .8s linear infinite}
+@keyframes spin{to{transform:rotate(360deg)}}
+.loading .msg{font-size:16px;color:#a09880;letter-spacing:1px}
+
+.result{padding:28px 22px 48px}
+.result .badge{display:inline-block;padding:7px 16px;border:1px solid rgba(201,169,110,.25);border-radius:16px;font-size:13px;color:#c9a96e;letter-spacing:2px;margin-bottom:14px}
+.result .type-name{font-size:36px;font-weight:900;margin-bottom:6px;line-height:1.2}
+.result .type-sub{font-size:18px;color:#d4b87a;margin-bottom:20px;line-height:1.4}
+
+.evidence-box{background:#16162a;border-radius:16px;padding:20px;margin-bottom:22px;border-left:3px solid #c9a96e}
+.evidence-box h3{font-size:14px;color:#c9a96e;letter-spacing:2px;margin-bottom:10px}
+.evidence-box p{font-size:14px;color:#b8b0a0;line-height:1.7}
+
+.module{margin-bottom:20px}
+.module h3{font-size:16px;color:#a09880;letter-spacing:1.5px;margin-bottom:10px;padding-bottom:8px;border-bottom:1px solid #1e1e2e}
+.module p{font-size:14px;color:#b8b0a0;line-height:1.75;margin-bottom:6px}
+
+.summary-box{background:linear-gradient(135deg,#1a1a2e,#1f1f34);border-radius:16px;padding:24px;margin:24px 0;text-align:center;border:1px solid rgba(201,169,110,.15)}
+.summary-box .q-mark{font-size:28px;color:#c9a96e;margin-bottom:8px}
+.summary-box p{font-size:17px;color:#d4b87a;line-height:1.7;letter-spacing:.5px}
+
+.advice-box{margin-bottom:24px}
+.advice-box h3{font-size:16px;color:#a09880;letter-spacing:2px;margin-bottom:12px}
+.advice-box .advice-item{padding:12px 14px;margin-bottom:8px;background:#16162a;border-radius:12px;font-size:14px;color:#b8b0a0;line-height:1.6;display:flex;gap:10px}
+.advice-box .advice-item .n{color:#c9a96e;font-weight:700;flex-shrink:0}
+
+.reminder-box{background:#16162a;border-radius:16px;padding:20px;margin-bottom:28px;border:1px solid #2a2a40}
+.reminder-box h3{font-size:15px;color:#c9a96e;letter-spacing:2px;margin-bottom:8px}
+.reminder-box p{font-size:14px;color:#a09880;line-height:1.7}
+
+.footer{text-align:center;padding:16px;font-size:11px;color:#3a3a48;border-top:1px solid #16162a;margin-top:auto}
+</style>
+</head>
+<body>
+<div class="app" id="app"></div>
+<script>
+// ========== 内容数据 ==========
+const DATA = {
+  title:"你收藏但不买的东西，<br>暴露了你想成为谁",
+  subtitle:"不是测你买不起什么——<br>是测你的收藏夹在替你保存哪一个版本的自己",
+
+  questions:[
+    {scene:"你最近一次打开收藏夹或购物车，停留最久的那个东西，你当时在心里嘀咕什么？",A:"\"这个东西真的值得——等我有能力了，第一个买它。\"你在等自己配得上它",B:"\"这个好特别，市面上找不出第二个了——先存着。\"你被它的独特性击中",C:"\"这个学会了或拥有了，我就能做那件事了——先收藏起来。\"你把收藏当成准备的第一步",D:"\"这个发出去一定有人问链接——先存着，以后用得上。\"你在想象别人看到它的反应"},
+    {scene:"你收藏夹里数量最多的那一类东西，最接近下面哪种？",A:"质感很好的经典款——手表、皮具、剪裁好的衣服。不是买不起，是觉得还没到\"可以心安理得拥有\"的阶段",B:"小众设计师款、独立出版物、手作孤品——每一个都像在替你宣告\"我和别人不一样\"",C:"在线课程、效率工具、技能账号、各种\"学了就能变厉害\"的内容——存了就好像已经开始了",D:"生活方式类好物——好看的餐具、氛围感灯具、博主同款家居。收藏的时候已经在想象自己用它们的画面"},
+    {scene:"半夜刷到一件让你心跳加速的东西，你最可能做什么？",A:"反复看详情页、买家秀、材质描述——像在做功课，其实是在说服自己\"它值得被我拥有\"",B:"截两张图存手机里，偶尔翻出来看看——\"看一眼就很满足，不一定非要拥有\"",C:"先收藏，心里想\"等我先把基础打好、先把那段忙完\"——收藏是第一步，兑现是以后的事",D:"立刻截图发给自己或朋友——\"你看这个，绝了\"——分享出去好像就已经和它发生了某种关系"},
+    {scene:"你收藏过一个东西超过半年但一直没买，最接近你真实原因的是？",A:"不是钱的问题——是觉得现在的自己还不配拥有它。等自己再优秀一点、再瘦一点、再成功一点",B:"买回来好像就\"俗了\"——收藏是一种更纯粹的关系，买下来反而破坏了那种想象的空间",C:"买了就得真的去用了、去学了、去做了——收藏不用负责，买下来就得兑现一个对自己的承诺",D:"怕买回来之后发现\"也就那样而已\"——收藏时的想象，比拥有本身更让人快乐"},
+    {scene:"如果有人翻你的收藏夹，你最不希望TA得出什么结论？",A:"\"原来你一直想成为这样的人啊\"——被看穿内心最深处的向往，太直接了",B:"\"你收藏的东西都好奇怪、好小众\"——但不是奇怪，是你不想被随口归类",C:"\"你收藏了这么多，但好像什么都没做\"——被戳中最不愿意面对的事实",D:"\"你收藏的东西都差不多嘛\"——但每一个收藏背后都有一个具体的、你想活进去的场景"},
+    {scene:"你收藏的那些东西，有没有一个共同的主题——它们是不是都在说同一种\"我想变成的样子\"？",A:"有的。它们都在说\"我想被认真对待\"——质感好的东西让人确认：我值得拥有好的",B:"有的。它们都在说\"我不想被归类\"——每一个收藏都是对\"普通\"的一次无声拒绝",C:"有的。它们都在说\"我想准备好了再出发\"——每一个收藏都是一个\"以后会用上\"的承诺",D:"有的。它们都在说\"我想被羡慕\"——每一个收藏都在搭建一个\"别人眼中值得向往的生活\""},
+    {scene:"你买过一件\"收藏了很久终于下手\"的东西之后，最真实的感受是什么？",A:"有一种\"确认感\"——好像在用这个东西向自己证明：我说到做到，我值得",B:"开心但有一点点失落——拥有的那一瞬间，那种\"想象中\"的快乐反而蒸发了一小半",C:"松了一口气但也开始焦虑——\"好了，现在我真的得去用它、学它、做它了\"",D:"第一反应是拍照分享——好像在告诉所有人\"你看，我终于成了用这个东西的人\""},
+    {scene:"你收藏但不买的那些东西里，有多少是在替别人收藏的——替那个\"更好的自己\"，替那个\"别人会喜欢的自己\"，替那个\"应该要有的自己\"？",A:"大部分是在替\"更好的自己\"收藏——觉得现在还不够好，先存着等那个版本的我来了再说",B:"大部分是在替\"真实的自己\"收藏——这些东西别人不一定懂，但这恰恰是我想成为的样子",C:"大部分是在替\"准备好了的自己\"收藏——总有一天我会用上它们的，我先替未来的自己存着",D:"大部分是在替\"被看见的自己\"收藏——收藏时想的不是东西本身，是拥有之后别人会怎么看我"},
+    {scene:"如果现在强制你清空收藏夹，只留三个——你留的标准最接近什么？",A:"留那三个最能代表\"我想成为的样子\"的——不是最贵，是最能定义我向往的方向",B:"留那三个最\"像我\"但别人不一定懂的——删掉的都是顺便收藏的，留下的才是真我",C:"留那三个最可能真的用上或学完的——其他的承认吧，就是永远不会再打开的",D:"留那三个最想让人看到的——删掉的都是偷偷喜欢的，留下的是\"想让别人知道我喜欢\"的"},
+    {scene:"你收藏一个东西的那一瞬间，身体里冒出来的冲动——用一句话描述，最接近什么？",A:"\"等到那一天，我也能成为配得上它的人\"——收藏是一种等待自己长大的方式",B:"\"这就是我——只是还没人看懂\"——收藏是一种在沉默中完成自我确认的方式",C:"\"总有一天我会准备好的\"——收藏是一种把焦虑暂时打包、放进文件夹的方式",D:"\"这就是我想要的生活\"——收藏是一种在想象中提前活了一遍那个版本的方式"},
+    {scene:"收藏夹里有没有一个东西，你收藏了它但永远不会买——可你每次翻到它都会停下来？",A:"有。一件贵到离谱但剪裁完美的大衣。不是买不起——是留着它在收藏夹里，提醒自己：我在往那个方向走",B:"有。一个根本没人知道的小众品牌手工包。每次看到都觉得——世界上还有人在做这样的东西，而我知道它，这就够了",C:"有。一门永远没时间学的课程。每次看到都默默想——等这段忙完。但它已经躺在收藏夹两年了",D:"有。一套博主同款的家居。每次看到都会想象——如果我的家也长这样，别人来做客时会是什么表情"},
+    {scene:"如果十年后的你回头看现在的收藏夹，你最希望TA说出哪句话？",A:"\"谢谢你替我存下了这些——我后来真的很认真地对待了自己\"",B:"\"原来你那么早就知道自己想成为谁了——只是那时候没人告诉你，这样也可以\"",C:"\"你存了那么多'以后会用'的东西，其实大部分都没用上——但没关系，它们帮你撑过了那些不确定的日子\"",D:"\"你就是想要被喜欢——现在你已经不需要靠这些东西来让别人喜欢你了\""}
+  ],
+
+  types:{
+    A:{name:"被认真对待的人",tag:"你的收藏夹在替你说：'在我开口之前——先别急着敷衍我'",icon:"⌚",
+       score:"想被认真对待 倾向 85%",
+       conclusion:"你的收藏夹里装的不是东西——是一个等待被认真对待的自己。你收藏质感好的、经典的、经得起时间的东西，不是因为虚荣，是因为你希望自己也被这样对待：被看见、被珍视、被尊重。你有一个没说出口的信念：等到我足够好的那一天，这些好东西就和我匹配了。你现在不买，不是因为买不起——是因为你觉得，自己还需要再努力一点，才配得上它们。",
+       evidence_note:"你收藏时在等自己\"配得上\"（Q1），你收藏夹里最多的不是便宜货而是质感经典款（Q2），你反复看详情页像在做功课其实在说服自己\"我值得\"（Q3），你不买的原因不是钱而是\"现在的自己还不够好\"（Q4），你最怕被看穿\"原来你想成为这样的人\"（Q5）。这些选择都指向同一个底层逻辑：你的收藏行为本质上是一场对自己价值的反复确认——你在用收藏夹里的东西，丈量自己和\"值得被认真对待\"之间的距离。",
+       quote:"你收藏的不是东西——是你对自己说的那句\"总有一天，我会配得上这些\"。而那个总有一天，其实已经到了。",
+       modules:[
+         {title:"你的收藏人格：等待型珍视者",content:"你的收藏夹是一个\"未来资格证明箱\"——每存进一件好东西，都是在对自己说：等我够好了，这些就是我的。你从小可能习惯了\"做好了才能被表扬\"的交换逻辑——考好了才有奖励、懂事了才被认可。于是你把这种模式带进了收藏里：不是想要什么就立刻要，而是先存着，等我证明了自己再说。你不是不舍得花钱——你是不舍得在没有\"准备好\"的时候，轻率地对待一件好东西。"},
+         {title:"你的收藏夹在替你想成为谁",content:"它想让你成为一个\"不需要先证明自己才配被认真对待\"的人。你的收藏夹里那个反复出现的主题——质感、经典、值得——其实不是东西的属性，是你对自己的期待。你希望别人看到你时，不需要你开口解释，就能感受到：这个人值得被认真对待。但问题是——如果你自己都不先认真对待自己的欲望，别人又怎么知道要重视你？"},
+         {title:"为什么你只收藏不行动",content:"你在等一个永远不会来的\"准备好了\"的时刻。你收藏的那件大衣，等的是\"瘦到理想体重\"的那一天；你收藏的那块表，等的是\"事业再上一个台阶\"的那一天。但这些门槛是你自己设的——没有人要求你必须完美才能拥有好东西。你不是不敢买——你是不敢承认：不用等到那一天，现在的自己已经可以拥有它了。"},
+         {title:"收藏和购买之间隔了什么",content:"隔了一个你对自己的判断。你觉得\"拥有\"是需要资格的——而你还不够格。但事实上，一件好东西被放在收藏夹里半年、一年、两年，它已经接受了你的打量、你的犹豫、你的自我否定。它比你想象中更愿意被现在的你拥有。你缺的不是钱——你缺的是一句对自己的许可：\"我现在这样，也可以。\""},
+         {title:"怎么让收藏从'想成为'变成'已在成为'",content:"从收藏夹里挑一件你存了最久的东西——不是最贵的那件，是存得最久的那件——然后买下来。不是为了证明什么，只是为了告诉那个一直在等的自己：不用等了，你现在就可以拥有。你不需要先成为谁才有资格被认真对待——你认真对待自己的欲望的那一刻，就已经是了。"}
+       ],
+       advice:["这周从收藏夹里挑一件存了超过三个月的东西，买下来。不为任何理由——只为打破\"要等自己够好才配拥有\"的魔咒。","整理收藏夹时问自己：这里有多少东西是我真心想要的，又有多少是我觉得\"应该要\"才收藏的？把\"应该要\"的那部分删掉。","下次收藏一个东西的时候，在三天内做出买或不买的决定。拖延不是因为没准备好——是因为你在给自己设门槛。","找一个你信任的人，把你最想要但一直没买的那件东西发给她，让她替你说出那句话：\"买吧，你值得。\""],
+       reminder:"你不需要先成为谁才配拥有好东西。你认真对待自己的那一刻——你就已经是那个\"值得被认真对待\"的人了。收藏夹里最久的那件东西，不是等你去够——是它在等你点头。"
+    },
+    B:{name:"活得不一样的人",tag:"你的收藏夹在替你说：'我不是奇怪——我只是不想被归类'",icon:"🎨",
+       score:"活得不一样 倾向 82%",
+       conclusion:"你的收藏夹是一个秘密的自我博物馆——里面每一件东西都在说同一句话：我和别人不一样，我也不想和别人一样。你收藏小众设计、独立作品、别人看不懂的东西——不是因为你品味怪，是因为\"普通\"对你来说就是一种不舒服。你不急着买，是因为收藏本身已经完成了一部分表达：我知道这个东西的存在，它能代表我——拥有未必比\"知道\"更高级。",
+       evidence_note:"你收藏时被独特性击中（Q1），你收藏夹里最多的是小众、独立、手作类物品（Q2），你截图存手机偶尔翻看觉得\"不一定要拥有\"（Q3），你不买的原因是怕买回来反而破坏了那种纯粹的想象（Q4），你最怕别人说你收藏的东西\"奇怪\"或被归类（Q5）。你的收藏逻辑不是占有，是确认——你在用这些收藏向自己证明：我和他们不一样，这种不一样是值得的。",
+       quote:"你收藏的不是物品——是你对\"普通\"的每一次拒绝。等到有一天你不再需要向任何人解释自己的品味，你就已经活成了收藏夹里的那个人。",
+       modules:[
+         {title:"你的收藏人格：独立型审美者",content:"你的收藏夹是你给自己搭建的审美避难所——在这里，你不需要向任何人解释\"为什么喜欢这个\"。你从小可能有过\"和别人不一样但被纠正\"的经历：喜欢的音乐被说太奇怪、穿的衣服被问\"你怎么穿成这样\"。于是你把那些\"不一样\"的冲动藏进了收藏夹——这里没有评判，只有属于你的、不需要解释的喜欢。你不是不买——你是怕买回来之后，那种\"纯粹的喜欢\"会被现实的评价污染。"},
+         {title:"你的收藏夹在替你想成为谁",content:"它想让你成为一个\"不需要用普通来换取安全感\"的人。你收藏的那些小众的东西、那些别人看不懂的选择——本质上是在问世界一个问题：我可以做自己吗？可以不做大多数人吗？可以被接受吗？你的收藏夹替你回答了：你可以。你不需要所有人都懂你——你只需要找到那几个和你一样的人。"},
+         {title:"为什么你只收藏不行动",content:"因为你怕\"拥有\"会让它从\"特别的\"变成\"普通的\"。收藏的时候，它属于一个想象中的世界——在那里它独一无二、不被打分、不被比价。但买回来之后，它就进入了你真实的生活：会落灰、会看腻、会被别人评论。你不是不想拥有——你是不想让它失去那种\"只存在于理想中\"的纯粹。"},
+         {title:"收藏和购买之间隔了什么",content:"隔了一个你对\"被误解\"的恐惧。你怕买回来之后，有人问\"这是什么牌子\"——你说出来的名字对方没听过，那一刻的尴尬比省下的钱更让你难受。但你想过没有——那个问你的人，可能正是因为你拥有了一件奇怪但真实的东西，才开始对你产生真正的兴趣。"},
+         {title:"怎么让收藏从'想成为'变成'已在成为'",content:"从收藏夹里挑一件你觉得\"别人一定看不懂但你真的好喜欢\"的东西——买下来。不用向任何人解释它是什么。你就放在每天能看到的地方——不是展示给别人看，是提醒自己：我已经活成了一个不需要解释的人。你的不一样不需要辩护——只需要被你自己先承认。"}
+       ],
+       advice:["这周买一件你收藏了很久但怕别人说\"奇怪\"的东西——买了之后不发朋友圈、不分享、不解释。只属于你。","整理收藏夹时找出三个\"因为大家都在收藏所以我也收藏了\"的东西——删掉。你的收藏夹不需要合群。","下次有人问你\"这个东西好奇怪\"的时候，试着只回答\"对啊，我好喜欢\"。不需要解释为什么——喜欢就是最高的理由。","找一个你觉得\"活得很像自己\"的人，把收藏夹里最特别的三个东西发给她——不是为了被认可，是为了确认：这个世界上，有人懂。"],
+       reminder:"你不是奇怪——你只是比别人更早地知道自己想要什么。那些\"不一样\"的东西恰好在收藏夹里等着你，等你有勇气把它们从\"想象中的自己\"变成\"现实中的自己\"。它们不嫌你犹豫——它们知道，你只是需要一点时间，来相信：这样也可以。"
+    },
+    C:{name:"准备好了的人",tag:"你的收藏夹在替你说：'等我准备好了——一切都会不一样'",icon:"📚",
+       score:"准备好了 倾向 80%",
+       conclusion:"你的收藏夹是一个巨大的\"待处理区\"——里面存满了你对自己说过但还没兑现的承诺。课程、工具、技能、效率方法——你收藏的每一个东西都在说同一句话：总有一天，我会准备好的。你相信准备是行动的第一步，但你很少走到第二步。收藏对你来说，是焦虑的暂停键：先存下来，这个问题就算被\"处理\"过了——可以安心地不去想它了。",
+       evidence_note:"你收藏时在想\"等学会了/拥有了就能做那件事了\"（Q1），你收藏最多的是课程、工具、技能类内容（Q2），你收藏是\"第一步，兑现是以后的事\"（Q3），你不买的原因是\"买了就得真的去做了\"而收藏不用负责（Q4），你最怕被人戳穿\"收藏了这么多但什么都没做\"（Q5）。你的收藏行为本质上是一种焦虑管理：把想做但不敢做的事先放进收藏夹，就好像已经迈出了第一步——虽然这一步永远没有第二步。",
+       quote:"你收藏的不是课程和工具——是你对自己的承诺：'等我准备好了，我就可以开始了。'但你知道吗——你收藏夹里最早的那门课，已经等了你好几年。它不介意再等——可你呢？",
+       modules:[
+         {title:"你的收藏人格：准备型拖延者",content:"你的收藏夹是一个\"可能性仓库\"——每存进一门课、一个工具、一个方法，都是在对自己说：我有能力做这件事，只是现在还不是时候。你从小可能习惯了\"准备好了才能上场\"的剧本——考试前要复习完所有内容、上台前要练到万无一失。于是你把人生也当成了考试：在\"开始\"之前，你需要先收集所有资料、做足所有准备。但人生的很多事——不像考试，不需要你先考到满分才能开始。"},
+         {title:"你的收藏夹在替你想成为谁",content:"它想让你成为一个\"不需要准备好也能开始\"的人。你收藏夹里的每一样东西，都是你心中那个\"更好的自己\"需要具备的技能或工具。但更好的自己不是收藏出来的——是试错试出来的。你收藏不是因为懒——恰恰相反，你太认真了，认真到不敢在没有准备好的时候冒险。"},
+         {title:"为什么你只收藏不行动",content:"因为收藏让你产生了一种\"已经开始了\"的错觉——而这种错觉比真正的开始更安全。收藏不需要面对失败、不需要面对\"学了也学不会\"、不需要面对\"做了也做不好\"。但你想过没有——你收藏夹里存了两年的那门课，如果你两年前就开始学，哪怕每天只学十分钟，你现在已经学了多少了？"},
+         {title:"收藏和购买之间隔了什么",content:"隔了一个你对\"不够好\"的恐惧。你怕买了课程学不完、怕买了工具用不好、怕买了书看不完。于是你选择不买——不买就不用面对\"我可能做不到\"的事实。但你想过没有——那些课程、工具、书籍，从来不是为了\"准备好了的人\"设计的——它们是为了\"想要开始的人\"设计的。而你，恰好是后者。"},
+         {title:"怎么让收藏从'想成为'变成'已在成为'",content:"从收藏夹里挑一门存了最久的课程或一个存了最久的工具——就是现在，在接下来的七天里，每天只碰它十分钟。不需要学完、不需要掌握、不需要出成果——只需要开始。让收藏从\"我以后会做\"变成\"我正在做\"。你不知道的是——开始本身，就已经是准备好了。"}
+       ],
+       advice:["从收藏夹里挑一门存了最久的课程——本周每天只学十分钟。不需要学完，只需要开始。把\"以后再学\"变成\"今天就碰一下\"。","整理收藏夹时，把超过半年没打开过的课程和工具移到一个单独的文件夹里，命名为\"承认吧——你其实不想学\"。如果一周内还想不起来，就删掉。","下次想收藏一门课的时候，先问自己：如果我不收藏，明天还会想起来吗？如果想不起来——那它就没那么重要。","找一个人和你一起学你收藏夹里那门最久的课——不是为了竞争，是为了让\"开始\"这件事没有那么孤独。"],
+       reminder:"你不是懒——你是太怕\"没准备好就做不好\"。但你收藏夹里最早的那门课，已经等了你好几年了。它不需要你准备好——它只需要你开始。哪怕只是每天十分钟——你回头看的时候会发现：你早就可以开始了，你只是缺了第一个\"开始\"。"
+    },
+    D:{name:"被羡慕的人",tag:"你的收藏夹在替你说：'你看——这就是我想活成的样子'",icon:"✨",
+       score:"想被羡慕 倾向 78%",
+       conclusion:"你的收藏夹是你正在构建的\"别人眼中的我\"——里面每一件东西都带着一种被注视的期待。你收藏生活方式好物、博主同款、能拍照分享的东西——不是因为你肤浅，是因为你比别人更在意\"我活成了什么样子\"。你收藏的时候，脑子里已经有了画面：用这个东西的时候，别人会怎么看我？你是不是终于成了那个\"被羡慕\"的人？你享受的不是拥有——你享受的是被看见。",
+       evidence_note:"你收藏时在想\"别人看到会怎么反应\"（Q1），你收藏最多的是生活方式类、能出片的好物（Q2），你分享截图时好像已经和物品发生了关系（Q3），你不买的原因是怕买回来发现\"也就那样\"——收藏的想象比拥有更快乐（Q4），你最怕别人说你收藏的东西\"都差不多\"——因为每个收藏背后都有一个具体的、你想被人看到的场景（Q5）。你的收藏本质上是一种\"提前预演\"：在真的拥有之前，先在想象里活一遍拥有之后被羡慕的感觉。",
+       quote:"你收藏的不是物品——是你希望被人看到的样子。但如果有一天你不再需要被看见也能感到满足——你就已经比收藏夹里任何东西都更珍贵了。",
+       modules:[
+         {title:"你的收藏人格：展示型构建者",content:"你的收藏夹是一个\"未来的我被人看到时的样子\"的素材库。你收藏的不是物品——是场景：用这个杯子喝咖啡的早晨、用这盏灯照亮的房间、穿这件衣服被人回头看的一瞬间。你可能从小有过\"不被看见\"或\"被忽略\"的经历——所以你比别人更在意：我存在吗？我被注意到了吗？我值得被羡慕吗？收藏对你来说，是一种替代性的被看见——东西还没到手，想象已经完成了。"},
+         {title:"你的收藏夹在替你想成为谁",content:"它想让你成为一个\"不用靠别人的羡慕来确认自己价值\"的人。你收藏的那些美好的东西，本身是值得喜欢的——但你把它们当成了\"被喜欢\"的工具。你在用收藏代替一个更深的需求：我想被看见、被认可、被当作\"活得不错的人\"。但你的生活本身——即使没有这些收藏在点缀——也已经足够值得被看见了。"},
+         {title:"为什么你只收藏不行动",content:"因为收藏时的想象是完美的——而现实永远会有瑕疵。你收藏的那套餐具，在想象中它永远摆在阳光正好的餐桌上，不会沾油、不会洗不干净、不会有一天看腻。但买回来之后，它就会变成一件\"要洗的餐具\"。你不是不想要——你是不想让那个完美的想象落地之后变普通。"},
+         {title:"收藏和购买之间隔了什么",content:"隔了一个你对\"真实的自己够不够好\"的怀疑。你怕的是：买了同样的东西，你的生活也不会变成博主那样。但你想过没有——博主的生活之所以被羡慕，不是因为有那件东西，是因为TA活在属于自己的节奏里。而你如果一直在收藏别人的生活模板，你永远找不到自己的节奏。"},
+         {title:"怎么让收藏从'想成为'变成'已在成为'",content:"从收藏夹里挑一件你存了很久的\"生活方式类\"好物——然后买下来。不需要拍照、不需要分享、不需要让任何人知道。就自己用——在一个普通的星期二的早晨。不是为了活成别人羡慕的样子——是为了确认：即使没有观众，这个杯子里的咖啡也可以很好喝。"}
+       ],
+       advice:["这周买一件收藏夹里存了很久的生活方式好物——买了之后不发朋友圈、不拍照、不分享。只为自己用一次——看看那种\"没有观众\"的快乐是什么感觉。","整理收藏夹时问自己：如果永远没有人看到我拥有这个东西——我还想要吗？把\"只想要被看到\"的那部分删掉。","下次收藏一个东西时，先想象一个场景——\"如果只有我自己知道它存在的意义\"。如果那个画面里你依然满足——那就收藏。","做一个实验：一整周不在社交媒体上分享你买了什么、用了什么。看看你会发现什么——关于自己，关于那些\"不需要被羡慕\"的快乐。"],
+       reminder:"你不是虚荣——你只是比别人更想要被看见。但你的生活不需要像博主一样才值得被喜欢。在一个普通的星期二早晨，用一个普通的杯子喝一杯普通的咖啡——那一刻的你，已经足够好，不需要任何滤镜。"
+    }
+  },
+
+  productModules:[
+    "你的收藏人格类型",
+    "你的收藏夹在替你想成为谁",
+    "为什么你只收藏不行动",
+    "收藏和购买之间隔了什么",
+    "怎么让收藏从'想成为'变成'已在成为'"
+  ],
+
+  disclaimer:"本测试仅为自我探索参考，不构成任何诊断、消费建议或效果承诺。收藏是个人行为，请结合自己的实际情况判断。"
+};
+
+// ========== 引擎 ==========
+let answers=[],currentQ=0,paid=false;
+
+function $(id){return document.getElementById(id)}
+const app = document.getElementById('app');
+
+function cover(){
+  app.innerHTML=`
+    <div class="screen active cover">
+      <div class="icon">📦</div>
+      <h1>${DATA.title}</h1>
+      <div class="sub">${DATA.subtitle}</div>
+      <button class="btn-start" onclick="start(true)">开始测试</button>
+      <div class="trust">前5题免费 · 记下答案左滑查看报告预览</div>
+    </div>`;
+}
+
+function start(free){answers=[];currentQ=0;paid=!free;renderQ()}
+
+function renderQ(){
+  if(currentQ>=DATA.questions.length){showResult();return;}
+  if(currentQ===5 && !paid){showGate();return;}
+  const q=DATA.questions[currentQ];
+  const pct=Math.round((currentQ/DATA.questions.length)*100);
+  const letters=['A','B','C','D'];
+  app.innerHTML=`
+    <div class="screen active">
+      <div class="progress-wrap">
+        <div class="progress-bar"><div class="progress-fill" style="width:${pct}%"></div></div>
+        <div class="progress-label">第 ${currentQ+1}/${DATA.questions.length} 题</div>
+      </div>
+      <div class="q-area">
+        <div class="q-num">${currentQ<5?'免费测试 · 第'+(currentQ+1)+'题':'深度解锁 · 第'+(currentQ+1)+'题'}</div>
+        <div class="q-text">${q.scene}</div>
+        <div class="options">
+          ${letters.map(l=>`<div class="opt" onclick="pick('${l}')"><div class="letter">${l}</div><div class="txt">${q[l]}</div></div>`).join('')}
+        </div>
+      </div>
+      ${currentQ===4?'<div style="text-align:center;font-size:13px;color:#6a6558;padding:8px 0">记下5个答案，左滑查看报告预览 →</div>':''}
+    </div>`;
+}
+
+function pick(letter){
+  answers.push(letter);
+  currentQ++;
+  renderQ();
+  window.scrollTo(0,0);
+}
+
+function showGate(){
+  app.innerHTML=`
+    <div class="screen active gate-screen">
+      <div class="lock-icon">🔓</div>
+      <h2>前5题只是倾向<br>完整12题才能看清全貌</h2>
+      <div class="gate-desc">后7题继续拆解：你的收藏夹在替你想成为谁、为什么只收藏不行动、收藏和购买之间到底隔了什么</div>
+      <ul class="unlock-list">
+        ${DATA.productModules.map(m=>`<li>${m}</li>`).join('')}
+      </ul>
+      <button class="btn-gate" onclick="unlock()">继续完成12题 · 解锁完整报告</button>
+      <div class="price">完整12题报告 · 做完自动解锁</div>
+    </div>`;
+}
+
+function unlock(){paid=true;renderQ()}
+
+function showResult(){
+  const counts={A:0,B:0,C:0,D:0};
+  for(let i=5;i<answers.length;i++){counts[answers[i]]++}
+  const sorted=Object.entries(counts).sort((a,b)=>b[1]-a[1]);
+  let typeKey=sorted[0][0];
+  if(sorted[0][1]===sorted[1][1]&&sorted[0][0]==='A'&&(sorted[1][0]==='C'||sorted[1][0]==='D'))typeKey=sorted[1][0];
+  if(sorted[0][1]===sorted[1][1]&&sorted[0][0]==='B'&&sorted[1][0]==='D')typeKey='D';
+  const type=DATA.types[typeKey];
+
+  const freeAnswers=answers.slice(0,5);
+  const freeLabels=['收藏时的内心对话','收藏夹内容构成','深夜冲动反应','长存不买的原因','被翻收藏夹的恐惧'];
+  const freeDesc=[
+    ['你在等自己配得上它','你被独特性击中','你把收藏当准备的第一步','你在想象别人看到的反应'],
+    ['你存的都是质感经典款——等自己够好了再拥有','你存的全是小众独立孤品——每一个都在说\"我不一样\"','你存的是课程和工具——存了就好像已经开始了','你存的是生活方式好物——收藏时已经在想象使用的画面'],
+    ['你在做功课式地反复看详情页——说服自己\"我值得\"','你截图存手机偶尔翻看——\"不一定要拥有\"','你先收藏想着以后再说——\"以后\"是无限延期的未来','你立刻分享截图——分享出去就好像建立了某种关系'],
+    ['不是钱的问题——是觉得现在的自己还不够配得上','怕买回来就\"俗了\"——收藏的想象比拥有更纯粹','买了就得真的去做了——收藏不用负责','怕买回来发现\"也就那样\"——想象的快乐比拥有更大'],
+    ['怕被看穿\"原来你想成为这样的人\"','怕被说\"好奇怪\"——但你不是奇怪是不想被归类','怕被戳穿\"收藏了这么多但什么都没做\"','怕被说\"都差不多\"——但每个收藏背后都有具体的场景']
+  ];
+
+  let evidenceHTML='<h3>📋 答案证据</h3><p>';
+  for(let i=0;i<5;i++){
+    const a=freeAnswers[i];
+    const descIdx=a==='A'?0:a==='B'?1:a==='C'?2:3;
+    evidenceHTML+=`<strong>Q${i+1}「${DATA.questions[i].scene.slice(0,18)}…」</strong>你选了${a}——${freeDesc[i][descIdx]}。<br><br>`;
+  }
+  evidenceHTML+=type.evidence_note+'</p>';
+
+  let modulesHTML='';
+  for(const m of type.modules){
+    modulesHTML+=`<div class="module"><h3>${m.title}</h3><p>${m.content}</p></div>`;
+  }
+
+  let adviceHTML='';
+  for(let i=0;i<type.advice.length;i++){
+    adviceHTML+=`<div class="advice-item"><span class="n">0${i+1}</span><span>${type.advice[i]}</span></div>`;
+  }
+
+  app.innerHTML=`
+    <div class="screen active result">
+      <div class="badge">你的收藏人格</div>
+      <div class="type-name">${type.name}</div>
+      <div class="type-sub">${type.tag}</div>
+
+      <div style="font-size:15px;color:#d4b87a;margin-bottom:4px">${type.icon} ${type.score}</div>
+      <p style="font-size:15px;color:#b8b0a0;line-height:1.75;margin-bottom:20px">${type.conclusion}</p>
+
+      <div class="evidence-box">${evidenceHTML}</div>
+      ${modulesHTML}
+
+      <div class="summary-box">
+        <div class="q-mark">"</div>
+        <p>${type.quote}</p>
+      </div>
+
+      <div class="advice-box">
+        <h3>📅 未来30天建议</h3>
+        ${adviceHTML}
+      </div>
+
+      <div class="reminder-box">
+        <h3>⚠️ 关键提醒</h3>
+        <p>${type.reminder}</p>
+      </div>
+
+      <div style="font-size:13px;color:#6a6558;line-height:1.6;text-align:center;margin-bottom:24px">${DATA.disclaimer}</div>
+      <div class="footer">以上结果为自我探索参考 · 每个选择都是了解自己的线索</div>
+    </div>`;
+  window.scrollTo(0,0);
+}
+
+// start
+cover();
+</script>
+</body>
+</html>
