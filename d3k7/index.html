@@ -1,0 +1,318 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
+<title>APP心理测试</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:"PingFang SC","Microsoft YaHei",sans-serif;background:#0f0f1a;color:#e8e0d0;min-height:100vh;display:flex;justify-content:center}
+.app{width:100%;max-width:500px;min-height:100vh;position:relative;overflow:hidden}
+.screen{display:none;flex-direction:column;min-height:100vh;padding:28px 22px 40px}
+.screen.active{display:flex}
+
+.cover{justify-content:center;align-items:center;text-align:center;gap:20px}
+.cover .icon{font-size:52px}
+.cover h1{font-size:29px;font-weight:900;line-height:1.4;letter-spacing:1.5px;padding:0 6px}
+.cover h1 .hl{color:#c9a96e}
+.cover .sub{font-size:15px;color:#8a8070;line-height:1.7;max-width:300px}
+.cover .btn-start{margin-top:10px;padding:15px 50px;font-size:18px;font-weight:700;background:linear-gradient(135deg,#c9a96e,#a6844d);color:#0f0f1a;border:none;border-radius:40px;cursor:pointer;letter-spacing:2px}
+.cover .btn-start:active{transform:scale(.96)}
+.cover .trust{font-size:12px;color:#4a4538;margin-top:6px}
+
+.progress-wrap{padding:4px 0 14px}
+.progress-bar{height:3px;background:#1e1e2e;border-radius:2px;overflow:hidden}
+.progress-fill{height:100%;background:linear-gradient(90deg,#c9a96e,#d4b87a);border-radius:2px;transition:width .3s}
+.progress-label{font-size:13px;color:#5a5548;margin-top:6px;text-align:right}
+
+.q-area{flex:1;display:flex;flex-direction:column;gap:16px}
+.q-area .q-num{font-size:13px;color:#6a6558;letter-spacing:2px}
+.q-area .q-text{font-size:23px;font-weight:700;line-height:1.5}
+.options{display:flex;flex-direction:column;gap:10px}
+.opt{padding:18px 16px;border-radius:14px;background:#16162a;border:1.5px solid #252540;cursor:pointer;transition:all .2s;display:flex;align-items:flex-start;gap:13px}
+.opt:active{transform:scale(.98);border-color:#c9a96e;background:#1e1e34}
+.opt .letter{width:33px;height:33px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:15px;font-weight:700;flex-shrink:0;background:rgba(201,169,110,.12);color:#c9a96e}
+.opt .txt{font-size:15px;line-height:1.55;color:#c8c0b0;flex:1}
+
+.gate-screen{justify-content:center;align-items:center;text-align:center;gap:24px}
+.gate-screen .lock-icon{font-size:48px}
+.gate-screen h2{font-size:26px;font-weight:800;line-height:1.4}
+.gate-screen .gate-desc{font-size:15px;color:#a09880;line-height:1.7;max-width:300px}
+.gate-screen .unlock-list{text-align:left;background:#16162a;border-radius:16px;padding:20px 24px;width:100%;max-width:320px}
+.gate-screen .unlock-list li{font-size:14px;color:#b8b0a0;line-height:2;list-style:none}
+.gate-screen .unlock-list li::before{content:"✓ ";color:#c9a96e;font-weight:700}
+.gate-screen .btn-gate{margin-top:8px;padding:14px 44px;font-size:18px;font-weight:700;background:linear-gradient(135deg,#c9a96e,#a6844d);color:#0f0f1a;border:none;border-radius:40px;cursor:pointer;letter-spacing:2px}
+.gate-screen .btn-gate:active{transform:scale(.96)}
+.gate-screen .price{font-size:14px;color:#6a6558;margin-top:4px}
+
+.loading{justify-content:center;align-items:center;text-align:center;gap:24px}
+.loading .spinner{width:52px;height:52px;border:3px solid #1e1e2e;border-top-color:#c9a96e;border-radius:50%;animation:spin .8s linear infinite}
+@keyframes spin{to{transform:rotate(360deg)}}
+.loading .msg{font-size:16px;color:#a09880;letter-spacing:1px}
+
+.result{padding:28px 22px 48px}
+.result .badge{display:inline-block;padding:7px 16px;border:1px solid rgba(201,169,110,.25);border-radius:16px;font-size:13px;color:#c9a96e;letter-spacing:2px;margin-bottom:14px}
+.result .type-name{font-size:36px;font-weight:900;margin-bottom:6px;line-height:1.2}
+.result .type-sub{font-size:18px;color:#d4b87a;margin-bottom:20px;line-height:1.4}
+
+.evidence-box{background:#16162a;border-radius:16px;padding:20px;margin-bottom:22px;border-left:3px solid #c9a96e}
+.evidence-box h3{font-size:14px;color:#c9a96e;letter-spacing:2px;margin-bottom:10px}
+.evidence-box p{font-size:14px;color:#b8b0a0;line-height:1.7}
+
+.module{margin-bottom:20px}
+.module h3{font-size:16px;color:#a09880;letter-spacing:1.5px;margin-bottom:10px;padding-bottom:8px;border-bottom:1px solid #1e1e2e}
+.module p{font-size:14px;color:#b8b0a0;line-height:1.75;margin-bottom:6px}
+
+.summary-box{background:linear-gradient(135deg,#1a1a2e,#1f1f34);border-radius:16px;padding:24px;margin:24px 0;text-align:center;border:1px solid rgba(201,169,110,.15)}
+.summary-box .q-mark{font-size:28px;color:#c9a96e;margin-bottom:8px}
+.summary-box p{font-size:17px;color:#d4b87a;line-height:1.7;letter-spacing:.5px}
+
+.advice-box{margin-bottom:24px}
+.advice-box h3{font-size:16px;color:#a09880;letter-spacing:2px;margin-bottom:12px}
+.advice-box .advice-item{padding:12px 14px;margin-bottom:8px;background:#16162a;border-radius:12px;font-size:14px;color:#b8b0a0;line-height:1.6;display:flex;gap:10px}
+.advice-box .advice-item .n{color:#c9a96e;font-weight:700;flex-shrink:0}
+
+.reminder-box{background:#16162a;border-radius:16px;padding:20px;margin-bottom:28px;border:1px solid #2a2a40}
+.reminder-box h3{font-size:15px;color:#c9a96e;letter-spacing:2px;margin-bottom:8px}
+.reminder-box p{font-size:14px;color:#a09880;line-height:1.7}
+
+.footer{text-align:center;padding:16px;font-size:11px;color:#3a3a48;border-top:1px solid #16162a;margin-top:auto}
+</style>
+</head>
+<body>
+<div class="app" id="app"></div>
+<script>
+// ========== 内容数据 ==========
+const DATA = {
+  title:"你每天最先打开的APP，<br>暴露了你的<br><span class='hl'>情绪缺口</span>",
+  subtitle:"不是测你用哪个APP——<br>是测你的情绪在替你做选择",
+
+  questions:[
+    {scene:"早晨醒来后，你通常最先打开哪一类APP？",A:"微信/微博/小红书——先看看昨晚有没有人找我，世界有没有新鲜事发生",B:"知乎/得到/新闻客户端——我需要一点信息刺激，让大脑醒过来",C:"抖音/B站/游戏——不想马上面对现实，先让自己沉浸在一个轻松的世界里",D:"日历/待办/邮件——先把今天要做的事捋一遍，心里才有底"},
+    {scene:"打开那个APP的第一秒，你最强烈的感受是什么？",A:"一种轻微的期待——有没有人给我点赞、评论、或者发了新消息",B:"一种充实的满足感——新的信息进来了，我不会被世界落下",C:"一种如释重负——终于可以不用想了，这个声音会替我填满空白的几分钟",D:"一种掌控的踏实——今天的时间线在我手里，不会失控"},
+    {scene:"如果哪天早晨手机没电了，你最先感到的是什么？",A:"焦虑——会不会有人找我？会不会错过了什么重要的动态？",B:"空落落的——没有新信息输入的那几分钟，感觉和世界断开了连接",C:"烦躁——那我等早餐、等地铁的那几分钟要干什么？干坐着太难熬了",D:"不安——今天的计划没确认过，万一有什么变动我不知道怎么办"},
+    {scene:"你刷完那个APP之后，通常会有什么样的情绪变化？",A:"有时候更开心——如果收到了回应；有时候更空了——如果什么也没有",B:"感觉更有方向了——脑子里多了些新东西，可以琢磨一整天",C:"说不清——好像没那么紧绷了，但也说不上开心，就是暂时不用想那些烦心事了",D:"稍微安心了一点——至少今天的框架搭好了，剩下的就是执行"},
+    {scene:"你有没有过「明明不想打开却还是打开了」的早晨？",A:"经常。打开那一下已经成了肌肉记忆——不是想看，是不打开总觉得少了点什么",B:"有的。有时候明明想安静一会儿，但手已经自己点开了——像在给自己注射信息",C:"太多了。明明知道刷完会更累，但那个「打开-沉浸-忘记」的循环太熟悉了",D:"有的。明明今天没什么特别重要的事，但还是忍不住确认一遍——好像不确认就会有遗漏"},
+    {scene:"你最早是什么时候开始养成「早晨先打开这个APP」的习惯的？",A:"可能是某个需要被回应的时期——等一个人的消息，或者等一个结果，后来就改不掉了",B:"应该是某个觉得自己「不够用」的阶段——开始用碎片时间补课，后来就停不下来了",C:"大概是某段比较难熬的日子——发现刷手机能让难熬的早晨快点过去，就一直这么过来了",D:"从工作或学习压力变大开始——需要确认一切在掌控中才能放心，后来就成了默认设置"},
+    {scene:"如果接下来一个月每天早晨都不许打开任何APP，你觉得最难熬的是什么？",A:"不知道别人在干什么、世界在发生什么——那种「被排除在外」的感觉",B:"脑子会特别安静——但那种安静不是平静，是空白。我需要有东西可以想",C:"要直面自己的脑子——没有东西帮我分心，那些不想想的事全都会涌上来",D:"没办法提前规划——只能随遇而安，那种「走着瞧」的感觉让我很不舒服"},
+    {scene:"你有没有因为「早晨先打开这个APP」而耽误过更重要的事？",A:"有。本来只是想看一眼消息，结果刷了半小时朋友圈——回过神来早该出门了",B:"有的。本来只想看一篇文章，结果顺着链接点进去，一早上就只剩一半了",C:"经常。本来想的是「就看五分钟」，结果一个接一个的视频，完全停不下来",D:"不太会耽误——但我会反复确认。明明已经看过了还是再看一遍，像在检查门锁"},
+    {scene:"你身边的人有没有说过你「太依赖手机」？你当时的反应是什么？",A:"说过。我嘴上说「工作需要」——但我心里知道，需要的不只是工作上的联系",B:"说过。我解释说这是在「学习」——但有时候我也不知道是在学习还是在填补什么",C:"说过。我一般笑笑不解释——他们不会懂那种「不用想事情」有多珍贵",D:"没人说过——因为我看起来像是在「处理正事」。但只有我知道，那些「正事」有时候可以等"},
+    {scene:"如果把你每天早晨打开的那个APP比作一个人，它最像你的什么？",A:"像一个永远不会拒绝我的老朋友——不管我什么时候打开，里面都有人在说话",B:"像一个随时待命的老师——我有任何问题都能找到答案，虽然我不一定有勇气问出口",C:"像一个不用说话的陪伴——它不需要我回应，我也不需要它理解我，我们只是待在一起",D:"像一个不会出错的助手——它帮我把凌乱的一天整理成清单，让我觉得自己还行"},
+    {scene:"你真正渴望的——不是那个APP给你的，而是它让你暂时忽略的——是什么？",A:"一个真实的声音——不是文字、不是表情包、不是点赞，是有人真的在听我说话",B:"一个值得深聊的话题——不是在屏幕上刷过去的那种，是能让我想了又想、说了又说的那种",C:"一个不需要逃避的早晨——醒来之后不是想「快让我离开这里」，而是「今天好像还不错」",D:"一个可以松手的时刻——不用确认、不用计划、不用控制，只是待着，也觉得没什么问题"},
+    {scene:"如果明天早上你可以选择——不是打开APP，而是做一件事来开始这一天，你最想选什么？",A:"和一个在乎的人面对面吃一顿不赶时间的早餐——不是看手机里的他们，是真的他们",B:"坐下来读一本一直想读但总觉得没时间的书——不是为了有用，就是为了一直想读",C:"出门走一段路，不带目的的那种——只是感受一下早晨的风、阳光和不用赶路的自己",D:"什么都不做——不计划、不确认、不检查。就坐在那里，让早晨自己慢慢展开"}
+  ],
+
+  types:{
+    A:{name:"你在等一个声音叫你的名字",tag:"社交型——你最先打开社交APP，不是上瘾，是想被连接",icon:"💬",
+       score:"社交连接需求 85%",
+       conclusion:"你每天早晨第一个打开的APP在替你说一句你不太敢承认的话：「请注意我——我只是想知道有人在。」你打开的不是APP，是一扇通往人群的窗。你需要的不是那些碎片化的信息流，而是一个真实的、持续的、有温度的连接。你在等一个人真的看见你——不是点赞，是注视；不是评论，是对话。",
+       evidence_note:"你打开APP的第一秒在期待有人找你（Q2），手机没电时你最先焦虑的是「有没有人联系我」（Q3），刷完之后你的情绪完全取决于有没有收到回应（Q4）。你最早养成这个习惯的时间点，往往和某个需要被回应的时期有关（Q6）。这些选择共同指向一个核心：你缺的不是信息，是关系里的确认。",
+       quote:"你打开的不是APP——是你对「被记得」的渴望。你一直以为自己是在看别人，其实你是在等别人看见你。",
+       modules:[
+         {title:"你的情绪缺口：连接饥渴",content:"你每天早晨最先抓起的不是手机，是一个可以通向人群的入口。你对「别人有没有找我」的在意，已经超出了功能性的需求——它变成了一个情绪锚点：如果收到了回应，这一天就有了底气；如果没有，心里会空出一个很难填的位置。这种在意不是脆弱——是你在用社交信号确认一件事：我还在别人的世界里占据一席之地。这个情绪缺口可能来自某段被忽略的经历，或者一个渐行渐远的关系，让你习惯了在手机里寻找替代。"},
+         {title:"你每天第一个打开的APP在替你要什么",content:"它在替你要一个确认：有人需要我，有人记得我，有人在我不知道的时候主动靠近了我。你刷朋友圈、看点赞、读评论——表面上是在消磨时间，实际上是在做一件事：搜索自己被世界接住的证据。那些小红点和通知音，是你的情绪补给站。问题在于：这些补给的保质期很短。刷完之后你更开心了吗？有时候更空了——因为你真正想要的不是一个已读回执，而是一段可以对话的关系。"},
+         {title:"你以为的「习惯」其实在补偿什么",content:"你一直以为「早晨先刷社交APP」只是一个习惯——就像刷牙洗脸一样自然。但习惯不会让你在没刷的时候觉得焦虑和不安。真正的习惯是可以替换的，而你的「习惯」更像是一种补偿：当真实生活里的连接不够深、不够多、不够确定时，社交APP提供了一种低成本的替代方案。你不需要付出太多就能获得「有人在」的感觉——代价是这种感觉转瞬即逝。你真正缺的不是在线的热闹，是线下的陪伴。"},
+         {title:"最容易误判自己的情绪需求",content:"你容易把自己定义为「社恐」或「太在意别人的看法」——但真正的问题是：你需要的不是更多的社交，而是更少的、更真的社交。你不是贪心——你是饥饿。饥饿的人会抓起任何能填肚子的东西，哪怕知道那是膨化食品。你刷社交APP时的空虚感，不是在说「我不应该刷」，而是在说「我想被更认真地对待」。不要错怪自己太依赖手机——你只是还没找到那个让你不用依赖手机的人。"},
+         {title:"怎么用早晨第一个选择调整一整天的状态",content:"试试在打开社交APP之前，先给一个人发一条不是群发的消息。不需要是「早安」，可以是你刚好想到的一句话、一张刚拍的清晨照片、或者一句「昨天那个话题我还在想」。把主动连接变成早晨的第一件事——而不是被动地等待别人来找你。你会发现：当你先伸出手时，你的情绪就不再依赖别人的小红点了。你成了连接的发起者，而不是等待者。"}
+       ],
+       advice:["明天早上，在打开任何APP之前，先给一个人发一条消息——不是回复，是主动说一句话。不用想太多，就发你脑子里第一个想到的。","这周找一个你一直想联系但觉得「没理由」联系的人，约出来喝杯东西。理由就是「好久没见了，想看看你最近怎么样」。","把手机静音一天——不是不看，是把通知关掉。观察：当你不知道有没有人找你的时候，你有没有更想去找真实的人？","写下来：你刷社交APP时最希望看到的三件事。然后问自己——这三件事里，有多少是可以在现实生活中自己创造的？"],
+       reminder:"你不是离不开社交APP——你是离不开「被人在意」的感觉。但值得你在意的人，不会只活在手机屏幕里。那些真正重要的人，值得你的声音，而不是一个点赞。"
+    },
+    B:{name:"你在用信息填满一个安静太久的大脑",tag:"信息型——你最先打开知识/新闻APP，不是好学，是怕空白",icon:"📚",
+       score:"智力刺激需求 82%",
+       conclusion:"你每天早晨第一个打开的APP在替你说一句你不太愿意承认的话：「我需要有事可想——不然我会开始想那些不想想的事。」你打开的不是信息流，是一面可以挡在你自己和你的思绪之间的墙。你需要的不是那些新闻、数据和知识点本身，而是一个能持续刺激大脑运转的理由。你的大脑不敢停下来——因为停下来的时候，有些你不愿意面对的东西会浮上来。",
+       evidence_note:"你打开APP的主要目的是「让大脑醒过来」（Q1、Q2），手机没电时你感觉「空落落的」「和世界断开了连接」（Q3），刷完之后你感觉「更有方向了」（Q4），你的习惯始于某个觉得自己「不够用」的阶段（Q6）。这些选择指向同一个底层逻辑：你把信息输入当成了一种情绪管理工具——脑子有事可做时，就没空产生焦虑。",
+       quote:"你打开的不是新闻——是你不愿意面对自己的那几分钟的屏障。真正需要喂养的不是你的求知欲，是你的不安。",
+       modules:[
+         {title:"你的情绪缺口：智力饥渴背后的空白恐惧",content:"你对信息有一种持续的、超过实际需要的渴求。你刷新闻不是想知道发生了什么——你是怕自己不知道；你看知识类内容不全是为了学习——你是怕自己的大脑闲下来。这种渴求的底色不是好学，是一种深层的不安：如果我没有在输入，我就在落后；如果我的大脑安静了，那些被我压下去的东西就会冒出来。你可能有过一段觉得自己「不够用」的经历——跟不上一场对话、被一个问题问住、在某个场合觉得自己浅薄——从那天起，你用信息填满了每一个缝隙。"},
+         {title:"你每天第一个打开的APP在替你要什么",content:"它在替你要一个「有事可做」的状态。你的大脑需要一个持续运转的理由——就像一个陀螺，停下来就会倒下。那些知识、新闻、观点像燃料一样被投进去，让大脑保持高速运转。但问题在于：你真正需要的不是更多的信息，而是一个值得深究的问题。信息只是碎片，问题才会让你真正沉浸——而沉浸感，恰恰是你最缺的东西。"},
+         {title:"你以为的「习惯」其实在补偿什么",content:"你一直以为「早晨看新闻/学东西」是一个好习惯——比刷短视频强多了。但你的大脑不是你想象中那种「学了就用」的状态。你是在用信息的密度来逃避思考的深度。真正的学习需要停顿、消化、输出——而你的早晨信息摄入更像是在「换气」：快速吸进来、快速呼出去，什么都没留下。你在补偿的不是知识的匮乏，是深度思考的缺席。你的大脑真正饿的不是信息，是一个值得你关掉屏幕、安静坐下来想一整天的问题。"},
+         {title:"最容易误判自己的情绪需求",content:"你容易觉得自己是「求知欲强」「关心时事」「热爱学习」——这些标签都是正确的，但它们只是表象。真正的你没有那么享受学习——你享受的是「不用面对空白的自己」。当你把信息输入停下来的时候，焦虑会冒出来——不是因为你错过了什么新闻，是因为你没有东西挡在你和自己的不安之间了。不要用「好学」来美化「逃避」——你的求知欲是真实的，但你的情绪需求也是。承认后者不会贬低前者。"},
+         {title:"怎么用早晨第一个选择调整一整天的状态",content:"明天早晨，在打开信息APP之前，先给自己五分钟的「主动思考时间」。不需要任何外部输入——就拿一支笔和一张纸，写下今天你最想弄明白的一个问题。不是「今天的新闻是什么」，而是「今天我想理解什么」。把早晨的第一个动作从「接收信息」变成「提出问题」。你会惊讶地发现：当你先定下自己的问题，再去看信息时，那些碎片会自动围绕你的问题排列——学习变成了真正的思考，而不是逃避。"}
+       ],
+       advice:["明天早上，先别打开任何信息APP。拿一张纸，写下三个你真正想弄明白的问题——不是工作上的，是你好奇但一直没时间去查的。","这周找一本需要连续读一两个小时的书，在早晨读——不是碎片式的刷，是坐下来读到你觉得够了为止。观察这种「深度吸收」和「快速刷屏」的区别。","关掉所有新闻APP的通知一周。你会发现：真正重要的新闻你不会错过——因为别人会告诉你。你错过的只是那些让你暂时逃避自己的噪音。","找一个你信任的、和你兴趣相似但观点不同的人，约一次长对话——不是微信文字，是面对面或者电话。让信息交换变成真正的交流。"],
+       reminder:"你需要的不是更多的信息——你需要的是一个值得你关掉所有APP、安静下来的问题。求知欲是你的天赋，别把它用成了逃避自己的工具。"
+    },
+    C:{name:"你在找一个不用想事情的出口",tag:"娱乐型——你最先打开视频/游戏APP，不是贪玩，是想喘口气",icon:"🎮",
+       score:"情绪逃避需求 88%",
+       conclusion:"你每天早晨第一个打开的APP在替你说一句你甚至没意识到的请求：「让我离开这里一会儿——就几分钟，然后我再回来面对。」你打开的不是娱乐内容，是一扇通往「无重量世界」的暗门。在那个世界里，你可以跟着别人笑、跟着剧情走、跟着游戏规则玩——不需要做任何重要决定，不需要面对任何难搞的情绪。你以为自己在充电，但其实你在逃。",
+       evidence_note:"你打开APP的首要目的是「不想马上面对现实」（Q1），手机没电时你最先感到的是「烦躁」——因为不知道那几分钟要怎么熬过去（Q3），刷完之后你「说不清」自己到底有没有变好（Q4），你很清楚那个「打开-沉浸-忘记」的循环（Q5），你最早养成这个习惯的时期往往是某段特别难熬的日子（Q6）。这些选择指向同一个真相：你的早晨第一件事不是享受，是疏散。",
+       quote:"你打开的不是视频——是你给自己开的五分钟病假条。但病假不会治好病，它只会让你拖延看医生的时间。",
+       modules:[
+         {title:"你的情绪缺口：快乐能力的流失",content:"你并不是一个贪玩的人——恰恰相反，你可能在别人眼里是「挺能扛」的那一个。你只是在早晨醒来时，感觉自己需要先「喘口气」才能开始这一天。这口气不是能量补充——是短暂逃离。你可能已经很久没有体验过那种「醒来之后自然地感到今天还不错」的感觉了。你的生活里不缺责任、不缺任务、不缺要应付的人和事——缺的是那种没有任何目的的、纯粹的轻盈和快乐。"},
+         {title:"你每天第一个打开的APP在替你要什么",content:"它在替你要一个暂停键。你不想在睁开眼睛的第一秒就开始面对「今天要做的事」「今天要面对的人」「今天要解决的麻烦」。视频、游戏、段子——它们提供了一种无痛的存在感：你不需要做任何事，只需要把自己交给算法。算法不会拒绝你，不会要求你，不会让你失望。但问题是：当你按了暂停键，生活的进度条并没有暂停。你在APP里度过的那段时间，那些让你想逃避的东西还在原地等着你——而且往往因为你拖延了面对的时间而变得更重。"},
+         {title:"你以为的「习惯」其实在补偿什么",content:"你一直以为「早晨刷刷视频/玩玩游戏」是给自己充电——放松一下再干活，不挺好的吗。但你的放松方式有一个特点：它本质上不是放松，是麻醉。真正的放松会让你精力恢复、思路清晰、情绪稳定。而你刷完之后「说不清自己到底有没有变好」——这就是麻醉和放松的区别。你在补偿的不是休息的需求，是快乐的缺失。如果你的生活里有足够多让你发自内心期待的事——一个你想见的人、一个你想做的项目、一个你觉得有意义的早晨——你不会需要先用娱乐把自己灌满才能出门。"},
+         {title:"最容易误判自己的情绪需求",content:"你容易觉得自己是「自制力不行」或「太懒了」——但这不是意志力的问题。没有人会在一个充满快乐和期待的早晨急着找出口。你把问题归咎于自己不够自律，然后陷入「自责-逃避-更自责」的循环。但真正需要被诊断的不是你的自控力，而是你的生活里还有多少让你不想睁开眼睛面对的东西。你需要的不是戒掉手机，是让你的早晨有值得醒来的理由。"},
+         {title:"怎么用早晨第一个选择调整一整天的状态",content:"试着在明天早上醒来的第一分钟，不要拿手机——先让自己感受十秒钟「我现在的感觉是什么」。不用评价，不用行动，只是感受。然后问自己：如果今天我可以做一件让我真的开心的事——不是逃避型的那种开心，是「做完之后会觉得今天没白过」的那种——那会是什么？不管答案大小，把它变成你今天第一件要做的事。让快乐从目的变成起点。"}
+       ],
+       advice:["明天早上，把手机放在卧室之外过夜。醒来后先不要碰它——去给自己泡一杯什么东西，站在窗前喝完，什么都不看，什么都不想。看看你能撑几分钟。","找出一个你一直想做的、和屏幕无关的小事——养一盆植物、学一个简单的手艺、去一个从没去过的街区走走——这周做一次。用真实的体验代替虚拟的刺激。","记录一周的早晨情绪：每天醒来后给自己打一个分（1-10分），看看你什么时候最想打开娱乐APP、什么时候最不需要它。找到那个分水岭。","如果你发现自己「明明知道刷完会更累还是刷了」——在那之前，先给自己安排一个「替代动作」。比如：先出门走五分钟，回来后如果还想刷再刷。大部分时候你会发现：走完回来就不想刷了。"],
+       reminder:"你不需要戒掉娱乐——你需要的是让娱乐变回「因为开心才去做的事」，而不是「因为不想不开心才去做的事」。你值得一个「不需要逃」的早晨。"
+    },
+    D:{name:"你在用计划对抗一个不愿意失控的自己",tag:"工具型——你最先打开效率/日历APP，不是自律，是怕失控",icon:"📋",
+       score:"掌控感需求 80%",
+       conclusion:"你每天早晨第一个打开的APP在替你说一句被你包装得很理性的请求：「让我确定今天不会出问题——然后我才敢开始。」你打开的不是效率工具，是一套检查程序：确认今天的安排有没有变动、待办有没有遗漏、时间线有没有漏洞。你像一个每天早上都要把房子检查一遍的人——不是房子有问题，是你不检查就没办法安心住进去。你以为自己在「进入状态」，但其实你在「排除焦虑」。",
+       evidence_note:"你打开APP的首要目的是「把今天的事捋一遍，心里才有底」（Q1），你的核心感受是「掌控的踏实」（Q2），手机没电时你最先不安——因为计划没确认过（Q3），刷完之后你「稍微安心了一点」（Q4），你忍不住反复确认——像检查门锁一样（Q8）。这些选择指向同一个底层需求：你用秩序来管理焦虑，但秩序越多，反而越无法忍受一点点失控的可能。",
+       quote:"你打开的不是日历——是你需要的一个「今天不会出事」的保证。但生活不是待办清单，它最有价值的部分从来都不在你计划之内。",
+       modules:[
+         {title:"你的情绪缺口：安全感的秩序化",content:"你对「掌控感」有一种超过实际情况的需求。你需要在睁开眼睛的第一秒就确认今天是有框架的——这个框架不是用来提高效率的，是用来安抚自己的。你真正怕的不是今天的任务完不成——是「万一有什么没想到的事情发生」。这种对意外的恐惧，可能来自某一次因为没有准备好而搞砸的经历、某一段失控的时期、或者一个让你长期觉得「不能有闪失」的环境。你把秩序当成安全感的来源：只要一切都安排好了，就不会出问题。但生活从来不是待办清单——你越依赖秩序，越害怕失控，越不敢让生活自然地发生。"},
+         {title:"你每天第一个打开的APP在替你要什么",content:"它在替你要一个承诺：「今天和昨天一样，一切都还在原来的轨道上。」你检查日历、看待办、确认邮件——表面上在做计划，实际上在做一件事：检测异常。你像一个雷达，每天早上扫描一遍，确认没有威胁。但真正的威胁——那些真正会让你失控的事——从来不在日历上提前通知你。你抓的是可控的小事，换来的是一种临时的安心。但你真正需要的不是确认今天的安排，是学会相信：即使今天的安排被打乱了，你也能应对。"},
+         {title:"你以为的「习惯」其实在补偿什么",content:"你一直以为「早晨先安排一天」是高效人士的好习惯——是的，它确实是。但「高效」和「不安」之间有一条很细的线。高效的人确认计划之后，会把这件事放下，开始行动。不安的人确认了还会再确认——明明已经看过了，还是忍不住再检查一遍，像出门之后折回去检查门锁。你补偿的不是计划的需求——你是在用「反复确认」来消耗焦虑的能量。你需要培养的不是更好的计划系统，而是「就算有遗漏也没关系」的心理肌肉。"},
+         {title:"最容易误判自己的情绪需求",content:"你容易把自己标签为「有条理的人」「效率型人格」「天生的组织者」。这些标签都是对的——但它们可能掩盖了一个更深的真相：你不是天生有条理，你是不得不有条理，因为无序会让你焦虑。真正的效率型人格可以从容面对变化——因为效率的本质是把事情做好，而不是把计划做完美。如果一次计划外的变动会让你一整天都不舒服，那你就不是效率高——你是安全感太依赖秩序了。"},
+         {title:"怎么用早晨第一个选择调整一整天的状态",content:"试着每周选一天早晨，不打开任何效率工具。不看日历、不看待办、不确认邮件——就让这一天自然地展开。在开始之前告诉自己：今天无论发生什么「计划外」的事，我都能应对。把这一天当成练习——练习在不完美的信息条件下行动，练习相信自己的即时反应能力，练习接受「有些事情今天搞不定也没关系」。你会发现：当你不再需要「确认所有事情」才能开始时，你的早晨会多出很多自由。"}
+       ],
+       advice:["明天早上，在打开日历/待办之前，先在脑子里过一遍：如果今天只能完成一件事，那件事是什么？然后以此为准——天塌了都先做这件事。","每周随机选一天，不提前规划任何事。就随遇而安地过一天——看看这一天有没有真的出问题。记录下来的和没记录下来的，哪一个更让你意外。","把「检查清单」的次数减半：如果之前每天检查三次，现在就检查一次。如果一次就够了，那就相信一次就够了。","找一个你信任的人，把你的一天计划交给TA来安排——只一天。看看当你不是掌控者的时候，会发生什么。"],
+       reminder:"你的计划是你的盔甲，但不是你的家。真正的安全感不是来自「一切都在掌控中」——而是来自「就算失控了，我也能接住自己」。试着让生活偶尔失控一下——你会比自己想象中更擅长应对。"
+    }
+  },
+
+  productModules:[
+    "你的情绪缺口类型",
+    "你每天第一个打开的APP在替你要什么",
+    "你以为的「习惯」其实在补偿什么",
+    "最容易误判自己的情绪需求",
+    "怎么用早晨第一个选择调整一整天的状态"
+  ],
+
+  disclaimer:"本测试仅为自我探索参考，不构成任何诊断、心理建议或效果承诺。情绪状态因人而异，请结合自己的实际感受判断。"
+};
+
+// ========== 引擎 ==========
+let answers=[],currentQ=0,paid=false;
+
+function $(id){return document.getElementById(id)}
+const app = document.getElementById('app');
+
+function cover(){
+  app.innerHTML=`
+    <div class="screen active cover">
+      <div class="icon">📱</div>
+      <h1>${DATA.title}</h1>
+      <div class="sub">${DATA.subtitle}</div>
+      <button class="btn-start" onclick="start(true)">开始测试</button>
+      <div class="trust">前5题免费 · 记下答案左滑查看报告预览</div>
+    </div>`;
+}
+
+function start(free){answers=[];currentQ=0;paid=!free;renderQ()}
+
+function renderQ(){
+  if(currentQ>=DATA.questions.length){showResult();return;}
+  if(currentQ===5 && !paid){showGate();return;}
+  const q=DATA.questions[currentQ];
+  const pct=Math.round((currentQ/DATA.questions.length)*100);
+  const letters=['A','B','C','D'];
+  app.innerHTML=`
+    <div class="screen active">
+      <div class="progress-wrap">
+        <div class="progress-bar"><div class="progress-fill" style="width:${pct}%"></div></div>
+        <div class="progress-label">第 ${currentQ+1}/${DATA.questions.length} 题</div>
+      </div>
+      <div class="q-area">
+        <div class="q-num">${currentQ<5?'免费测试 · 第'+(currentQ+1)+'题':'深度解锁 · 第'+(currentQ+1)+'题'}</div>
+        <div class="q-text">${q.scene}</div>
+        <div class="options">
+          ${letters.map(l=>`<div class="opt" onclick="pick('${l}')"><div class="letter">${l}</div><div class="txt">${q[l]}</div></div>`).join('')}
+        </div>
+      </div>
+      ${currentQ===4?'<div style="text-align:center;font-size:13px;color:#6a6558;padding:8px 0">记下5个答案，左滑查看报告预览 →</div>':''}
+    </div>`;
+}
+
+function pick(letter){
+  answers.push(letter);
+  currentQ++;
+  renderQ();
+  window.scrollTo(0,0);
+}
+
+function showGate(){
+  app.innerHTML=`
+    <div class="screen active gate-screen">
+      <div class="lock-icon">🔓</div>
+      <h2>前5题只是倾向<br>完整12题才能看清全貌</h2>
+      <div class="gate-desc">后7题继续拆解：你的APP选择在替你要什么、你在补偿什么、真正需要的是什么</div>
+      <ul class="unlock-list">
+        ${DATA.productModules.map(m=>`<li>${m}</li>`).join('')}
+      </ul>
+      <button class="btn-gate" onclick="unlock()">继续完成12题 · 解锁完整报告</button>
+      <div class="price">完整12题报告 · 做完自动解锁</div>
+    </div>`;
+}
+
+function unlock(){paid=true;renderQ()}
+
+function showResult(){
+  const counts={A:0,B:0,C:0,D:0};
+  for(let i=5;i<answers.length;i++){counts[answers[i]]++}
+  const sorted=Object.entries(counts).sort((a,b)=>b[1]-a[1]);
+  let typeKey=sorted[0][0];
+  if(sorted[0][1]===sorted[1][1]&&sorted[0][0]==='A'&&(sorted[1][0]==='C'||sorted[1][0]==='D'))typeKey=sorted[1][0];
+  if(sorted[0][1]===sorted[1][1]&&sorted[0][0]==='B'&&sorted[1][0]==='D')typeKey='D';
+  const type=DATA.types[typeKey];
+
+  const freeAnswers=answers.slice(0,5);
+  const freeLabels=['第一打开选择','打开瞬间感受','手机没电的反应','刷完后情绪变化','违心打开的频率'];
+  const freeDesc=[
+    ['你最先关心的是「有没有人找我」','你相信信息输入才能让大脑启动','你在用娱乐给自己一个缓冲地带','你习惯用秩序获得安全感和方向感'],
+    ['你带着期待——期待被看见、被回应','你带着充实感——害怕被世界落下','你带着解脱感——终于可以不用想了','你带着掌控感——今天在自己的手里'],
+    ['你的焦虑指向人际关系的中断','你的焦虑指向信息接入的中断','你的焦虑指向逃避通道的中断','你的焦虑指向秩序确认的中断'],
+    ['你的情绪好坏直接和社交反馈挂钩','你获得了可琢磨的素材但未必真的消化','你自己也说不清到底变了还是没变','你换来了暂时的安心但问题仍在那里'],
+    ['打开APP已经是肌肉记忆，不打开感觉少了什么','有时候不是想看而是手自己动了，像注射信息','你很清楚这个循环：打开-沉浸-忘记-更累','明明没什么事还是反复确认，像检查门锁']
+  ];
+
+  let evidenceHTML='<h3>📋 答案证据</h3><p>';
+  for(let i=0;i<5;i++){
+    const a=freeAnswers[i];
+    const descIdx=a==='A'?0:a==='B'?1:a==='C'?2:3;
+    evidenceHTML+=`<strong>Q${i+1}「${DATA.questions[i].scene.slice(0,18)}…」</strong>你选了${a}——${freeDesc[i][descIdx]}。<br><br>`;
+  }
+  evidenceHTML+=type.evidence_note+'</p>';
+
+  let modulesHTML='';
+  for(const m of type.modules){
+    modulesHTML+=`<div class="module"><h3>${m.title}</h3><p>${m.content}</p></div>`;
+  }
+
+  let adviceHTML='';
+  for(let i=0;i<type.advice.length;i++){
+    adviceHTML+=`<div class="advice-item"><span class="n">0${i+1}</span><span>${type.advice[i]}</span></div>`;
+  }
+
+  app.innerHTML=`
+    <div class="screen active result">
+      <div class="badge">你的情绪缺口类型</div>
+      <div class="type-name">${type.name}</div>
+      <div class="type-sub">${type.tag}</div>
+
+      <div style="font-size:15px;color:#d4b87a;margin-bottom:4px">${type.icon} ${type.score}</div>
+      <p style="font-size:15px;color:#b8b0a0;line-height:1.75;margin-bottom:20px">${type.conclusion}</p>
+
+      <div class="evidence-box">${evidenceHTML}</div>
+      ${modulesHTML}
+
+      <div class="summary-box">
+        <div class="q-mark">"</div>
+        <p>${type.quote}</p>
+      </div>
+
+      <div class="advice-box">
+        <h3>📅 未来30天建议</h3>
+        ${adviceHTML}
+      </div>
+
+      <div class="reminder-box">
+        <h3>⚠️ 关键提醒</h3>
+        <p>${type.reminder}</p>
+      </div>
+
+      <div style="font-size:13px;color:#6a6558;line-height:1.6;text-align:center;margin-bottom:24px">${DATA.disclaimer}</div>
+      <div class="footer">以上结果为自我探索参考 · 每个选择都是了解自己的线索</div>
+    </div>`;
+  window.scrollTo(0,0);
+}
+
+// start
+cover();
+</script>
+</body>
+</html>

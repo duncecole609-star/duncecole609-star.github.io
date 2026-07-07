@@ -1,0 +1,318 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
+<title>熬夜心理测试</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:"PingFang SC","Microsoft YaHei",sans-serif;background:#0f0f1a;color:#e8e0d0;min-height:100vh;display:flex;justify-content:center}
+.app{width:100%;max-width:500px;min-height:100vh;position:relative;overflow:hidden}
+.screen{display:none;flex-direction:column;min-height:100vh;padding:28px 22px 40px}
+.screen.active{display:flex}
+
+.cover{justify-content:center;align-items:center;text-align:center;gap:20px}
+.cover .icon{font-size:52px}
+.cover h1{font-size:29px;font-weight:900;line-height:1.4;letter-spacing:1.5px;padding:0 6px}
+.cover h1 .hl{color:#c9a96e}
+.cover .sub{font-size:15px;color:#8a8070;line-height:1.7;max-width:300px}
+.cover .btn-start{margin-top:10px;padding:15px 50px;font-size:18px;font-weight:700;background:linear-gradient(135deg,#c9a96e,#a6844d);color:#0f0f1a;border:none;border-radius:40px;cursor:pointer;letter-spacing:2px}
+.cover .btn-start:active{transform:scale(.96)}
+.cover .trust{font-size:12px;color:#4a4538;margin-top:6px}
+
+.progress-wrap{padding:4px 0 14px}
+.progress-bar{height:3px;background:#1e1e2e;border-radius:2px;overflow:hidden}
+.progress-fill{height:100%;background:linear-gradient(90deg,#c9a96e,#d4b87a);border-radius:2px;transition:width .3s}
+.progress-label{font-size:13px;color:#5a5548;margin-top:6px;text-align:right}
+
+.q-area{flex:1;display:flex;flex-direction:column;gap:16px}
+.q-area .q-num{font-size:13px;color:#6a6558;letter-spacing:2px}
+.q-area .q-text{font-size:23px;font-weight:700;line-height:1.5}
+.options{display:flex;flex-direction:column;gap:10px}
+.opt{padding:18px 16px;border-radius:14px;background:#16162a;border:1.5px solid #252540;cursor:pointer;transition:all .2s;display:flex;align-items:flex-start;gap:13px}
+.opt:active{transform:scale(.98);border-color:#c9a96e;background:#1e1e34}
+.opt .letter{width:33px;height:33px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:15px;font-weight:700;flex-shrink:0;background:rgba(201,169,110,.12);color:#c9a96e}
+.opt .txt{font-size:15px;line-height:1.55;color:#c8c0b0;flex:1}
+
+.gate-screen{justify-content:center;align-items:center;text-align:center;gap:24px}
+.gate-screen .lock-icon{font-size:48px}
+.gate-screen h2{font-size:26px;font-weight:800;line-height:1.4}
+.gate-screen .gate-desc{font-size:15px;color:#a09880;line-height:1.7;max-width:300px}
+.gate-screen .unlock-list{text-align:left;background:#16162a;border-radius:16px;padding:20px 24px;width:100%;max-width:320px}
+.gate-screen .unlock-list li{font-size:14px;color:#b8b0a0;line-height:2;list-style:none}
+.gate-screen .unlock-list li::before{content:"✓ ";color:#c9a96e;font-weight:700}
+.gate-screen .btn-gate{margin-top:8px;padding:14px 44px;font-size:18px;font-weight:700;background:linear-gradient(135deg,#c9a96e,#a6844d);color:#0f0f1a;border:none;border-radius:40px;cursor:pointer;letter-spacing:2px}
+.gate-screen .btn-gate:active{transform:scale(.96)}
+.gate-screen .price{font-size:14px;color:#6a6558;margin-top:4px}
+
+.loading{justify-content:center;align-items:center;text-align:center;gap:24px}
+.loading .spinner{width:52px;height:52px;border:3px solid #1e1e2e;border-top-color:#c9a96e;border-radius:50%;animation:spin .8s linear infinite}
+@keyframes spin{to{transform:rotate(360deg)}}
+.loading .msg{font-size:16px;color:#a09880;letter-spacing:1px}
+
+.result{padding:28px 22px 48px}
+.result .badge{display:inline-block;padding:7px 16px;border:1px solid rgba(201,169,110,.25);border-radius:16px;font-size:13px;color:#c9a96e;letter-spacing:2px;margin-bottom:14px}
+.result .type-name{font-size:36px;font-weight:900;margin-bottom:6px;line-height:1.2}
+.result .type-sub{font-size:18px;color:#d4b87a;margin-bottom:20px;line-height:1.4}
+
+.evidence-box{background:#16162a;border-radius:16px;padding:20px;margin-bottom:22px;border-left:3px solid #c9a96e}
+.evidence-box h3{font-size:14px;color:#c9a96e;letter-spacing:2px;margin-bottom:10px}
+.evidence-box p{font-size:14px;color:#b8b0a0;line-height:1.7}
+
+.module{margin-bottom:20px}
+.module h3{font-size:16px;color:#a09880;letter-spacing:1.5px;margin-bottom:10px;padding-bottom:8px;border-bottom:1px solid #1e1e2e}
+.module p{font-size:14px;color:#b8b0a0;line-height:1.75;margin-bottom:6px}
+
+.summary-box{background:linear-gradient(135deg,#1a1a2e,#1f1f34);border-radius:16px;padding:24px;margin:24px 0;text-align:center;border:1px solid rgba(201,169,110,.15)}
+.summary-box .q-mark{font-size:28px;color:#c9a96e;margin-bottom:8px}
+.summary-box p{font-size:17px;color:#d4b87a;line-height:1.7;letter-spacing:.5px}
+
+.advice-box{margin-bottom:24px}
+.advice-box h3{font-size:16px;color:#a09880;letter-spacing:2px;margin-bottom:12px}
+.advice-box .advice-item{padding:12px 14px;margin-bottom:8px;background:#16162a;border-radius:12px;font-size:14px;color:#b8b0a0;line-height:1.6;display:flex;gap:10px}
+.advice-box .advice-item .n{color:#c9a96e;font-weight:700;flex-shrink:0}
+
+.reminder-box{background:#16162a;border-radius:16px;padding:20px;margin-bottom:28px;border:1px solid #2a2a40}
+.reminder-box h3{font-size:15px;color:#c9a96e;letter-spacing:2px;margin-bottom:8px}
+.reminder-box p{font-size:14px;color:#a09880;line-height:1.7}
+
+.footer{text-align:center;padding:16px;font-size:11px;color:#3a3a48;border-top:1px solid #16162a;margin-top:auto}
+</style>
+</head>
+<body>
+<div class="app" id="app"></div>
+<script>
+// ========== 内容数据 ==========
+const DATA = {
+  title:"你熬夜的理由，<br>暴露了你白天<br><span class='hl'>没敢面对的事</span>",
+  subtitle:"不是测你是不是睡得晚——<br>是测你的深夜在替白天说什么",
+
+  questions:[
+    {scene:"夜深了，你躺在床上却不想睡，脑子里最常飘过什么？",A:"今天又没做什么自己想做的事，现在睡太不甘心了",B:"一想到明天还有那么多事等着，我就想再多躲一会儿",C:"回想一整天，好像没一件事让我觉得真的值得记住",D:"终于安静了——没有人找我，没有消息，只有我自己"},
+    {scene:"你刷着手机熬夜时，真正在等的其实是什么？",A:"等一个“今天属于我”的时刻——哪怕只有睡前这几十分钟",B:"等困到什么都想不动了再睡——这样就不用躺着胡思乱想了",C:"等一个让我觉得“今天没白过”的东西——一条消息、一个好笑的视频",D:"没在等什么，就是舍不得今天的安静结束——明天又该吵了"},
+    {scene:"第二天醒来很困，你心里最先冒出来的念头是？",A:"困就困吧，至少昨晚那段时间是完全属于我的",B:"又熬夜了——但比起面对今天，我宁愿困着也不想开始",C:"又是没什么期待的一天，多睡少睡有什么区别",D:"困是困，但昨晚的安静让我觉得值——不被打扰的感觉值得用困换"},
+    {scene:"你熬夜最多的时间段，通常在什么时候？",A:"十点到凌晨一点——把白天被切割掉的时间一块块捡回来",B:"十一点到凌晨两点——躲明天的焦虑，越躲越舍不得睡",C:"不固定，就是空洞地刷，刷到手机砸脸——然后第二天什么都不记得",D:"十点到凌晨——家人睡了、群安静了、世界终于不吵了"},
+    {scene:"如果白天的生活让你很满足，你还会熬夜吗？",A:"会少很多——我熬夜就是因为白天被掏空了，晚上需要补回来",B:"可能不会——我熬夜就是在拖明天的开始，满足的白天不需要拖",C:"应该不会——有值得醒来的一天，谁会想在深夜耗着",D:"还是会——我需要那段只有自己的时间，跟满足不满足没关系"},
+    {scene:"你注意到没，熬夜的时候你其实在做什么？",A:"在做白天没时间做的事——看书、追剧、发呆，总之是“我的事”",B:"在把明天的到来往后推——每多熬一分钟，明天就晚来一分钟",C:"没做什么特别的，就是机械地滑手机，但就是不想停",D:"在享受“不被需要”的状态——不回复、不解释、不社交"},
+    {scene:"你有没有在深夜产生过一种“终于松下来”的感觉？",A:"有。白天的时间是别人的，晚上才是自己的——那种松弛来自“夺回”",B:"有。但不是松弛，是暂时逃跑的安全感——今晚还不用面对",C:"偶尔有。但更多是一种空洞的放松——松完了第二天更空",D:"经常有。深夜是一种免打扰模式——不需要扮演任何角色"},
+    {scene:"如果逼你每天十点睡觉，你最怕失去什么？",A:"失去唯一一段完全属于自己的时间——那我会觉得整天都在给别人活着",B:"失去逃避明天的缓冲带——十点睡觉意味着明天来得更早",C:"也说不上怕失去什么——但会觉得日子更没存在感了",D:"失去唯一的独处时刻——白天身边总有人，只有晚上我是自己的"},
+    {scene:"熬夜这件事，你跟谁聊过吗？聊的时候你最想说的是什么？",A:"“我不是不想睡，我是舍不得睡——白天的时间不是我的”",B:"“我不是喜欢熬夜，我是怕明天——怕到不想让今天结束”",C:"“我也不知道为什么熬夜——就是觉得睡不睡都差不多”",D:"“我不是失眠，我是享受——全世界安静的时候我才最清醒”"},
+    {scene:"凌晨一点，你放下手机终于要睡了，那一瞬间什么感觉？",A:"满足——今晚我又给自己偷了几个小时，明天的事明天再说",B:"慌张——明天又要困着过了，但又重复了一次逃跑",C:"空——好像这几个小时什么都没留下，只是消耗掉了",D:"平静——这个世界终于安静了几个小时，我也安静了"},
+    {scene:"如果给你一个不用熬夜也能“补回来”的方式，你觉得会是什么？",A:"白天有一段完全没人打扰、不用回应任何人的时间——哪怕只有一小时",B:"明天不再是威胁——没有必须面对的事、没有焦虑的等待",C:"白天有了一件让我真心期待的事——不需要用熬夜来填补空洞",D:"不用换——我就喜欢晚上，只要第二天不用早起就行"},
+    {scene:"仔细想想，你觉得自己还需要熬夜多久？",A:"等白天也能有一段“我的时间”，我可能就不需要熬夜了",B:"等我敢面对明天的时候——但说实话，我不知道那天什么时候来",C:"等我白天找到了什么值得我醒着的事——在那之前，熬夜至少让我不空",D:"只要我还需要独处，就会一直熬夜——这不是问题，这是我选的"}
+  ],
+
+  types:{
+    A:{name:"报复性熬夜",tag:"你在深夜找回的，是白天被夺走的时间主权",icon:"🌙",
+       score:"时间主权回收 倾向 85%",
+       conclusion:"你的熬夜不是懒，是一种无声的抗议。白天的时间被工作、责任、别人的需求切割成碎片，每一块都不真正属于你。所以到了晚上，你不甘心就这么睡了——你要把时间抢回来，哪怕代价是明天的疲倦。你熬夜刷剧、看书、发呆，不是在消磨时间，是在行使“我的时间我做主”的权利。",
+       evidence_note:"你在Q1选择了“不甘心今天就这样结束”，Q2在等“属于我的时刻”，Q5承认满足的白天会减少熬夜需求，Q8最怕失去“唯一属于自己的时间”。这些选择指向同一个深层逻辑：你的熬夜是一种“时间收复”——白天你给了别人，晚上你要给自己一个交代。你不是睡不着，你是舍不得睡。",
+       quote:"你不是在熬夜——你是在对白天说：“你把我的时间拿走了，我自己拿回来。”每一个不睡的夜晚，都是你对自己说：我还值得被自己认真对待。",
+       modules:[
+         {title:"你的熬夜真相：你在夺回时间主权",content:"报复性熬夜的本质不是贪玩，是补偿。白天你扮演了太多角色——员工、伴侣、父母、朋友——每一个角色都在索取你的时间和注意力。你努力回应了所有人，唯独没时间回应自己。深夜成了你唯一可以“不扮演任何人”的时间段。所以你熬夜：不是为了熬夜，是为了做回自己。哪怕只是无意义地刷手机——至少这段时间是你自己决定要刷的。"},
+         {title:"你熬夜真正在做什么",content:"你在做一件白天做不了的事：行使“不作为”的权利。白天你被各种“应该”推着走——应该回复、应该完成、应该出现、应该负责。熬夜的时候，你把所有“应该”都关在门外，享受一段“没有义务”的时间。这其实是一种心理上的深呼吸——你需要确认：我还是我自己的。哪怕只是用这几十分钟发发呆。"},
+         {title:"白天的什么在把你推向深夜",content:"白天的你被“切割感”推向了深夜。每一个被打断的思考、每一段被占用的时间、每一次“先处理别人的事”的妥协——都在累积一种“今天没过够”的饥饿感。到了晚上，你饿到不行了，就开始“暴饮暴食”——用熬夜来补偿白天的匮乏。问题是：这种补偿并不能真正解决白天的饥饿，只是让你第二天更累。"},
+         {title:"熬夜对你的身体在说什么",content:"你的身体在说：“你白天把能量都给出去了，晚上还要透支——你当我是无限供应的吗？”报复性熬夜本质上是一种“借高利贷”——你借了睡眠时间来换取“做自己”的感觉，但利息是第二天的疲惫、注意力涣散、情绪不稳定。长期来看，这笔账不划算。你不是在给自己补充能量——你是在消耗明天的能量来填补今天的情感缺口。"},
+         {title:"怎么用晚上的时间补白天的缺口",content:"真正的解决方案不是在晚上抢时间，是在白天种下“属于自己”的时间碎片。哪怕只是午休时的十分钟独处、通勤路上的一首想听的歌、下班前的一杯不被打扰的咖啡。你需要让白天也有“我的时刻”——这样晚上就不需要报复了。不是戒掉熬夜——是让白天变得值得醒着。当白天不再是亏空，夜晚就不再是唯一的补给站。"}
+       ],
+       advice:["明天白天，找一个十分钟的时间窗口——不接电话、不回消息、不处理任何人的事。就十分钟。看看这十分钟会不会让你今晚少熬一点。","在手机备忘录里记下来：今天有什么事是“我自己想做”的？哪怕只是一件小事。如果一件都没有——今晚的熬夜就不是你的错，是白天欠你的。","试着把睡前的一小时从“抢时间”变成“给自己一个交代”——不是报复白天，是感谢自己撑过了一天。心态变了，熬夜的长度也会变。","找一个白天可以“完全属于自己”的活动——健身房一小时、公园散步、一间咖啡馆的角落。把它当成和“晚上的你”的约会。白天约会到位了，晚上就不会那么饥渴。"],
+       reminder:"你不是贪玩，你是在讨回属于自己的时间。但讨回的方式不一定非得是熬夜——你值得在太阳底下也拥有属于自己的一小时。你不需要用疲惫来证明你为自己活过。"
+    },
+    B:{name:"逃避性熬夜",tag:"你熬夜不是因为不想睡，是因为不想面对睁眼后的明天",icon:"🌑",
+       score:"明日焦虑延迟 倾向 83%",
+       conclusion:"你的熬夜是一种情绪上的拖延症。你不是喜欢深夜——你是害怕明天。明天的压力、期待、不确定性，让你不想让今天结束。每多熬一分钟，明天就晚来一分钟。你用困意来屏蔽焦虑——熬到脑子转不动了，就不用想那些让你不安的事了。但天亮之后，焦虑还在原地等你。",
+       evidence_note:"你在Q1想让明天慢点来，Q2等的是“困到什么都想不动”，Q5坦言满足的白天可能不会让你熬夜，Q8最怕失去“逃避明天的缓冲带”。你的选择指向同一个真相：熬夜是你的避难所——你用深夜的屏幕光亮，挡住明天的门。你不是不想睡，你是不敢面对明天的自己。",
+       quote:"你舍不得睡，不是珍惜今天——是害怕明天。每一个熬夜的夜晚，都是你在对自己说：“再多给我一分钟，我还没准备好面对它。”",
+       modules:[
+         {title:"你的熬夜真相：你在推迟恐惧",content:"逃避性熬夜的核心不是失眠，是焦虑。你躺在床上闭上眼睛的那一刻，所有白天被你压下去的担心都涌了上来——明天的工作、明天的社交、明天可能要面对的困难。你的大脑太清醒了，清醒到让你害怕。于是你打开手机，用信息流把那些担心冲走——不是真的想看什么，是需要一个“别想”的理由。屏幕的光是你对抗黑暗焦虑的盾牌。"},
+         {title:"你熬夜真正在做什么",content:"你在给自己搭建一个“暂时的安全区”。深夜的世界是暂停的——没有人给你发工作消息、没有人期待你的回复、没有人需要你做决定。在这个安全区里，你可以暂时不用面对任何让你紧张的事。但问题是：这个安全区是借来的——天亮就要还。你每熬一晚，安全区就少一点，因为明天的你会更疲惫、更需要逃避，形成一种越逃越深的循环。"},
+         {title:"白天的什么在把你推向深夜",content:"白天的你被“未完成感”和“不确定感”推向了深夜。那些没做完的事、没说出口的话、没想清楚的决策——它们白天没被你处理掉，晚上就变成了焦虑的燃料。你不是在逃避睡眠——你是在逃避“面对这些未完成”的那一刻。熬夜让你把“面对”推迟到明天——但明天它们还在，而且因为你更疲惫了而显得更大。"},
+         {title:"熬夜对你的身体在说什么",content:"你的身体在说：“你让我困到极致，以为这就能骗过焦虑——但焦虑不会因为困了就消失，它只是换了一种方式折磨你。”逃避性熬夜会形成一个恶性循环：熬夜让你第二天状态更差，状态差让你更焦虑，更焦虑让你更想逃避，更想逃避让你继续熬夜。打破这个循环，不是从睡觉开始——是从面对“你怕什么”开始。你面对的速度决定了你解脱的速度。"},
+         {title:"怎么用晚上的时间补白天的缺口",content:"睡前花十分钟，把明天让你焦虑的事写下来——不是解决它们，是“命名”它们。写下来之后你会发现：它们没有你想象中那么大。然后再问自己一句：“今晚我能为其中的哪一件做点什么？哪怕只是一个小步骤。”把焦虑从模糊的感觉变成具体的条目——它就没那么可怕了。做完这一步，你就可以睡了：因为你已经比昨天多面对了一点。哪怕只多了一点点。"}
+       ],
+       advice:["今晚睡前写下一件让你焦虑的明天的事，旁边写一句：“不管明天怎样，今晚的我做了我能做的。”然后关灯。你不需要解决问题，你只需要面对它。","把手机放在卧室以外的房间充电。你需要一个物理上的仪式来告诉自己：今晚的逃避到此为止。屏幕不在身边，焦虑就没有了燃料。","明天早上醒来，先做一件让你有掌控感的小事——铺床、喝一杯热水、拉开窗帘。你不需要解决所有问题，你只需要一个“我开始了”的信号。","找一天把明天最让你焦虑的那件事提前处理掉一小部分——哪怕只是发一条消息、查一个信息。你会发现：提前面对比推迟面对轻松很多。焦虑的真正对手不是逃避，是行动。"],
+       reminder:"你怕的不是明天——是“还没有准备好”的自己。但没有人是准备好才开始的。你不需要准备好了再睡觉——你只需要对自己说：今晚我放过自己，明天的事明天再说。放过自己，不是放弃——是给自己休息的权利。"
+    },
+    C:{name:"空虚性熬夜",tag:"你熬夜是因为白天什么都没留下——你在等一个“今天值得过”的理由",icon:"🌫️",
+       score:"意义感缺席 倾向 80%",
+       conclusion:"你的熬夜是一种存在感上的饥饿。白天过完，你回想不起有什么事让你觉得“值得”——没有成就感、没有连接、没有兴奋、没有触动。你不甘心就这样睡过去，因为你还没有找到今天的意义。于是你熬夜——在手机里翻找一个能让今天变得有分量的东西：一条消息、一个视频、一个念头。但通常找不到。屏幕里的内容越刷越多，心里却越刷越空。",
+       evidence_note:"你在Q1回想一天发现没有值得记住的事，Q3觉得多睡少睡没区别，Q5坦言有值得醒来的事就不会熬夜，Q10放下手机时感觉空。你的选择指向一个核心空洞：白天没有给你足够的意义感，你希望晚上能补回来——但空洞不能被无意义的信息填满。你需要的不是更多的内容，是更多的存在感。",
+       quote:"你熬夜不是在等消息——是在等一个“今天没白活”的证据。但请不要在深夜的手机里找它——它不在那里。它在你白天不敢靠近的那些事里。",
+       modules:[
+         {title:"你的熬夜真相：你在找今天的重量",content:"空虚性熬夜是一种“意义饥饿”。人类需要感觉到自己的一天是有重量的——被需要、有进展、有感受、有连接。但有些白天太平、太轻、太像复制粘贴，让你感觉不到自己的存在。深夜成了你最后的希望：也许在睡前这半小时里，会发生什么让今天变得不一样的事。但屏幕给不了你想要的重量——它只能给你更多轻飘飘的、明天就会忘记的信息碎片。"},
+         {title:"你熬夜真正在做什么",content:"你在做一件事：给今天一个“还没结束”的理由。只要还没睡，今天就还可能有转机——可能有人找你、可能刷到让你有感触的内容、可能突然想通一件事。你在延长今天的生命线，因为你还没有给它画上一个满意的句号。但你需要知道的是：一个句号不需要完美——它只需要存在。画上句号，明天才是一张新的白纸，而不是今天的草稿。"},
+         {title:"白天的什么在把你推向深夜",content:"白天的你被“重复感”和“无感”推向了深夜。当你的一天被机械地填满——开会、回消息、吃饭、通勤——但没有一件事让你觉得“这是我选的”或“这让我有感觉”时，你就会在晚上寻找补偿。你不是缺时间——你是缺“活着的证据”。熬夜是你用最省力的方式在寻找一点存在感，但手机里的存在感是假的存在感——它只存在三秒，然后滑走，什么都不剩。"},
+         {title:"熬夜对你的身体在说什么",content:"你的身体在说：“你让我陪你等一个不会出现的东西——今晚不会有大事发生，明天也不会有。除非你白天开始做点不一样的事。”空虚感不会因为熬夜而消退——它会在第二天醒来时更重，因为你又在一个空洞的夜晚之后，迎来一个空洞的白天。你需要的不是更多的夜晚时间——是更多的白天内容。不是时间的问题，是你往时间里装了什么的问题。"},
+         {title:"怎么用晚上的时间补白天的缺口",content:"不要用晚上的时间来“找意义”——意义不能在手机上找到。用晚上的时间来“创造一点点东西”：写三行字、画一张潦草的画、整理一张照片、给自己做一杯好喝的东西。不需要大成就——需要的是“今晚我留下了一点什么”的实感。哪怕只是一行字：“今天我做了____，让我觉得还行。”那个空白填上任何东西，都比空着好。意义不是找到的，是创造出来的。"}
+       ],
+       advice:["今晚睡前写下一件今天发生的事——任何事。不是“伟大”的事，是真实的事。比如：“今天喝了一杯还不错的水。”让它成为今天的重量。重量不需要大，只需要真的。","明天白天做一件小的、但完全由你选择的事——换一条路线走、点一个没吃过的菜、给一个好久没联系的人发一条消息。打破重复感，不需要大动作，只需要一个“我决定”的瞬间。","把手机里最浪费时间的那个APP设置使用时间限制。你不需要戒掉它——你需要让“找意义”这件事换一个场所。屏幕之外的世界，才是意义真正生长的地方。","这周找一个晚上不要碰手机——去做一件你小时候喜欢但现在很久没做的事。画一幅丑画、拼一个积木、折一个纸飞机。找回那种“我做了一件东西”的满足感。不是消费内容，是创造内容。"],
+       reminder:"你不是找不到意义——你是找错地方了。意义不在深夜的信息流里，意义在你白天伸出手去触碰世界的那些瞬间。哪怕那个瞬间很不起眼——它也会比你在屏幕上划过的一千条内容更重、更真、更属于你。"
+    },
+    D:{name:"安静性熬夜",tag:"你熬夜不是因为别的——只是因为深夜是唯一不用回应任何人的时间",icon:"🌌",
+       score:"独处权守卫 倾向 88%",
+       conclusion:"你的熬夜是一种自我保护。白天你被各种声音包围——别人的需求、群里的消息、社交的期待、家庭的琐事。你一直在回应、在付出、在被需要。只有到了深夜，这个世界才终于安静下来。没有人找你、没有人期待你的回复、没有人需要你做什么。你不是喜欢熬夜——你是需要这段“不被需要”的时间来呼吸。这段安静是你给自己的氧气面罩。",
+       evidence_note:"你在Q1感叹终于安静了，Q2舍不得今天的安静结束，Q5表示即使白天满足也需要独处时间，Q8最怕失去唯一的独处时刻。你的选择指向同一个内核：你需要的不是熬夜——是需要一个“没有人需要我”的时间窗口。深夜只是这个窗口唯一可用的时段。你不是离不开手机，你是离不开安静。",
+       quote:"你不是在熬夜——你是在守护一天中唯一一段可以不扮演任何角色的时间。那些安静的小时，是你还给自己的呼吸。",
+       modules:[
+         {title:"你的熬夜真相：你在守护自己的安静",content:"安静性熬夜的核心不是“不想睡”——是“终于可以不社交了”。白天你被各种角色裹挟——你需要回应、需要照顾、需要配合、需要表现。你努力做好了每一个角色，但所有的角色加起来，唯独没有留一个位置给“什么都不做的自己”。深夜成了你唯一可以卸下所有角色、什么都不做的时刻。你舍不得睡，不是舍不得手机——是舍不得这份难得的自由。这份自由比睡眠更稀有。"},
+         {title:"你熬夜真正在做什么",content:"你在做一件白天没机会做的事：什么都不为任何人做。你看手机不是为了获取信息——是给自己一个“我在忙”的假象，好让这个世界别来打扰你。深夜的时间是你的隔离带：把白天的噪音隔在外面，把自己留在里面。你需要的不是熬夜的内容——是熬夜带来的“不被需要”的状态。那个状态让你重新成为一个人，而不是一个功能。"},
+         {title:"白天的什么在把你推向深夜",content:"白天的你被“持续被需要”推向了深夜。每一个群消息、每一个电话、每一个“你能帮我一下吗”——都在消耗你的独处配额。你是一个善于回应的人，但善于回应的人也有被掏空的时候。当你的社交电池在白天耗尽时，晚上你就需要一段完全不被任何人需要的恢复时间。这不叫社恐——这叫你的出厂设置里就有一个“需要独处来充电”的模块。你不是不爱别人，你是需要先把自己充满。"},
+         {title:"熬夜对你的身体在说什么",content:"你的身体在说：“你喜欢安静没问题——但我们能不能换一个不伤身体的时间段来安静？”安静性熬夜最大的误区是：你以为只有深夜才能独处。但其实独处可以发生在任何时间——清晨、午休、通勤路上的一小段空白。你不是只能通过熬夜来守护自己的安静——你只是还没试过别的时段。身体需要的不仅是安静，还有睡眠——你可以两个都要。"},
+         {title:"怎么用晚上的时间补白天的缺口",content:"你需要的是：把“独处”从深夜挪到白天。哪怕只有十五分钟。跟家人说：我需要一段不被打扰的时间。跟同事说：我先自己待一会儿，二十分钟后回复你。跟朋友说：今晚我需要自己待着。你不是在拒绝他们——你是在给自己的独处电池充电。只有充好了电，你才能更好地回应他们。把独处从一种“偷偷进行的事”变成一种“光明正大的需求”——这不是自私，这是自保。"}
+       ],
+       advice:["明天白天找一个十五分钟的空档——关掉所有通知，戴上降噪耳机，走到一个没人认识你的角落。就十五分钟。看看白天的安静和深夜的安静有什么不同。安静不需要天黑——只需要你允许自己。","跟身边最亲近的人说一句：“我需要一段不说话的时间，不是针对你，是我需要充电。”看看对方的反应。大部分时候——他们比你想象中更理解。爱你的人希望你充满电，而不是耗尽。","试着把深夜的独处时间缩短一小时，把这一小时挪到清晨六点——清晨的安静比深夜的安静更有质量，而且不会伤身体。早起的一小时可以等于熬夜的两小时。","记录一周内你在哪些时刻觉得“我需要自己待一会儿”。找到规律之后，在这些时刻来临之前主动安排独处——而不是被动地等到深夜。预防比补救更有效，也更好睡。"],
+       reminder:"你不是孤僻——你只是需要呼吸。但呼吸不一定要在深夜。阳光下的安静，也是安静。你值得在白天也拥有一段不被任何人找到的时间。你的安静不是逃避世界——是你给自己最深的照顾。"
+    }
+  },
+
+  productModules:[
+    "你的熬夜类型",
+    "你熬夜真正在做什么",
+    "白天的什么在把你推向深夜",
+    "熬夜对你的身体在说什么",
+    "怎么用晚上的时间补白天的缺口"
+  ],
+
+  disclaimer:"本测试仅为自我探索参考，不构成任何诊断、医疗建议或效果承诺。熬夜习惯与心理健康密切相关，如有持续困扰建议咨询专业医生或心理咨询师。"
+};
+
+// ========== 引擎 ==========
+let answers=[],currentQ=0,paid=false;
+
+function $(id){return document.getElementById(id)}
+const app = document.getElementById('app');
+
+function cover(){
+  app.innerHTML=`
+    <div class="screen active cover">
+      <div class="icon">🌙</div>
+      <h1>${DATA.title}</h1>
+      <div class="sub">${DATA.subtitle}</div>
+      <button class="btn-start" onclick="start(true)">开始测试</button>
+      <div class="trust">前5题免费 · 记下答案左滑查看报告预览</div>
+    </div>`;
+}
+
+function start(free){answers=[];currentQ=0;paid=!free;renderQ()}
+
+function renderQ(){
+  if(currentQ>=DATA.questions.length){showResult();return;}
+  if(currentQ===5 && !paid){showGate();return;}
+  const q=DATA.questions[currentQ];
+  const pct=Math.round((currentQ/DATA.questions.length)*100);
+  const letters=['A','B','C','D'];
+  app.innerHTML=`
+    <div class="screen active">
+      <div class="progress-wrap">
+        <div class="progress-bar"><div class="progress-fill" style="width:${pct}%"></div></div>
+        <div class="progress-label">第 ${currentQ+1}/${DATA.questions.length} 题</div>
+      </div>
+      <div class="q-area">
+        <div class="q-num">${currentQ<5?'免费测试 · 第'+(currentQ+1)+'题':'深度解锁 · 第'+(currentQ+1)+'题'}</div>
+        <div class="q-text">${q.scene}</div>
+        <div class="options">
+          ${letters.map(l=>`<div class="opt" onclick="pick('${l}')"><div class="letter">${l}</div><div class="txt">${q[l]}</div></div>`).join('')}
+        </div>
+      </div>
+      ${currentQ===4?'<div style="text-align:center;font-size:13px;color:#6a6558;padding:8px 0">记下5个答案，左滑查看报告预览 →</div>':''}
+    </div>`;
+}
+
+function pick(letter){
+  answers.push(letter);
+  currentQ++;
+  renderQ();
+  window.scrollTo(0,0);
+}
+
+function showGate(){
+  app.innerHTML=`
+    <div class="screen active gate-screen">
+      <div class="lock-icon">🔓</div>
+      <h2>前5题只是倾向<br>完整12题才能看清全貌</h2>
+      <div class="gate-desc">后7题继续拆解：你熬夜真正在做什么、白天的什么在把你推向深夜、以及怎么从根源上不再被熬夜困住</div>
+      <ul class="unlock-list">
+        ${DATA.productModules.map(m=>`<li>${m}</li>`).join('')}
+      </ul>
+      <button class="btn-gate" onclick="unlock()">继续完成12题 · 解锁完整报告</button>
+      <div class="price">完整12题报告 · 做完自动解锁</div>
+    </div>`;
+}
+
+function unlock(){paid=true;renderQ()}
+
+function showResult(){
+  const counts={A:0,B:0,C:0,D:0};
+  for(let i=5;i<answers.length;i++){counts[answers[i]]++}
+  const sorted=Object.entries(counts).sort((a,b)=>b[1]-a[1]);
+  let typeKey=sorted[0][0];
+  if(sorted[0][1]===sorted[1][1]&&sorted[0][0]==='A'&&(sorted[1][0]==='C'||sorted[1][0]==='D'))typeKey=sorted[1][0];
+  if(sorted[0][1]===sorted[1][1]&&sorted[0][0]==='B'&&sorted[1][0]==='D')typeKey='D';
+  const type=DATA.types[typeKey];
+
+  const freeAnswers=answers.slice(0,5);
+  const freeLabels=['深夜脑海里的念头','刷手机真正在等的','醒来第一念头','熬夜高峰时段','满足还会熬吗'];
+  const freeDesc=[
+    ['你不甘心今天就这样结束——属于你的时间还没开始','你想让明天慢点来——逃避比面对容易','你回想一天发现没留下什么——意义感缺席','你终于等到世界安静——独处才是最奢侈的事'],
+    ['你在等一段属于你的时间——哪怕只有睡前这几十分钟','你想困到什么都想不动——用困意屏蔽焦虑','你在找一个让今天有存在感的理由','你没有在等什么——只是在享受不被需要的自由'],
+    ['困就困——昨晚偷来的自由值得这个代价','你宁愿困着面对今天，也不想那么快开始','多睡少睡都一样——没有期待的日子不差这几个小时','困但满足——安静的几个小时比睡眠更治愈'],
+    ['你把白天被切碎的时间一块块捡回来——深夜是回收站','你在拖——明天越晚开始越好，每多熬一分钟都算赢','你没有固定节奏——空洞地耗到撑不住，第二天什么都不记得','你等世界静音——那是最珍贵的独处窗口期'],
+    ['白天被掏空的人才需要晚上补——你不是喜欢熬夜，你是在回收主权','你在拖延明天——满足的白天不需要逃避','有值得醒来的一天，谁还熬夜——熬夜是空虚的产物','即使满足也需要独处——这是需求，不是补偿']
+  ];
+
+  let evidenceHTML='<h3>📋 答案证据</h3><p>';
+  for(let i=0;i<5;i++){
+    const a=freeAnswers[i];
+    const descIdx=a==='A'?0:a==='B'?1:a==='C'?2:3;
+    evidenceHTML+=`<strong>Q${i+1}「${DATA.questions[i].scene.slice(0,18)}…」</strong>你选了${a}——${freeDesc[i][descIdx]}。<br><br>`;
+  }
+  evidenceHTML+=type.evidence_note+'</p>';
+
+  let modulesHTML='';
+  for(const m of type.modules){
+    modulesHTML+=`<div class="module"><h3>${m.title}</h3><p>${m.content}</p></div>`;
+  }
+
+  let adviceHTML='';
+  for(let i=0;i<type.advice.length;i++){
+    adviceHTML+=`<div class="advice-item"><span class="n">0${i+1}</span><span>${type.advice[i]}</span></div>`;
+  }
+
+  app.innerHTML=`
+    <div class="screen active result">
+      <div class="badge">你的熬夜人格</div>
+      <div class="type-name">${type.name}</div>
+      <div class="type-sub">${type.tag}</div>
+
+      <div style="font-size:15px;color:#d4b87a;margin-bottom:4px">${type.icon} ${type.score}</div>
+      <p style="font-size:15px;color:#b8b0a0;line-height:1.75;margin-bottom:20px">${type.conclusion}</p>
+
+      <div class="evidence-box">${evidenceHTML}</div>
+      ${modulesHTML}
+
+      <div class="summary-box">
+        <div class="q-mark">"</div>
+        <p>${type.quote}</p>
+      </div>
+
+      <div class="advice-box">
+        <h3>📅 未来30天建议</h3>
+        ${adviceHTML}
+      </div>
+
+      <div class="reminder-box">
+        <h3>⚠️ 关键提醒</h3>
+        <p>${type.reminder}</p>
+      </div>
+
+      <div style="font-size:13px;color:#6a6558;line-height:1.6;text-align:center;margin-bottom:24px">${DATA.disclaimer}</div>
+      <div class="footer">以上结果为自我探索参考 · 每个选择都是了解自己的线索</div>
+    </div>`;
+  window.scrollTo(0,0);
+}
+
+// start
+cover();
+</script>
+</body>
+</html>

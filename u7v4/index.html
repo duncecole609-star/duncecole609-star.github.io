@@ -1,0 +1,318 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
+<title>让人舒服的原因测试</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:"PingFang SC","Microsoft YaHei",sans-serif;background:#0f0f1a;color:#e8e0d0;min-height:100vh;display:flex;justify-content:center}
+.app{width:100%;max-width:500px;min-height:100vh;position:relative;overflow:hidden}
+.screen{display:none;flex-direction:column;min-height:100vh;padding:28px 22px 40px}
+.screen.active{display:flex}
+
+.cover{justify-content:center;align-items:center;text-align:center;gap:20px}
+.cover .icon{font-size:52px}
+.cover h1{font-size:29px;font-weight:900;line-height:1.4;letter-spacing:1.5px;padding:0 6px}
+.cover h1 .hl{color:#c9a96e}
+.cover .sub{font-size:15px;color:#8a8070;line-height:1.7;max-width:300px}
+.cover .btn-start{margin-top:10px;padding:15px 50px;font-size:18px;font-weight:700;background:linear-gradient(135deg,#c9a96e,#a6844d);color:#0f0f1a;border:none;border-radius:40px;cursor:pointer;letter-spacing:2px}
+.cover .btn-start:active{transform:scale(.96)}
+.cover .trust{font-size:12px;color:#4a4538;margin-top:6px}
+
+.progress-wrap{padding:4px 0 14px}
+.progress-bar{height:3px;background:#1e1e2e;border-radius:2px;overflow:hidden}
+.progress-fill{height:100%;background:linear-gradient(90deg,#c9a96e,#d4b87a);border-radius:2px;transition:width .3s}
+.progress-label{font-size:13px;color:#5a5548;margin-top:6px;text-align:right}
+
+.q-area{flex:1;display:flex;flex-direction:column;gap:16px}
+.q-area .q-num{font-size:13px;color:#6a6558;letter-spacing:2px}
+.q-area .q-text{font-size:23px;font-weight:700;line-height:1.5}
+.options{display:flex;flex-direction:column;gap:10px}
+.opt{padding:18px 16px;border-radius:14px;background:#16162a;border:1.5px solid #252540;cursor:pointer;transition:all .2s;display:flex;align-items:flex-start;gap:13px}
+.opt:active{transform:scale(.98);border-color:#c9a96e;background:#1e1e34}
+.opt .letter{width:33px;height:33px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:15px;font-weight:700;flex-shrink:0;background:rgba(201,169,110,.12);color:#c9a96e}
+.opt .txt{font-size:15px;line-height:1.55;color:#c8c0b0;flex:1}
+
+.gate-screen{justify-content:center;align-items:center;text-align:center;gap:24px}
+.gate-screen .lock-icon{font-size:48px}
+.gate-screen h2{font-size:26px;font-weight:800;line-height:1.4}
+.gate-screen .gate-desc{font-size:15px;color:#a09880;line-height:1.7;max-width:300px}
+.gate-screen .unlock-list{text-align:left;background:#16162a;border-radius:16px;padding:20px 24px;width:100%;max-width:320px}
+.gate-screen .unlock-list li{font-size:14px;color:#b8b0a0;line-height:2;list-style:none}
+.gate-screen .unlock-list li::before{content:"✓ ";color:#c9a96e;font-weight:700}
+.gate-screen .btn-gate{margin-top:8px;padding:14px 44px;font-size:18px;font-weight:700;background:linear-gradient(135deg,#c9a96e,#a6844d);color:#0f0f1a;border:none;border-radius:40px;cursor:pointer;letter-spacing:2px}
+.gate-screen .btn-gate:active{transform:scale(.96)}
+.gate-screen .price{font-size:14px;color:#6a6558;margin-top:4px}
+
+.loading{justify-content:center;align-items:center;text-align:center;gap:24px}
+.loading .spinner{width:52px;height:52px;border:3px solid #1e1e2e;border-top-color:#c9a96e;border-radius:50%;animation:spin .8s linear infinite}
+@keyframes spin{to{transform:rotate(360deg)}}
+.loading .msg{font-size:16px;color:#a09880;letter-spacing:1px}
+
+.result{padding:28px 22px 48px}
+.result .badge{display:inline-block;padding:7px 16px;border:1px solid rgba(201,169,110,.25);border-radius:16px;font-size:13px;color:#c9a96e;letter-spacing:2px;margin-bottom:14px}
+.result .type-name{font-size:36px;font-weight:900;margin-bottom:6px;line-height:1.2}
+.result .type-sub{font-size:18px;color:#d4b87a;margin-bottom:20px;line-height:1.4}
+
+.evidence-box{background:#16162a;border-radius:16px;padding:20px;margin-bottom:22px;border-left:3px solid #c9a96e}
+.evidence-box h3{font-size:14px;color:#c9a96e;letter-spacing:2px;margin-bottom:10px}
+.evidence-box p{font-size:14px;color:#b8b0a0;line-height:1.7}
+
+.module{margin-bottom:20px}
+.module h3{font-size:16px;color:#a09880;letter-spacing:1.5px;margin-bottom:10px;padding-bottom:8px;border-bottom:1px solid #1e1e2e}
+.module p{font-size:14px;color:#b8b0a0;line-height:1.75;margin-bottom:6px}
+
+.summary-box{background:linear-gradient(135deg,#1a1a2e,#1f1f34);border-radius:16px;padding:24px;margin:24px 0;text-align:center;border:1px solid rgba(201,169,110,.15)}
+.summary-box .q-mark{font-size:28px;color:#c9a96e;margin-bottom:8px}
+.summary-box p{font-size:17px;color:#d4b87a;line-height:1.7;letter-spacing:.5px}
+
+.advice-box{margin-bottom:24px}
+.advice-box h3{font-size:16px;color:#a09880;letter-spacing:2px;margin-bottom:12px}
+.advice-box .advice-item{padding:12px 14px;margin-bottom:8px;background:#16162a;border-radius:12px;font-size:14px;color:#b8b0a0;line-height:1.6;display:flex;gap:10px}
+.advice-box .advice-item .n{color:#c9a96e;font-weight:700;flex-shrink:0}
+
+.reminder-box{background:#16162a;border-radius:16px;padding:20px;margin-bottom:28px;border:1px solid #2a2a40}
+.reminder-box h3{font-size:15px;color:#c9a96e;letter-spacing:2px;margin-bottom:8px}
+.reminder-box p{font-size:14px;color:#a09880;line-height:1.7}
+
+.footer{text-align:center;padding:16px;font-size:11px;color:#3a3a48;border-top:1px solid #16162a;margin-top:auto}
+</style>
+</head>
+<body>
+<div class="app" id="app"></div>
+<script>
+// ========== 内容数据 ==========
+const DATA = {
+  title:"你让人觉得舒服的原因，<br>和你以为的<br><span class='hl'>不一样</span>",
+  subtitle:"不是测你讨不讨人喜欢——<br>是找到你身上那种让人放松的、<br>你可能从没注意到的特质",
+
+  questions:[
+    {scene:"刚认识不久的人，突然对你说了很私人的事，你当时的反应是？",A:"先听ta说完——不打断，也不急着给建议",B:"听完后问了一个和ta刚说的内容有关的追问",C:"保持安静，让ta自己决定要说到什么程度",D:"用和平常一样的态度回应——让ta觉得这不值得紧张"},
+    {scene:"朋友说过和你待在一起「很放松」，你觉得最主要的原因是？",A:"我几乎不评价任何人的选择——好坏都不说出口",B:"我会记住ta们随口提的小事，下次聊天时会再问起",C:"我不需要对方一直说话——两个人安静待着也没关系",D:"我的情绪比较稳定——来找我不用猜今天是什么状态"},
+    {scene:"一群人聊天时，你发现自己大多数时候在做什么？",A:"注意谁的话被打断了或被忽略了——然后去接那个人的话",B:"听的时候在想ta为什么这么说，而不是接下来我要说什么",C:"有人沉默时我不会cue ta——沉默本来就不是一个需要被拯救的事",D:"不管场面热闹还是冷清，我保持差不多的节奏和表情"},
+    {scene:"有人对你说过「不知道为什么，就是很想跟你说这些」，你觉得是因为？",A:"可能是我没有露出任何「你说这个不太好吧」的表情",B:"大概是我问了一个让ta突然想认真回答的问题",C:"也许因为我没有急着给解决方案——只是让ta完整地说完了",D:"大概是我没有突然切换话题或看手机——让ta觉得被认真对待了"},
+    {scene:"你觉得「让人舒服」这件事，自己的状态最接近哪一种？",A:"不是我做了什么——是我没做那些让人紧张和防备的小动作",B:"我只是比别人多听了一会儿——但大多数人缺的恰恰就是这一会儿",C:"我可能只是不觉得冷场有问题——对方感觉到了，就也放松了",D:"我情绪不太波动——对方不需要为了照顾我的感受而调整自己"},
+    {scene:"如果有人说「在你面前我好像不用装」，你心里第一时间会怎么想？",A:"因为你装的时候我看到了——我选择不拆穿，让你自己慢慢卸下来",B:"可能因为我没有在等你表演一个有趣或得体的版本——我只是在听你",C:"你本来就不用装——那个不装的你，从一开始就没有问题",D:"因为你发现不管你怎么表现，我的反应都不会突然变冷或变热"},
+    {scene:"对方在你面前情绪有些失控，你最可能做的是？",A:"不问原因，不问「要不要帮忙」——先让ta把这个情绪完整地走完",B:"等ta稍微停下来，轻声问了一句ta之前提过的某件小事",C:"安静地坐在旁边——不靠近也不远离，等ta给我信号",D:"保持和平时完全一样的态度——让ta知道哭了也不会改变什么"},
+    {scene:"你有没有过「别人觉得和我相处很舒服，但我其实什么都没做」的感觉？",A:"有——后来才明白，「不做什么」可能才是最难做到的事",B:"有——我不是刻意在倾听，但也许「真正的倾听」本身就很少见",C:"有——也许因为我不要求对方有趣、精彩、得体，ta们就不用演",D:"有——我的状态不绑定在别人身上，所以ta们不需要对我的情绪负责"},
+    {scene:"在亲密关系或重要友谊里，你最怕被误解成什么？",A:"怕被当成没有底线的人——不审判不等于我什么都接受、什么都可以",B:"怕被当成没有想法的人——我在认真听，但我也在认真地思考",C:"怕被当成冷漠或不在乎——安静不等于我不在意，我只是在用另一种方式在场",D:"怕被当成没有情绪的人——稳定不等于我什么都感受不到"},
+    {scene:"什么样的人会让你也觉得舒服、也想主动靠近？",A:"不急着给我贴标签或给建议的人——能先完整地听完我说的话",B:"会记得我上次聊天时说过什么的人——被记住是最基本的被尊重",C:"不需要我每时每刻都保持「在线」状态的人——允许我偶尔沉默的人",D:"情绪稳定的人——我不需要提前猜测ta今天是什么模式、会不会突然变脸"},
+    {scene:"「让人舒服」这件事，最容易在什么地方消耗你？",A:"一直在给别人不被审判的空间——但很少有人说：你也可以犯错，我也不会审判你",B:"一直在听——但很少有人转过头来认真地问我一句「那你呢，你最近怎么样」",C:"一直在做那个容纳沉默和尴尬的人——但自己也有不想一个人扛的时候",D:"一直在做那个情绪稳定的人——但自己也会有摇摇晃晃、想被接住的时候"},
+    {scene:"如果「让人舒服」是一种超能力，你最想让身边的人理解什么？",A:"不是我脾气好——是我经历过被审判的滋味，所以选择不用审判让你害怕",B:"不是我天生有耐心——是我知道不被听见是什么感觉，所以不想让你也尝到",C:"不是我喜欢安静——是我知道你需要一个不用表演、不用证明自己的地方",D:"不是我天生情绪稳定——是我知道忽冷忽热有多伤人，所以选择先稳住自己"}
+  ],
+
+  types:{
+    A:{name:"因为你不审判",tag:"你让人舒服的真正原因，不是热情——是你从不评价",icon:"🌿",
+       score:"不审判 倾向 85%",
+       conclusion:"你让人舒服的原因，和你以为的完全不一样。你以为是因为你脾气好、好说话、不跟人起冲突。但真相要深得多：你几乎不审判任何人。你不急着给别人的选择打对错分，不对别人的生活指指点点，不露出「你这样不对吧」的表情。你以为这是最基本的礼貌——但你没意识到，大多数人每天都活在别人的审判之下。你的不审判，对别人来说是一种快要灭绝的安全感。在你面前，ta们终于可以不够好、不够对、不够体面——而你只是安静地看着，连眉头都没有皱一下。",
+       evidence_note:"你在意的是「没做什么」而不是「做了什么」（Q1、Q5），你最怕别人在你面前「装」（Q6），有人对你倾诉时你的第一反应是不要露出评判的表情（Q4），你怕被误解成没有底线（Q9）——但你清楚，不审判不等于没有标准。你只是把审判的权力还给了对方本人。",
+       quote:"你不审判别人，不是因为你没有标准——是因为你知道，每个人都已经在审判自己了。你只是不愿意做那个再多踩一脚的人。",
+       modules:[
+         {title:"你让人舒服的真正原因",content:"你以为自己只是「好相处」——但真正的原因是：你几乎不审判任何人。别人在你面前不需要美化自己的选择、不需要为错误找借口、不需要提前准备一个「说得过去的版本」。你给出的是一种罕见的自由：做错也没关系，说漏嘴也没关系，不够好也没关系。这种自由，比你想象中的「热情」和「幽默」珍贵一百倍。"},
+         {title:"你以为的原因和实际差在哪",content:"你可能一直以为别人喜欢你是因为你随和、不挑剔、好说话。但你错了——别人喜欢你，是因为在你这里不用「过关」。大多数人每天都在过无数个隐形的关卡：穿搭关、谈吐关、收入关、观点关。你这里没有关卡。你不是随和——你是免检通道。这两者之间差着一个量级的温柔。"},
+         {title:"别人在你身边感受到什么",content:"感到安全。不是保镖那种安全——是一种「我可以不完美地出现在这个人面前」的安全。别人在你身边时，肩膀会不自觉地放下来，语速会变慢，会说出一些本来打算咽回去的话。因为你没有在给ta打分——ta终于不用自己给自己打分了。"},
+         {title:"这种特质的隐藏力量",content:"不审判是一种比「会说话」更强大的社交能力。会说话的人让人愉快——不审判的人让人自由。愉快是一种情绪，自由是一种状态。情绪会过去，状态会留下来。所以那些在你面前卸下防备的人，会一直想回来。不是因为你有多了不起——是因为在你这，ta们可以不是「了不起的人」。"},
+         {title:"怎么保护这种特质不被消耗",content:"不审判的人最容易掉进一个陷阱：一直给别人空间，忘了自己也需要被放过。你需要记住：你可以审判「消耗你的人」。不审判不等于来者不拒。那些利用你的不审判来倾倒情绪垃圾、从不说谢谢、从不关心你感受的人——你有权利请他们离开。你的温柔有边界，才是可持续的温柔。"}
+       ],
+       advice:["这周留意一次：当别人在你面前说了一件「不够正确」的事时，观察自己的第一反应是皱眉还是点头。如果是皱眉——没关系，先对自己说：ta有权利和我不一样。","找一个你信任的人，主动对ta说一件你觉得自己「不太行」的事。不是求安慰——是练习：让自己也体验一次不被审判的感觉。","如果有人反复消耗你的温柔又不曾关心过你——这周试着少回一次消息。不审判不等于你的能量是免费的。","把你最舒服的状态拍一张照片留下来——不是自拍，是你房间、桌子、窗外那个让你觉得「可以不用撑了」的角落。记住：你给别人那个角落的同时，你也要有一个。"],
+       reminder:"你不审判别人——但别忘了，你自己也在「别人」里面。有时候你对自己比谁都严格。试着用你看别人的眼神，看一次自己。那个不够好、不够对、不够体面的你——也值得不被审判。"
+    },
+    B:{name:"因为你真的在听",tag:"你让人舒服的真正原因，不是会聊天——是你真的在听",icon:"🎧",
+       score:"真倾听 倾向 83%",
+       conclusion:"你让人舒服的原因，和你以为的完全不一样。你以为是因为你话不多、不抢戏、脾气好。但真正让你与众不同的东西，远比这些更稀有：你真的在听。不是点头、不是「嗯嗯」、不是在等自己说话的间隙——你是真的在听对方说了什么、没说什么、在哪些地方声音变轻了。你听完之后会问一个只有认真听才会问的问题。你以为这是最基本的——但你不知道，大多数人已经很久没有被真正听过了。在你这里，ta们是第一次被听见。",
+       evidence_note:"你听完会给追问而不是给建议（Q1），你会记住别人随口提的小事并在下次聊起（Q2），你在群体中关注的是理解而非回应（Q3），别人说跟你说话像跟自己说话但又不一样（Q8），你最怕在亲密关系里被当成「没想法」——但你知道倾听和思考是同时发生的（Q9）。",
+       quote:"你没有在等自己说话——你是在等对方说出那句一直没被人接住的话。然后你接住了。",
+       modules:[
+         {title:"你让人舒服的真正原因",content:"你以为自己只是「比较安静」——但真正的原因是你拥有一种越来越罕见的技能：完整的倾听。不打断、不跳转话题、不急着把自己代入。你听完之后会沉默两秒，然后问出一个让对到的问题。对方这时候会有一种很奇特的感觉——「原来我刚才说的那些，真的有人在认真处理」。这种感觉，比任何赞美都更让人想继续跟你说下去。"},
+         {title:"你以为的原因和实际差在哪",content:"你可能以为别人觉得跟你相处舒服是因为你「不抢话」或「性格好」。但真相是：大多数人在日常对话中，从来没有被完整地听过。别人在等ta说完，别人在想自己的事，别人在脑中排练等下要说的内容。你不做这些——你让对话变成了「对话」而不是「交替展示」。你以为这是基本礼貌——但对别人来说，这是第一次。"},
+         {title:"别人在你身边感受到什么",content:"感到被当作一个完整的人来看待。不是简历、不是标签、不是今天的状态——是一个完整的、有来龙去脉的人。因为你听了ta说的那些无关紧要的小事，并且记住了——这让ta觉得自己不是一个过客。被记住是最基本的被尊重——但你发现了吗，大多数人连这个最基本的都没收到过。"},
+         {title:"这种特质的隐藏力量",content:"真正的倾听，是建立深度关系最快的方式。不是因为倾听本身有多厉害——是因为真正被听过的人会对你产生信任。信任是不可逆的：一旦有人在你这里体验过「被听见」，ta就会下意识地把你标记为「安全的人」。这种标记，比任何社交技巧都持久。你用倾听换来的东西，是别人用表达换不来的。"},
+         {title:"怎么保护这种特质不被消耗",content:"倾听者最容易遇到的消耗是：一直在接收，但很少有人反过来接收你。你需要学会主动切换角色——在安全的关系里，偶尔做那个「说的人」。如果对方只习惯你听、不愿意听你说，这不是你的问题——是这段关系不平衡。你有权利对只索取不给予的倾听说停。"}
+       ],
+       advice:["这周找一个人，认真问ta一句：「你上次说的那个事，后来怎么样了？」——注意看ta的表情变化。那个表情，就是「被记住」的样子。","和那个一直在听你的人（如果有的话）约一次：这次换你来说。哪怕你说得磕磕巴巴——练习被倾听也是一种能力。","记录一次你「没有被听见」的时刻。不是为了委屈——是为了提醒自己：你知道那种感觉有多难受，所以才不想让别人也尝到。","如果有一个人每次跟你聊天都是ta单方面输出——这周试着在ta换气时插一句：「我最近也有一些想说的。」看ta的反应。"],
+       reminder:"你一直在听别人——但你自己呢？你有多久没有被认真地听过一次了？你给了别人一个安全的地方，请你也为自己找一个。那个愿意听你说的人，可能也在等你开口。"
+    },
+    C:{name:"因为你不需要对方表演",tag:"你让人舒服的真正原因，不是幽默——是你允许沉默",icon:"🌙",
+       score:"不要求表演 倾向 80%",
+       conclusion:"你让人舒服的原因，和你以为的完全不一样。你以为是因为你不难相处、不计较、不给人压力。但真正稀有的事情是：你不需要对方「表演一个有趣的人」。你可以和沉默共存，可以和尴尬握手，可以接受对方说「我不知道」或「今天没什么好说的」。当别人在你面前突然不想说话了，你不会问「怎么了你怎么不说话」，也不会急着用话题填满空隙。你以为这是你的性格——但对别人来说，这是一种巨大的解脱：终于有一个地方，不用演了。",
+       evidence_note:"你和别人相处时不需要对方一直说话（Q2），你在群体中对沉默的人不会cue ta给对方压力（Q3），你不把冷场当作需要被解决的问题（Q5），你在别人情绪低落时选择安静陪伴而非急着做点什么（Q7），你最怕被误解成冷漠（Q9）——但你不是冷漠，你是把沉默当作一种尊重。",
+       quote:"你给出了这个世界上最难给出的一样东西：一个不需要表演、不需要证明、不需要保持有趣的地方。",
+       modules:[
+         {title:"你让人舒服的真正原因",content:"你以为自己只是「不挑剔」——但真正的原因是：你从不要求任何人表演。你不期待对方每次都风趣、有见识、状态在线。你允许对方说「今天没什么想说的」，允许聊天中断在那里，允许空气安静几秒甚至几分钟而不觉得尴尬。你以为这只是「你不爱说话」——但别人感受到的是：终于有一个地方，我可以把面具摘下来。不用演一个有趣的自己，不用演一个得体的自己，不用演任何版本——就只是自己。"},
+         {title:"你以为的原因和实际差在哪",content:"你可能以为别人喜欢和你待在一起是因为你「不给人压力」。但压力的反面不是轻松——是没有脚本。大多数社交场合都有隐形的剧本：你要表现开心、你要说话有趣、你要让气氛热起来。你这里没有剧本。没有导演，没有台词，没有人喊action。别人走进你的空间，发现可以什么都不演——这种反差，比你想象中更震撼。"},
+         {title:"别人在你身边感受到什么",content:"感到可以「不在线」。不是手机不在线——是整个人不用时刻保持运转。不用想话题、不用照顾气氛、不用确保自己看起来OK。在你面前，可以发呆、可以走神、可以说一半停一半、可以半天不开口。这种「可以不在线」的自由，是现代生活里最稀缺的东西。你在无意中，给了别人一个可以关机的角落。"},
+         {title:"这种特质的隐藏力量",content:"不需要对方表演，意味着你看到的是真实的人。别人在你这里展示的，不是精华版、不是高光版、不是社交版——是原版。而原版的人，一旦被接纳过一次，就会对你产生一种很深的信任。因为ta知道：你见过ta不有趣、不精彩、不在状态的样子——你还在。这种信任，比赞美更牢固。"},
+         {title:"怎么保护这种特质不被消耗",content:"允许沉默的人容易遇到一种消耗：别人把「你这里很安静」当成了「我可以随便来」。你需要学会分辨：哪些沉默是彼此舒服的——哪些沉默是你在替对方扛着ta不愿意面对的东西。前者可以留，后者要学会放回去。你的安静是一种礼物——不要把它送给不需要的人。"}
+       ],
+       advice:["这周和别人相处时，刻意留一段沉默——不用话题填满。观察对方是放松了还是更焦虑了。这个反应会告诉你：ta是不是那个也懂得沉默的人。","找一段独处的时间，对自己说：我不用演一个「让人舒服的人」。不演——也是一种不表演。","如果有人在你沉默时表现得很不安、一直找话题——温柔地告诉ta：「没关系，不说话也可以。」看看ta会不会慢慢放松下来。","区分两种沉默：治愈的沉默和逃避的沉默。前者让你感觉平静，后者让你感觉沉重。保护前者的时间，远离后者的来源。"],
+       reminder:"你不需要表演——这个权利你给了别人，也请你给自己。你也有权沉默、有权不在状态、有权今天不是一个让人觉得舒服的人。你给别人的温柔，别忘了也留一份给自己。"
+    },
+    D:{name:"因为你一直稳定",tag:"你让人舒服的真正原因，不是随和——是你可预测",icon:"🪨",
+       score:"稳定性 倾向 82%",
+       conclusion:"你让人舒服的原因，和你以为的完全不一样。你以为是因为你包容、不计较、什么都能接受。但真正让人安心的是：你的情绪和能量是稳定的。今天来找你是这个你，明天来还是。你不会突然冷淡、不会忽冷忽热、不会因为自己心情不好而让别人必须小心翼翼地猜。别人在你面前不需要「看脸色」——因为你的脸始终是同一张。你以为这是性格温和——但对一些长期活在别人情绪波动中的人来说，你的稳定是一种救命的东西。",
+       evidence_note:"你的情绪不随场面变化而大幅波动（Q3），别人找你不需要猜你今天的模式（Q2），你在别人情绪失控时保持同样的态度（Q7），你最怕被误解成没有情绪（Q9）——但稳定不等于麻木，你只是选择不把自己的波动转嫁给别人。你知道忽冷忽热有多伤人（Q12），所以你选择先稳住自己。",
+       quote:"你的稳定不是麻木——是你在心里经历了无数次起伏之后，选择把平稳的那一面留给别人。",
+       modules:[
+         {title:"你让人舒服的真正原因",content:"你以为自己只是「情绪比较稳」——但真正的原因是：你给了别人一种可以预测的安全感。来找你之前不用猜你心情好不好、不用看朋友圈试探你今天的能量状态、不用担心哪句话说错了你会突然冷掉。这种可预测性，在人际关系中比「有趣」和「有魅力」重要得多。有趣的人让人想靠近——稳定的人让人敢留下来。"},
+         {title:"你以为的原因和实际差在哪",content:"你可能以为别人喜欢你是因为你包容、不计较。但包容是一种行为，稳定是一种存在。行为可以被模仿，存在不能。你不是「忍住不发火」——你是从底层就没有把情绪挂在别人身上。别人感觉到的是：在你这里，天不会突然变。这种确定的平静，对于长期在人际关系中提心吊胆的人来说，比任何安慰都更治愈。"},
+         {title:"别人在你身边感受到什么",content:"感到脚踏实地。不是不用心——是不用费心。不用费心去维护你的情绪、不用费心去猜测你的反应、不用费心去防止踩到你的雷区。你是一片平地——没有突然的坑，没有隐形的地雷。别人在你身边时，终于可以不踮着脚走路了。在一个越来越不稳定的世界里，你的稳定是一种锚。"},
+         {title:"这种特质的隐藏力量",content:"稳定的人有一个巨大的优势：别人会把你当作参照点。当ta们自己情绪波动、自我怀疑、被外界影响时，会下意识地想你是怎么看这件事的。不是因为你的观点最对——是因为你的角度最不容易被情绪带偏。久而久之，你会成为很多人心里那个「稳的版本」。这种影响力，不是靠说服获得的——是靠存在本身。"},
+         {title:"怎么保护这种特质不被消耗",content:"稳定的人最容易遇到的消耗是：别人把你的稳定当成理所当然。以为你不需要被关心、不需要被接住、不需要偶尔不稳定。你需要记住：稳定是你的选择，不是你的出厂设置。你可以选择在某些人面前不稳定——那是一种更高层级的信任。不要把稳定省给所有人——留一些给自己和最值得的人。"}
+       ],
+       advice:["这周允许自己在一个安全的人面前「不稳定」一次。不需要理由，不需要铺垫——就是今天不想稳了。看ta能不能接住。","留意一次：当你感觉到自己情绪波动时，是不是下意识地先安抚了别人而不是自己。如果是——先停下来，先管自己。","写下来：哪些人的情绪波动让你最累？哪些人的情绪你很自然地就能接住？前者学会保持距离，后者学会珍惜。","给自己设置一个「不稳定日」——每月至少一天，你可以不对任何人的情绪负责，只对自己的情绪诚实。"],
+       reminder:"你一直在做别人的锚——但锚也有被浪冲得晃动的时候。不要因为自己偶尔不稳就觉得「我不再是那个让人舒服的人了」。你的不稳也是你的一部分——让值得的人看到它，说不定会让ta们更舒服：原来你也不是完美稳定的，原来你也会摇晃。"
+    }
+  },
+
+  productModules:[
+    "你让人舒服的真正原因",
+    "你以为的原因和实际差在哪",
+    "别人在你身边感受到什么",
+    "这种特质的隐藏力量",
+    "怎么保护这种特质不被消耗"
+  ],
+
+  disclaimer:"本测试仅为自我探索参考，不构成任何心理诊断、治疗建议或效果承诺。每个人的感受和关系都是独特的，请结合自己的实际体验来判断。"
+};
+
+// ========== 引擎 ==========
+let answers=[],currentQ=0,paid=false;
+
+function $(id){return document.getElementById(id)}
+const app = document.getElementById('app');
+
+function cover(){
+  app.innerHTML=`
+    <div class="screen active cover">
+      <div class="icon">🌿</div>
+      <h1>${DATA.title}</h1>
+      <div class="sub">${DATA.subtitle}</div>
+      <button class="btn-start" onclick="start(true)">开始测试</button>
+      <div class="trust">前5题免费 · 记下答案继续解锁完整报告</div>
+    </div>`;
+}
+
+function start(free){answers=[];currentQ=0;paid=!free;renderQ()}
+
+function renderQ(){
+  if(currentQ>=DATA.questions.length){showResult();return;}
+  if(currentQ===5 && !paid){showGate();return;}
+  const q=DATA.questions[currentQ];
+  const pct=Math.round((currentQ/DATA.questions.length)*100);
+  const letters=['A','B','C','D'];
+  app.innerHTML=`
+    <div class="screen active">
+      <div class="progress-wrap">
+        <div class="progress-bar"><div class="progress-fill" style="width:${pct}%"></div></div>
+        <div class="progress-label">第 ${currentQ+1}/${DATA.questions.length} 题</div>
+      </div>
+      <div class="q-area">
+        <div class="q-num">${currentQ<5?'免费测试 · 第'+(currentQ+1)+'题':'深度解锁 · 第'+(currentQ+1)+'题'}</div>
+        <div class="q-text">${q.scene}</div>
+        <div class="options">
+          ${letters.map(l=>`<div class="opt" onclick="pick('${l}')"><div class="letter">${l}</div><div class="txt">${q[l]}</div></div>`).join('')}
+        </div>
+      </div>
+      ${currentQ===4?'<div style="text-align:center;font-size:13px;color:#6a6558;padding:8px 0">记下5个答案，继续解锁完整报告 →</div>':''}
+    </div>`;
+}
+
+function pick(letter){
+  answers.push(letter);
+  currentQ++;
+  renderQ();
+  window.scrollTo(0,0);
+}
+
+function showGate(){
+  app.innerHTML=`
+    <div class="screen active gate-screen">
+      <div class="lock-icon">🔓</div>
+      <h2>前5题只是倾向<br>完整12题才能看清真正的你</h2>
+      <div class="gate-desc">后7题带你深入发现：你让人舒服的真正原因，可能和你以为的完全不一样</div>
+      <ul class="unlock-list">
+        ${DATA.productModules.map(m=>`<li>${m}</li>`).join('')}
+      </ul>
+      <button class="btn-gate" onclick="unlock()">继续完成12题 · 解锁完整报告</button>
+      <div class="price">完整12题报告 · 做完自动解锁</div>
+    </div>`;
+}
+
+function unlock(){paid=true;renderQ()}
+
+function showResult(){
+  const counts={A:0,B:0,C:0,D:0};
+  for(let i=5;i<answers.length;i++){counts[answers[i]]++}
+  const sorted=Object.entries(counts).sort((a,b)=>b[1]-a[1]);
+  let typeKey=sorted[0][0];
+  if(sorted[0][1]===sorted[1][1]&&sorted[0][0]==='A'&&(sorted[1][0]==='C'||sorted[1][0]==='D'))typeKey=sorted[1][0];
+  if(sorted[0][1]===sorted[1][1]&&sorted[0][0]==='B'&&sorted[1][0]==='D')typeKey='D';
+  const type=DATA.types[typeKey];
+
+  const freeAnswers=answers.slice(0,5);
+  const freeLabels=['初次见面的反应','被说放松时的自我认知','群体中的自然位置','被信任时的理解','对自身特质的觉察'];
+  const freeDesc=[
+    ['你没有打断ta——给了对方自己决定节奏的空间','你在ta说完后给了一个追问——让ta感到被认真对待了','你什么都没多做——但你的安静本身就是一种无声的邀请','你用平常的态度回应——让ta觉得这件事本来就不需要紧张'],
+    ['你不评价任何选择——好坏都不说，这让对方觉得绝对安全','你记得ta提过的细节——被记住比任何安慰都更有力量','你不要求一直说话——安静对你来说不是需要被填补的空白','你的情绪稳定——来找你之前不需要猜今天是什么模式'],
+    ['你在注意谁被冷落了——然后默默去接那个人的话','你在想ta为什么这么说——不是在等自己开口的机会','你不把沉默当成问题——这让沉默中的人也感到被接纳','你保持自己的节奏——不管场面怎样，你都是同一个你'],
+    ['你没有露出任何审判的表情——这让对方放下了最后一层防备','你问了一个好问题——好问题比好答案更让人想开口','你没有急着给建议——有时候被完整地听完就已经足够了','你没有突然改变话题——你的稳定让对方敢于往深处说'],
+    ['你意识到是「没做什么」——但克制与不评价本身就是一种强大的能力','你比别人多听了一会儿——而大多数人缺的恰恰就是这一会儿','你不觉得冷场是问题——对方感受到了，于是也不需要把它当问题','你的情绪不绑定在别人身上——这让对方不用为你的感受负责']
+  ];
+
+  let evidenceHTML='<h3>📋 答案证据</h3><p>';
+  for(let i=0;i<5;i++){
+    const a=freeAnswers[i];
+    const descIdx=a==='A'?0:a==='B'?1:a==='C'?2:3;
+    evidenceHTML+=`<strong>Q${i+1}「${DATA.questions[i].scene.slice(0,18)}…」</strong>你选了${a}——${freeDesc[i][descIdx]}。<br><br>`;
+  }
+  evidenceHTML+=type.evidence_note+'</p>';
+
+  let modulesHTML='';
+  for(const m of type.modules){
+    modulesHTML+=`<div class="module"><h3>${m.title}</h3><p>${m.content}</p></div>`;
+  }
+
+  let adviceHTML='';
+  for(let i=0;i<type.advice.length;i++){
+    adviceHTML+=`<div class="advice-item"><span class="n">0${i+1}</span><span>${type.advice[i]}</span></div>`;
+  }
+
+  app.innerHTML=`
+    <div class="screen active result">
+      <div class="badge">你让人舒服的真正原因</div>
+      <div class="type-name">${type.name}</div>
+      <div class="type-sub">${type.tag}</div>
+
+      <div style="font-size:15px;color:#d4b87a;margin-bottom:4px">${type.icon} ${type.score}</div>
+      <p style="font-size:15px;color:#b8b0a0;line-height:1.75;margin-bottom:20px">${type.conclusion}</p>
+
+      <div class="evidence-box">${evidenceHTML}</div>
+      ${modulesHTML}
+
+      <div class="summary-box">
+        <div class="q-mark">“</div>
+        <p>${type.quote}</p>
+      </div>
+
+      <div class="advice-box">
+        <h3>📅 未来30天建议</h3>
+        ${adviceHTML}
+      </div>
+
+      <div class="reminder-box">
+        <h3>⚠️ 关键提醒</h3>
+        <p>${type.reminder}</p>
+      </div>
+
+      <div style="font-size:13px;color:#6a6558;line-height:1.6;text-align:center;margin-bottom:24px">${DATA.disclaimer}</div>
+      <div class="footer">以上结果为自我探索参考 · 每个选择都是了解自己的线索</div>
+    </div>`;
+  window.scrollTo(0,0);
+}
+
+// start
+cover();
+</script>
+</body>
+</html>

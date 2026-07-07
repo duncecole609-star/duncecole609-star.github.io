@@ -1,0 +1,318 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
+<title>回复速度心理测试</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:"PingFang SC","Microsoft YaHei",sans-serif;background:#0f0f1a;color:#e8e0d0;min-height:100vh;display:flex;justify-content:center}
+.app{width:100%;max-width:500px;min-height:100vh;position:relative;overflow:hidden}
+.screen{display:none;flex-direction:column;min-height:100vh;padding:28px 22px 40px}
+.screen.active{display:flex}
+
+.cover{justify-content:center;align-items:center;text-align:center;gap:20px}
+.cover .icon{font-size:52px}
+.cover h1{font-size:29px;font-weight:900;line-height:1.4;letter-spacing:1.5px;padding:0 6px}
+.cover h1 .hl{color:#c9a96e}
+.cover .sub{font-size:15px;color:#8a8070;line-height:1.7;max-width:300px}
+.cover .btn-start{margin-top:10px;padding:15px 50px;font-size:18px;font-weight:700;background:linear-gradient(135deg,#c9a96e,#a6844d);color:#0f0f1a;border:none;border-radius:40px;cursor:pointer;letter-spacing:2px}
+.cover .btn-start:active{transform:scale(.96)}
+.cover .trust{font-size:12px;color:#4a4538;margin-top:6px}
+
+.progress-wrap{padding:4px 0 14px}
+.progress-bar{height:3px;background:#1e1e2e;border-radius:2px;overflow:hidden}
+.progress-fill{height:100%;background:linear-gradient(90deg,#c9a96e,#d4b87a);border-radius:2px;transition:width .3s}
+.progress-label{font-size:13px;color:#5a5548;margin-top:6px;text-align:right}
+
+.q-area{flex:1;display:flex;flex-direction:column;gap:16px}
+.q-area .q-num{font-size:13px;color:#6a6558;letter-spacing:2px}
+.q-area .q-text{font-size:23px;font-weight:700;line-height:1.5}
+.options{display:flex;flex-direction:column;gap:10px}
+.opt{padding:18px 16px;border-radius:14px;background:#16162a;border:1.5px solid #252540;cursor:pointer;transition:all .2s;display:flex;align-items:flex-start;gap:13px}
+.opt:active{transform:scale(.98);border-color:#c9a96e;background:#1e1e34}
+.opt .letter{width:33px;height:33px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:15px;font-weight:700;flex-shrink:0;background:rgba(201,169,110,.12);color:#c9a96e}
+.opt .txt{font-size:15px;line-height:1.55;color:#c8c0b0;flex:1}
+
+.gate-screen{justify-content:center;align-items:center;text-align:center;gap:24px}
+.gate-screen .lock-icon{font-size:48px}
+.gate-screen h2{font-size:26px;font-weight:800;line-height:1.4}
+.gate-screen .gate-desc{font-size:15px;color:#a09880;line-height:1.7;max-width:300px}
+.gate-screen .unlock-list{text-align:left;background:#16162a;border-radius:16px;padding:20px 24px;width:100%;max-width:320px}
+.gate-screen .unlock-list li{font-size:14px;color:#b8b0a0;line-height:2;list-style:none}
+.gate-screen .unlock-list li::before{content:"✓ ";color:#c9a96e;font-weight:700}
+.gate-screen .btn-gate{margin-top:8px;padding:14px 44px;font-size:18px;font-weight:700;background:linear-gradient(135deg,#c9a96e,#a6844d);color:#0f0f1a;border:none;border-radius:40px;cursor:pointer;letter-spacing:2px}
+.gate-screen .btn-gate:active{transform:scale(.96)}
+.gate-screen .price{font-size:14px;color:#6a6558;margin-top:4px}
+
+.loading{justify-content:center;align-items:center;text-align:center;gap:24px}
+.loading .spinner{width:52px;height:52px;border:3px solid #1e1e2e;border-top-color:#c9a96e;border-radius:50%;animation:spin .8s linear infinite}
+@keyframes spin{to{transform:rotate(360deg)}}
+.loading .msg{font-size:16px;color:#a09880;letter-spacing:1px}
+
+.result{padding:28px 22px 48px}
+.result .badge{display:inline-block;padding:7px 16px;border:1px solid rgba(201,169,110,.25);border-radius:16px;font-size:13px;color:#c9a96e;letter-spacing:2px;margin-bottom:14px}
+.result .type-name{font-size:36px;font-weight:900;margin-bottom:6px;line-height:1.2}
+.result .type-sub{font-size:18px;color:#d4b87a;margin-bottom:20px;line-height:1.4}
+
+.evidence-box{background:#16162a;border-radius:16px;padding:20px;margin-bottom:22px;border-left:3px solid #c9a96e}
+.evidence-box h3{font-size:14px;color:#c9a96e;letter-spacing:2px;margin-bottom:10px}
+.evidence-box p{font-size:14px;color:#b8b0a0;line-height:1.7}
+
+.module{margin-bottom:20px}
+.module h3{font-size:16px;color:#a09880;letter-spacing:1.5px;margin-bottom:10px;padding-bottom:8px;border-bottom:1px solid #1e1e2e}
+.module p{font-size:14px;color:#b8b0a0;line-height:1.75;margin-bottom:6px}
+
+.summary-box{background:linear-gradient(135deg,#1a1a2e,#1f1f34);border-radius:16px;padding:24px;margin:24px 0;text-align:center;border:1px solid rgba(201,169,110,.15)}
+.summary-box .q-mark{font-size:28px;color:#c9a96e;margin-bottom:8px}
+.summary-box p{font-size:17px;color:#d4b87a;line-height:1.7;letter-spacing:.5px}
+
+.advice-box{margin-bottom:24px}
+.advice-box h3{font-size:16px;color:#a09880;letter-spacing:2px;margin-bottom:12px}
+.advice-box .advice-item{padding:12px 14px;margin-bottom:8px;background:#16162a;border-radius:12px;font-size:14px;color:#b8b0a0;line-height:1.6;display:flex;gap:10px}
+.advice-box .advice-item .n{color:#c9a96e;font-weight:700;flex-shrink:0}
+
+.reminder-box{background:#16162a;border-radius:16px;padding:20px;margin-bottom:28px;border:1px solid #2a2a40}
+.reminder-box h3{font-size:15px;color:#c9a96e;letter-spacing:2px;margin-bottom:8px}
+.reminder-box p{font-size:14px;color:#a09880;line-height:1.7}
+
+.footer{text-align:center;padding:16px;font-size:11px;color:#3a3a48;border-top:1px solid #16162a;margin-top:auto}
+</style>
+</head>
+<body>
+<div class="app" id="app"></div>
+<script>
+// ========== 内容数据 ==========
+const DATA = {
+  title:"你回消息的速度，<br>暴露了你在关系里的<br><span class='hl'>位置</span>",
+  subtitle:"不是测你回得快还是慢——<br>是测你的回复节奏，到底在替你说什么",
+
+  questions:[
+    {scene:"收到一条消息后，你通常多久回复？",A:"看是谁发的。重要的人快回，不重要的人可能忘回——我的速度就是对关系的打分",B:"几乎秒回。不管是谁、什么内容——先回了再说，不回心里不踏实",C:"一般会等一会儿再回。不是没看到——是不想让对方觉得我随时都在等TA的消息",D:"看心情。今天想聊天就秒回，不想说话就放着——我的回复节奏和对方是谁关系不大"},
+    {scene:"对方隔了很久才回你消息，你的第一反应是什么？",A:"看TA平时回我的速度——如果TA本来就慢那没事，如果TA对别人快对我慢，我会记住",B:"赶紧回TA——怕TA觉得我在计较，或者怕TA下次回得更慢",C:"那我也慢一点。TA用什么节奏对我，我就用什么节奏对TA——公平很重要",D:"还好，没太在意。我自己也会很久不回，所以没资格要求别人秒回"},
+    {scene:"你已读不回的时候，最常见的原因是什么？",A:"对方回得太敷衍——一个嗯字或一个表情，我不知道怎么接，也不想硬接",B:"消息内容让我焦虑——不知道回什么才对，怕回错了对方会不高兴",C:"我需要时间想清楚怎么回——不想给一个不经思考的答案，也不想被对方带着节奏走",D:"纯粹是当下不想聊天——和对方没关系，是我自己的电量问题"},
+    {scene:"对方秒回你的时候，你心里是什么感觉？",A:"舒服——觉得被重视了。但也会观察：TA是对所有人都秒回，还是只对我这样",B:"有点压力——TA秒回了，我是不是也得秒回？不回会不会让TA失望",C:"正常——秒回不代表什么。有时候秒回只是因为正好在看手机而已",D:"看情况——如果我也正好想聊就开心，如果不想聊就觉得有点负担"},
+    {scene:"有没有人因为你回消息的速度跟你吵过架？",A:"有过——对方觉得我不够在乎TA。但我只是用TA对我的方式对TA，TA没意识到而已",B:"没有——因为我从来不给他们这个机会。再忙也会回，哪怕只是一个表情",C:"有过——对方觉得我故意冷淡。但其实我只是需要自己的节奏，不是针对TA",D:"很少——因为和我走得近的人都知道我回消息随缘，不随缘的也走不近了"},
+    {scene:"深夜收到一条消息，你已经看到了但不想现在回。最接近你内心的想法是？",A:"看是谁——如果是白天冷落我的人深夜才找我，我不会回。深夜秒回太容易被当成随叫随到",B:"回吧——万一TA有急事呢？万一不回TA会多想呢？算了，回一个再睡",C:"放着——深夜的消息最容易越界。我需要睡觉和独处时间，明天早上再回也不迟",D:"看心情和电量——今天还能回就回，不想回就关掉通知。深夜消息不应该被当成义务"},
+    {scene:"你发现自己在某段关系里的回复速度变了——变快或变慢了。你觉得这意味着什么？",A:"我在重新校准这段关系——变快是因为TA值得，变慢是因为我发现不对等了",B:"变慢了说明我在这段关系里放松了——终于不用时刻紧绷着秒回了。这是个好消息",C:"变快说明我可能有点依赖TA了——这让我警惕。变慢才是回到让我舒服的距离",D:"什么都没意味——我的回复速度本来就一直在变，和天气一样。不用过度解读"},
+    {scene:"对方发了一条很长的消息给你，你的回复习惯是？",A:"TA写多长我回多长——不是计较，是觉得对方认真了，我也要同样认真地回应",B:"赶紧先回一个在看或表情——让TA知道我没忽视TA，虽然我还没看完内容",C:"认真看，但不会立刻回。长消息需要长回复——我不想草率对付，等我有时间好好回",D:"看内容——如果是重要的事就认真回，如果是情绪输出就看心情回。长度不是我的决策依据"},
+    {scene:"你是否曾在回消息这件事上，对某个人有过愧疚感？",A:"有——对那个对我很好但我回得很敷衍的人。不是不喜欢TA，是TA的好让我不知道怎么同等回应",B:"经常——对自己在乎的人回得不够快、不够好。每次看到未读消息都会下意识焦虑",C:"很少——我回得慢是我的节奏，如果对方因此受伤，可能是TA需要调整期待，而不是我改",D:"偶尔——对我真正在意但当时没精力好好回的人。但我相信真正的关系不会被回复速度影响"},
+    {scene:"如果把回复速度看成一段关系的温度计，你觉得你是那个看温度计的人，还是被看的人？",A:"都是。我在看别人，也知道别人在看我——关系本来就是在互相校准中找到平衡的",B:"我是被看的那个——太怕别人觉得我冷，所以自己先调到恒温。没有波动就没有误读",C:"我是看温度计的人——我会故意让温度降一点，确保自己随时可以抽身。太热的关系让我窒息",D:"我不用温度计——温度本来就在变，今天冷明天热都是正常的。能接受这点的人留下，不能的走"},
+    {scene:"你最希望和你关系亲近的人，怎么理解你的回复习惯？",A:"希望TA知道——我回得快是因为你值得，我回得慢是因为你在消耗我。速度就是我对关系的真实反馈",B:"希望TA知道——我秒回不是因为我闲，是因为我害怕让你等。请不要利用我的害怕",C:"希望TA知道——我回得慢不是拒绝，是我需要不被催促的独处时间。等我回的时候，我一定是用心回的",D:"希望TA知道——别用回复速度来判断我在不在乎你。我回得快慢和在乎没关系，只和我当下的状态有关系"},
+    {scene:"回消息这件事，你觉得它在你的关系里承担了什么功能？",A:"它是一个天平——我在用回复速度告诉对方：你对我怎样，我就对你怎样。公平是第一原则",B:"它是一个安全阀——我通过控制回复速度来控制对方对我的评价。快回是为了不被讨厌",C:"它是一道门——我通过控制回复速度来控制关系的距离。慢回是为了不被吞噬",D:"它是一面镜子——照出来的是我当下的状态，不是我对你的判断。不要从镜子里找答案"}
+  ],
+
+  types:{
+    A:{name:"对等回应型",tag:"你的回复速度是一面镜子——你怎样对我，我就怎样对你",icon:"⚖️",
+       score:"对等回应 倾向 83%",
+       conclusion:"你的回复逻辑建立在公平感之上。你不是故意忽快忽慢——你是在用回复速度向对方传递一个清晰的信息：我对你的态度，取决于你对我的态度。你先观察对方的节奏，再决定自己的节奏。这种对等不是计较，是你对关系质量的要求——你值得被认真对待，就像你认真对待别人一样。",
+       evidence_note:"你在Q1中就透露了回复速度取决于对方是谁——你在用速度给关系打分。Q2里你会比较对方对不同人的回复差异，在意自己是否被区别对待。Q4里你会在意对方秒回是只对你还是对所有人——你寻找的是专属信号。Q5里你曾因为用对方的方式回应对方面引发过冲突——对方没意识到你只是在复制TA的节奏。你的回复逻辑是一个天平：你先观察，再回应，公平感始终是你关系里最重要的事。",
+       quote:"你回得快不是因为你闲——是因为那个人值得你把手机从口袋里拿出来。你回得慢不是因为你忙——是因为你在等那个人先证明自己值得。",
+       modules:[
+         {title:"你的回应人格：天平型关系校准者",content:"你在回消息这件事上有一套自己的公平法则：你先观察对方怎么对你，再决定你怎么回应。这不是算计——是你从小就知道：单方面热情撑不了多久。你曾经对某个人秒回过，但对方没有给你同等的回应——从那以后，你学会了：速度是关系的一面镜子。先看清对方的诚意，再决定自己要不要认真。这不是冷，是保护自己被消耗的底线。"},
+         {title:"你的秒回名单在替你说什么",content:"你的秒回名单其实很短——上面的人通过了你的校准测试。他们回你快，你回他们也快；他们认真，你比他们还认真。这个名单不是按血缘或职级排的——是按对等程度排的。你在用回复速度告诉世界：我对你的每一份认真，都不是白给的——是因为你先给了。"},
+         {title:"已读不回背后的真实心理",content:"你已读不回的时候，往往不是因为忙——是因为你觉得对方不值得一个即时回复。TA可能回得很敷衍，可能很久才回你一次，可能只在需要你的时候才出现。你不回，不是报复——是你不想再单方面维持这段对话。你的沉默是一个测试：看TA是否会在没有回应的情况下，依然愿意重新发起对话。"},
+         {title:"容易被你的回复习惯误伤的关系",content:"有些人其实在意你，但TA们回复慢只是因为性格或习惯——而不是不在乎。你的天平机制有时候会误伤这类人：你把TA们归入不对等的那一类，然后刻意放慢——但TA们根本没意识到自己在被校准。另一类容易被误伤的是新关系——还没有足够的数据让你判断，你就已经用慢回复拉开了距离。"},
+         {title:"怎么用回消息的方式让关系更平衡",content:"试着在最初几次互动中先给出你的标准节奏——而不是先等对方。你先快回三次，看对方怎么回应你。如果TA也快——恭喜你，找到了一个对等的人。如果TA慢——你可以问一次：你回消息就是这种风格吗？问一次就够了。不是所有慢回都是不在乎——有些人的慢回和冷漠是两回事。学会分辨，你的天平才不会被误触。"}
+       ],
+       advice:["找一段你正在用慢回复惩罚对方的关系——问自己：TA是真的不在乎我，还是TA本来就回消息慢？","下周对三个人主动秒回——不等他们先回你。观察：有没有人因为你先快就也变快了？","把你最在意的那段关系的聊天记录翻出来——看双方回复速度的变化趋势。它是不是已经在告诉你关系在往哪个方向走。","练习一次直接表达：告诉对方你回得太慢的时候我会不开心。不靠慢回去报复——靠说出来。"],
+       reminder:"你的公平感很珍贵——它帮你筛选掉了那些不值得的人。但不是所有慢回都是不重视，就像不是所有快回都是真心。在公平之外，留一点余地去信任——有些关系值得你先给，哪怕对方还没证明自己。"
+    },
+    B:{name:"安全秒回型",tag:"你的秒回不是热情——是不敢让任何人等你",icon:"🛡️",
+       score:"安全秒回 倾向 86%",
+       conclusion:"你的秒回背后藏着一个很深的逻辑：你怕让别人等。不是怕耽误事——是怕等待会让对方对你产生负面评价。你通过快速回复来维持关系的安全温度：只要我回得够快，就不会被讨厌、不会被冷落、不会给别人留下话柄。但你的秒回是有代价的——它让你的手机变成了一个永远在响的警报器。",
+       evidence_note:"你在Q1中几乎秒回所有人——回复对你来说更像是一种义务而非选择。Q2里即使对方很久才回你，你也赶紧回TA——怕计较会让自己显得小气。Q4里对方的秒回不但没让你开心，反而让你有压力——因为TA秒回了，你就觉得自己也必须秒回。Q5里你从来没有因为回复速度跟人吵过架——因为你从来不给对方这个机会。你的回复逻辑是一个安全阀：用最快的速度消除所有可能被讨厌的风险。",
+       quote:"你回得那么快，不是因为你在等消息——是因为你害怕别人在等你。但被等待，有时候也是被在意的一种方式。",
+       modules:[
+         {title:"你的回应人格：安全阀型关系维护者",content:"你的秒回不是天生的——是练出来的。你可能经历过因为回得慢而被误解、被冷落、甚至被指责的时刻。从那以后，你学会了：快回是最安全的选项。快回意味着你不会被抓住把柄，不会被说不在乎，不会给别人离开你的理由。但你把秒回当成了关系的保险——而保险从来都不是免费的。你的焦虑，就是保费。"},
+         {title:"你的秒回名单在替你说什么",content:"你的秒回名单上几乎有所有人——同事、朋友、家人、甚至不太熟的人。这不是因为你对他们都一样在意——是因为你对他们都一样害怕。你害怕任何一个未读消息都是一个潜在的不满。你的秒回在告诉世界：别生我的气，你看，我很快。但这也在告诉世界：我的时间是随时可以被别人打断的。"},
+         {title:"已读不回背后的真实心理",content:"你很少已读不回——那会让你焦虑到不行。即使不知道怎么回，你也会先发一个表情或一个嗯字来堵住对方可能的抱怨。但你知道吗——有时候已读不回是一种力量，它意味着：我有权利先照顾自己的感受，然后再回应你。你不需要为保持每一段关系都做出无条件的即时响应。"},
+         {title:"容易被你的回复习惯误伤的关系",content:"你的秒回有时候会让对方觉得有压力——尤其对方是延迟防御型或随机波动型的人。他们会觉得被你的秒回推着走，不得不也加快节奏。同时，你的秒回也让一些人觉得你好拿捏——因为你的快速回应暴露了你对关系安全的渴望。还有一类误伤是：你秒回得太快，反而让对方觉得你的回应没有经过思考——不够有分量。"},
+         {title:"怎么用回消息的方式让关系更平衡",content:"试试给自己设一个回复窗口期：看到消息后，先深呼吸三次再看内容。给自己一个心理缓冲——你不是客服，不需要7x24在线。从那些让你最不焦虑的关系开始练习慢回——找一个你信任的人，告诉TA：我今天想训练自己不秒回，你帮我。你会发现——真正在意你的人，不会因为你晚回三十分钟就离开。"}
+       ],
+       advice:["明天试着把手机放在你看不到的地方——先放一小时。然后回来看看：有没有消息因为没回而变得不可挽回的？（大概率没有）","挑一个你信任的人，告诉TA：我总秒回是因为怕你生气。听听TA的回答——可能会让你意外。","查看你最常秒回的五个人——其中有多少是你真正在意的人，多少是你只是怕他们不满意的人？把后者从秒回名单里删掉。","下一次收到一条让你焦虑的消息，先别回。等五分钟——你会发现五分钟后的答案和第一秒完全不同。"],
+       reminder:"你不需要用秒回来证明你的在乎——真正值得的关系，不会因为你回了慢一点就不成立。你的时间是你的，不是别人的安全感补丁。学会让自己在消息面前停下来，也是在让关系变得更真实——不是基于恐惧的秒回，而是基于选择的回应。"
+    },
+    C:{name:"延迟防御型",tag:"你的慢回不是冷漠——是你给自己留的安全距离",icon:"🚪",
+       score:"延迟防御 倾向 81%",
+       conclusion:"你回消息比别人慢半拍——不是因为你没看到，而是看到之后你选择先放一放。你需要一个心理缓冲：在收到消息和发出回复之间，有一段属于你自己的思考时间。慢回是你保持自我边界的方式——不让别人用消息的频率决定你的生活节奏，也不让关系因为回复得太快而加速到一个你还没准备好的位置。",
+       evidence_note:"你在Q1里会故意等一会儿再回——不让对方觉得你随时在线。Q3里你最常已读不回的原因是需要时间思考和控制节奏——不是不在乎，是不想在没想清楚之前被迫给出回应。Q5里曾有人因为你回得慢跟你吵过架——你被误解为冷淡，但其实你只是需要不被催促的独处时间。你的回复逻辑是一道门：用回复速度来管理关系的距离，慢回是在保护自己的空间不被压缩。",
+       quote:"你回得慢，不是因为不在乎——是因为你还在确认：我是在回应你的期待，还是在我的节奏里回应你。这两件事有天壤之别。",
+       modules:[
+         {title:"你的回应人格：边界型节奏守护者",content:"你对回复速度的掌控，本质上是你在保护自己的自主权。你曾经有过被消息追着跑的经历——对方的一条消息打乱了你的整个下午，或者一次过快的回复把一段关系推到了一个你后悔的位置。从那以后，你学会了：回复速度是你为数不多可以完全掌控的东西。慢一点，你就多了一分清醒；慢一点，关系就不能趁你不注意的时候走得太远。"},
+         {title:"你的秒回名单在替你说什么",content:"你的秒回名单非常短——可能只有一两个人。能被你秒回的人，是你完全信任不会侵犯你边界的人。TA们不会因为你先回了就要求你一直在线，也不会把你的快速回应当作一种承诺。你的秒回是一种礼遇——只有通过了你的边界考核的人，才能进入这个名单。"},
+         {title:"已读不回背后的真实心理",content:"你已读不回的时候，往往是在给自己争取思考的时间和空间。那条消息可能让你感到被需要——而你觉得如果不经过仔细思考就回应，可能会给对方一个你还没准备好的信号。你不回，不是拒绝——是你在说：这件事对我很重要，我不能草率。但你不说，对方只能看着已读二字胡乱猜测——这是你的延迟策略最大的代价。"},
+         {title:"容易被你的回复习惯误伤的关系",content:"最容易受伤的是那些真的需要你即时回应的人——不是因为TA们想控制你，而是TA们在那个当下确实需要你的支持。你的延迟可能被解读为冷漠或不在乎，尤其是在紧急或情绪脆弱的时刻。另一类误伤是那些和你相似的人——TA们也在用自己的节奏回复，两边的慢回叠加在一起，关系就变得像隔着一层毛玻璃在对话。"},
+         {title:"怎么用回消息的方式让关系更平衡",content:"你不需要放弃自己的节奏，但可以在慢回的同时给出一个信号：收到了，在想，晚点回。这三个词加起来不超过三秒钟，但能帮对方理解：你不是在忽视TA，你只是在用自己的方式认真对待。同时，试着区分需要慢回的时刻和可以快回的时刻——不是所有快回都是边界的丧失，有时候快回恰恰是连接的开始。"}
+       ],
+       advice:["下次收到一条你打算晚点回的消息——先花三秒钟发一句收到了，稍后回你。这三秒钟会让对方从焦虑猜测中解脱出来。","找到你秒回名单上的那个人，问TA：我回别人慢但回你快——你感觉到了吗？这个对话可能帮你更理解自己的边界设置。","给自己设定一个回复最晚时限——比如两个小时或半天。不是给自己压力，是承诺对方一个可以预见的回应时间。","试着一周内对某个人快回一次——不是TA要求你，是你自己选的。观察：快回一次，你的边界还在不在？"},
+       reminder:"你为自己争取思考时间是对的——真正的回应值得慢一点。但偶尔让对方知道你在想，也是一种回应。不是每一条消息都是对你的入侵——有些只是在说：我想你了，不是在催你。"
+    },
+    D:{name:"随机波动型",tag:"你的回复没有规律——因为你的情绪本来就不按时间表走",icon:"🌊",
+       score:"随机波动 倾向 79%",
+       conclusion:"你的回复节奏像潮汐——有时候秒回，有时候消失半天，有时候半夜突然出现。别人很难从回复速度上判断你对TA的态度——因为你自己也不太清楚今天的你会怎么回。你的回复习惯取决于你的电量、情绪、手头在做的事——而不是对方是谁。这种随机性让你自由，但也让你被误解：别人可能觉得你忽冷忽热，但你自己知道——你只是一直在跟着自己的节奏活。",
+       evidence_note:"你在Q1里回复节奏完全由心情决定——和对方是谁关系不大。Q3里已读不回的原因纯粹是当下不想聊天——和对方无关，是你自己的电量问题。Q5里很少有人因为你回消息的速度跟你吵架——因为和你走得近的人都接受了你的随机模式。你的回复逻辑是一面镜子：照出的是你当下的状态，而不是你对关系的判断。你希望人们从你的行为里读到的是你这个人——而不是一条可以解读的速度曲线。",
+       quote:"你今天秒回不代表你在意——你今天不回也不代表你冷漠。你只是拒绝让别人用回复时间来定义你。真正了解你的人，会看你的全部——而不是你回消息的速度。",
+       modules:[
+         {title:"你的回应人格：浪潮型自我表达者",content:"你不是不会秒回——你只是不愿意把回复变成一种义务。你回消息的节奏和你的情绪周期同步：心情好的时候你可以聊一整天，能量低的时候你连打开微信都觉得累。这种随机性让你感觉很真实——你不伪装成自己不在意的样子，也不勉强自己在不想说话的时候开口。你希望别人接受的是一个完整的人——一个有波峰也有波谷的人，而不是一个稳定的回复机器。"},
+         {title:"你的秒回名单在替你说什么",content:"你没有固定的秒回名单——一个人在周一可能被你秒回，在周三可能被你忘回。这不是因为你对TA的态度变了——是因为星期一的你和星期三的你状态不同。你的秒回不是一种荣誉体系——它不反映TA在你心里的位置，只反映当下的你是否有余裕给出即时回应。这让一些人困惑——但也让那些真正懂你的人在混乱中找到了和你连线的其他方式。"},
+         {title:"已读不回背后的真实心理",content:"你已读不回的时候，通常不是因为生气或疏远——是真的一句话也打不出来。那个时刻的你电量不足，或者注意力被别的事情占据，或者你需要完全不被干扰的独处时间。你希望对方能明白：我不回，不是我不在乎你——是此刻的我无法给出一句有温度的回应。与其发一个敷衍的嗯字，你宁愿沉默。这种沉默在你看来是尊重——但对方不一定能接收到这个意思。"},
+         {title:"容易被你的回复习惯误伤的关系",content:"最容易受伤害的是安全秒回型的人——TA们会把你的随机解读为不在乎、不尊重或忽冷忽热。TA们需要的稳定回应恰恰是你最给不了的。另一类被误伤的是对等回应型——TA们会用你对TA的速度来反向校准TA对你的速度，于是你们的互动陷入了一个双方都在试探的循环。还有就是那些对你来说很重要但你刚好在低电量期联系你的人——时机不对，误伤了一个本来重要的人。"},
+         {title:"怎么用回消息的方式让关系更平衡",content:"你不需要改变你的随机本质——随机不是问题，不沟通才是。让那些重要的人知道你的风格：我回消息有时候快有时候慢，和你的重要性没关系，只和我当时的状态有关。给重要的人一个替代通道：如果你真的有急事找我，打电话。这一句话就能消解大部分关于回复速度的误解。同时，在你状态好的时候偶尔主动发消息——让那些习惯了被动等待的人知道你也在想着TA们。"}
+       ],
+       advice:["给和你最近的五个人发一条消息，告诉他们：我回消息有时候慢不是不在意你——就是当时没电了。这句话会把很多悬而未决的误解一次清零。","这周记录三天你的回复时间——看看有没有规律。可能你自己都没意识到的节奏隐藏在里面——某段时间你最愿意回，某段时间你最不愿意。","找一个你经常已读不回的人，下一次在你不想回的时候发一句今天不想聊天，改天找你。沉默可以被替换为一个温柔的边界。","在状态最好的时候，主动约一个人——用行动告诉TA们，你的随机不是忽冷忽热，是温度随天气变。"],
+       reminder:"你的回复没有规律——但你在意的人需要规律才能感到安全。不需要变成别人期待的样子，但可以在偶尔给出一个信号：今天的我在线，或者今天的我不在线。不是让你改变自己——是让那些想走近你的人，能找到一条可以走进来的路。"
+    }
+  },
+
+  productModules:[
+    "你的回应模式类型",
+    "你的秒回名单在替你说什么",
+    "已读不回背后的真实心理",
+    "容易被你的回复习惯误伤的关系",
+    "怎么用回消息的方式让关系更平衡"
+  ],
+
+  disclaimer:"本测试仅为自我探索参考，不构成任何诊断、心理建议或效果承诺。回复习惯是个人风格的一部分，请结合自己的实际感受判断。"
+};
+
+// ========== 引擎 ==========
+let answers=[],currentQ=0,paid=false;
+
+function $(id){return document.getElementById(id)}
+const app = document.getElementById('app');
+
+function cover(){
+  app.innerHTML=`
+    <div class="screen active cover">
+      <div class="icon">💬</div>
+      <h1>${DATA.title}</h1>
+      <div class="sub">${DATA.subtitle}</div>
+      <button class="btn-start" onclick="start(true)">开始测试</button>
+      <div class="trust">前5题免费 · 记下答案左滑查看报告预览</div>
+    </div>`;
+}
+
+function start(free){answers=[];currentQ=0;paid=!free;renderQ()}
+
+function renderQ(){
+  if(currentQ>=DATA.questions.length){showResult();return;}
+  if(currentQ===5 && !paid){showGate();return;}
+  const q=DATA.questions[currentQ];
+  const pct=Math.round((currentQ/DATA.questions.length)*100);
+  const letters=['A','B','C','D'];
+  app.innerHTML=`
+    <div class="screen active">
+      <div class="progress-wrap">
+        <div class="progress-bar"><div class="progress-fill" style="width:${pct}%"></div></div>
+        <div class="progress-label">第 ${currentQ+1}/${DATA.questions.length} 题</div>
+      </div>
+      <div class="q-area">
+        <div class="q-num">${currentQ<5?'免费测试 · 第'+(currentQ+1)+'题':'深度解锁 · 第'+(currentQ+1)+'题'}</div>
+        <div class="q-text">${q.scene}</div>
+        <div class="options">
+          ${letters.map(l=>`<div class="opt" onclick="pick('${l}')"><div class="letter">${l}</div><div class="txt">${q[l]}</div></div>`).join('')}
+        </div>
+      </div>
+      ${currentQ===4?'<div style="text-align:center;font-size:13px;color:#6a6558;padding:8px 0">记下5个答案，左滑查看报告预览 →</div>':''}
+    </div>`;
+}
+
+function pick(letter){
+  answers.push(letter);
+  currentQ++;
+  renderQ();
+  window.scrollTo(0,0);
+}
+
+function showGate(){
+  app.innerHTML=`
+    <div class="screen active gate-screen">
+      <div class="lock-icon">🔓</div>
+      <h2>前5题只是倾向<br>完整12题才能看清全貌</h2>
+      <div class="gate-desc">后7题继续拆解：你回消息的速度到底在替你说什么、你的秒回名单里都有谁、已读不回背后你真正在想什么</div>
+      <ul class="unlock-list">
+        ${DATA.productModules.map(m=>`<li>${m}</li>`).join('')}
+      </ul>
+      <button class="btn-gate" onclick="unlock()">继续完成12题 · 解锁完整报告</button>
+      <div class="price">完整12题报告 · 做完自动解锁</div>
+    </div>`;
+}
+
+function unlock(){paid=true;renderQ()}
+
+function showResult(){
+  const counts={A:0,B:0,C:0,D:0};
+  for(let i=5;i<answers.length;i++){counts[answers[i]]++}
+  const sorted=Object.entries(counts).sort((a,b)=>b[1]-a[1]);
+  let typeKey=sorted[0][0];
+  if(sorted[0][1]===sorted[1][1]&&sorted[0][0]==='A'&&(sorted[1][0]==='C'||sorted[1][0]==='D'))typeKey=sorted[1][0];
+  if(sorted[0][1]===sorted[1][1]&&sorted[0][0]==='B'&&sorted[1][0]==='D')typeKey='D';
+  const type=DATA.types[typeKey];
+
+  const freeAnswers=answers.slice(0,5);
+  const freeLabels=['初次回应逻辑','对方延迟反应','已读不回的真相','秒回时的感受','速度引发的冲突'];
+  const freeDesc=[
+    ['你的回复速度取决于对方是谁——你在用速度给关系打分','你几乎秒回所有人——回复对你来说更像一种义务而非选择','你会故意等一会儿——不让对方觉得你随时在线','你的回复节奏由心情决定——和对方是谁关系不大'],
+    ['你在比较——TA对你的速度和TA对别人是否一致，公平感被触发','你赶紧回TA——怕计较会显得自己小气，不想让关系有裂痕','你也慢回去——TA用什么节奏对你，你就用什么节奏回应','你不太在意——因为你自己也经常这样，没资格要求别人'],
+    ['对方回得太敷衍——你不想为一句嗯字或一个表情续命','消息让你焦虑——不知道回什么才对，怕回错了惹对方不高兴','你需要时间思考——不想被对方的节奏带着走，也不想草率回应','当下不想聊天——和对方无关，纯粹是你自己的电量不在线'],
+    ['被重视了——但你会观察TA对别人是否也这样，你在寻找专属信号','有压力——TA秒回了你也得秒回，不然会担心让对方失望','觉得正常——秒回不代表什么特别的意思，可能只是正好在看手机','看心情——想聊就开心，不想聊就觉得有负担，和对方关系不大'],
+    ['有过——对方没意识到你只是在复制TA的节奏，你们在用速度较劲','没有——你再忙也会回，不给对方挑你毛病的机会','有过——对方觉得你冷淡，但你只是需要不被催促的独处节奏','很少——和你走得近的人都知道你回消息随缘，不接受的早走远了']
+  ];
+
+  let evidenceHTML='<h3>📋 答案证据</h3><p>';
+  for(let i=0;i<5;i++){
+    const a=freeAnswers[i];
+    const descIdx=a==='A'?0:a==='B'?1:a==='C'?2:3;
+    evidenceHTML+=`<strong>Q${i+1}「${DATA.questions[i].scene.slice(0,18)}…」</strong>你选了${a}——${freeDesc[i][descIdx]}。<br><br>`;
+  }
+  evidenceHTML+=type.evidence_note+'</p>';
+
+  let modulesHTML='';
+  for(const m of type.modules){
+    modulesHTML+=`<div class="module"><h3>${m.title}</h3><p>${m.content}</p></div>`;
+  }
+
+  let adviceHTML='';
+  for(let i=0;i<type.advice.length;i++){
+    adviceHTML+=`<div class="advice-item"><span class="n">0${i+1}</span><span>${type.advice[i]}</span></div>`;
+  }
+
+  app.innerHTML=`
+    <div class="screen active result">
+      <div class="badge">你的回应人格</div>
+      <div class="type-name">${type.name}</div>
+      <div class="type-sub">${type.tag}</div>
+
+      <div style="font-size:15px;color:#d4b87a;margin-bottom:4px">${type.icon} ${type.score}</div>
+      <p style="font-size:15px;color:#b8b0a0;line-height:1.75;margin-bottom:20px">${type.conclusion}</p>
+
+      <div class="evidence-box">${evidenceHTML}</div>
+      ${modulesHTML}
+
+      <div class="summary-box">
+        <div class="q-mark">"</div>
+        <p>${type.quote}</p>
+      </div>
+
+      <div class="advice-box">
+        <h3>📅 未来30天建议</h3>
+        ${adviceHTML}
+      </div>
+
+      <div class="reminder-box">
+        <h3>⚠️ 关键提醒</h3>
+        <p>${type.reminder}</p>
+      </div>
+
+      <div style="font-size:13px;color:#6a6558;line-height:1.6;text-align:center;margin-bottom:24px">${DATA.disclaimer}</div>
+      <div class="footer">以上结果为自我探索参考 · 每个选择都是了解自己的线索</div>
+    </div>`;
+  window.scrollTo(0,0);
+}
+
+// start
+cover();
+</script>
+</body>
+</html>

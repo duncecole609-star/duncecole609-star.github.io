@@ -1,0 +1,318 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
+<title>气质心理测试</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:"PingFang SC","Microsoft YaHei",sans-serif;background:#0f0f1a;color:#e8e0d0;min-height:100vh;display:flex;justify-content:center}
+.app{width:100%;max-width:500px;min-height:100vh;position:relative;overflow:hidden}
+.screen{display:none;flex-direction:column;min-height:100vh;padding:28px 22px 40px}
+.screen.active{display:flex}
+
+.cover{justify-content:center;align-items:center;text-align:center;gap:20px}
+.cover .icon{font-size:52px}
+.cover h1{font-size:29px;font-weight:900;line-height:1.4;letter-spacing:1.5px;padding:0 6px}
+.cover h1 .hl{color:#c9a96e}
+.cover .sub{font-size:15px;color:#8a8070;line-height:1.7;max-width:300px}
+.cover .btn-start{margin-top:10px;padding:15px 50px;font-size:18px;font-weight:700;background:linear-gradient(135deg,#c9a96e,#a6844d);color:#0f0f1a;border:none;border-radius:40px;cursor:pointer;letter-spacing:2px}
+.cover .btn-start:active{transform:scale(.96)}
+.cover .trust{font-size:12px;color:#4a4538;margin-top:6px}
+
+.progress-wrap{padding:4px 0 14px}
+.progress-bar{height:3px;background:#1e1e2e;border-radius:2px;overflow:hidden}
+.progress-fill{height:100%;background:linear-gradient(90deg,#c9a96e,#d4b87a);border-radius:2px;transition:width .3s}
+.progress-label{font-size:13px;color:#5a5548;margin-top:6px;text-align:right}
+
+.q-area{flex:1;display:flex;flex-direction:column;gap:16px}
+.q-area .q-num{font-size:13px;color:#6a6558;letter-spacing:2px}
+.q-area .q-text{font-size:23px;font-weight:700;line-height:1.5}
+.options{display:flex;flex-direction:column;gap:10px}
+.opt{padding:18px 16px;border-radius:14px;background:#16162a;border:1.5px solid #252540;cursor:pointer;transition:all .2s;display:flex;align-items:flex-start;gap:13px}
+.opt:active{transform:scale(.98);border-color:#c9a96e;background:#1e1e34}
+.opt .letter{width:33px;height:33px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:15px;font-weight:700;flex-shrink:0;background:rgba(201,169,110,.12);color:#c9a96e}
+.opt .txt{font-size:15px;line-height:1.55;color:#c8c0b0;flex:1}
+
+.gate-screen{justify-content:center;align-items:center;text-align:center;gap:24px}
+.gate-screen .lock-icon{font-size:48px}
+.gate-screen h2{font-size:26px;font-weight:800;line-height:1.4}
+.gate-screen .gate-desc{font-size:15px;color:#a09880;line-height:1.7;max-width:300px}
+.gate-screen .unlock-list{text-align:left;background:#16162a;border-radius:16px;padding:20px 24px;width:100%;max-width:320px}
+.gate-screen .unlock-list li{font-size:14px;color:#b8b0a0;line-height:2;list-style:none}
+.gate-screen .unlock-list li::before{content:"✓ ";color:#c9a96e;font-weight:700}
+.gate-screen .btn-gate{margin-top:8px;padding:14px 44px;font-size:18px;font-weight:700;background:linear-gradient(135deg,#c9a96e,#a6844d);color:#0f0f1a;border:none;border-radius:40px;cursor:pointer;letter-spacing:2px}
+.gate-screen .btn-gate:active{transform:scale(.96)}
+.gate-screen .price{font-size:14px;color:#6a6558;margin-top:4px}
+
+.loading{justify-content:center;align-items:center;text-align:center;gap:24px}
+.loading .spinner{width:52px;height:52px;border:3px solid #1e1e2e;border-top-color:#c9a96e;border-radius:50%;animation:spin .8s linear infinite}
+@keyframes spin{to{transform:rotate(360deg)}}
+.loading .msg{font-size:16px;color:#a09880;letter-spacing:1px}
+
+.result{padding:28px 22px 48px}
+.result .badge{display:inline-block;padding:7px 16px;border:1px solid rgba(201,169,110,.25);border-radius:16px;font-size:13px;color:#c9a96e;letter-spacing:2px;margin-bottom:14px}
+.result .type-name{font-size:36px;font-weight:900;margin-bottom:6px;line-height:1.2}
+.result .type-sub{font-size:18px;color:#d4b87a;margin-bottom:20px;line-height:1.4}
+
+.evidence-box{background:#16162a;border-radius:16px;padding:20px;margin-bottom:22px;border-left:3px solid #c9a96e}
+.evidence-box h3{font-size:14px;color:#c9a96e;letter-spacing:2px;margin-bottom:10px}
+.evidence-box p{font-size:14px;color:#b8b0a0;line-height:1.7}
+
+.module{margin-bottom:20px}
+.module h3{font-size:16px;color:#a09880;letter-spacing:1.5px;margin-bottom:10px;padding-bottom:8px;border-bottom:1px solid #1e1e2e}
+.module p{font-size:14px;color:#b8b0a0;line-height:1.75;margin-bottom:6px}
+
+.summary-box{background:linear-gradient(135deg,#1a1a2e,#1f1f34);border-radius:16px;padding:24px;margin:24px 0;text-align:center;border:1px solid rgba(201,169,110,.15)}
+.summary-box .q-mark{font-size:28px;color:#c9a96e;margin-bottom:8px}
+.summary-box p{font-size:17px;color:#d4b87a;line-height:1.7;letter-spacing:.5px}
+
+.advice-box{margin-bottom:24px}
+.advice-box h3{font-size:16px;color:#a09880;letter-spacing:2px;margin-bottom:12px}
+.advice-box .advice-item{padding:12px 14px;margin-bottom:8px;background:#16162a;border-radius:12px;font-size:14px;color:#b8b0a0;line-height:1.6;display:flex;gap:10px}
+.advice-box .advice-item .n{color:#c9a96e;font-weight:700;flex-shrink:0}
+
+.reminder-box{background:#16162a;border-radius:16px;padding:20px;margin-bottom:28px;border:1px solid #2a2a40}
+.reminder-box h3{font-size:15px;color:#c9a96e;letter-spacing:2px;margin-bottom:8px}
+.reminder-box p{font-size:14px;color:#a09880;line-height:1.7}
+
+.footer{text-align:center;padding:16px;font-size:11px;color:#3a3a48;border-top:1px solid #16162a;margin-top:auto}
+</style>
+</head>
+<body>
+<div class="app" id="app"></div>
+<script>
+// ========== 内容数据 ==========
+const DATA = {
+  title:"你身上有种气质，<br>只是你自己<br><span class='hl'>不知道叫什么</span>",
+  subtitle:"不是测你好不好——是帮你认出那个被你忽略了很久的自己",
+
+  questions:[
+    {scene:"走进全是陌生人的房间，你下意识会怎么做？",A:"先找个角落站定，用眼睛熟悉全场——不是社恐，是你习惯先看清再决定往哪走",B:"找看起来最和善的人先聊两句——你天生知道怎么让气氛没那么僵",C:"注意力被房间里的东西吸引——墙上的画、桌上的书，总有什么让你好奇",D:"不慌不忙找个位置坐下，该喝水喝水——你的从容不是装的，是真不急"},
+    {scene:"一个不太熟的人突然认真夸了你一句，你的第一反应是？",A:"微微点头说谢谢，但心里在想「他为什么要夸我」——你习惯先理解动机再回应",B:"眼睛一亮，笑着说「真的吗」——然后反过来也夸对方一句",C:"追问「哪方面？你具体说的是什么」——你想知道别人眼里的你到底是什么样",D:"平静地说谢谢，然后继续刚才的话题——不是不在意，是觉得没必要放大"},
+    {scene:"你和好朋友因为一件事看法完全不同，你通常会？",A:"不吵，但也不让步——沉默里有一种「你可以不认同我，但我不会改」的笃定",B:"先听对方说完，找到你们共同的部分——你更在意关系，不是输赢",C:"兴奋地追问「你为什么这么想」——分歧对你来说不是冲突，是信息增量",D:"说「我们过两天再看」——不是逃避，是你知道很多分歧不需要当场解决"},
+    {scene:"深夜，一个朋友突然发消息说「我今天好难过」，你的第一反应是？",A:"认真看完每一条消息，想好了再回复——你的安慰不随便，所以特别有分量",B:"秒回「我在」，然后问「要不要出来走走」——你的存在本身就是安慰",C:"问一连串问题帮她梳理发生了什么——你不是在审问，是在帮她看见自己",D:"说「慢慢说，我不走」——你不急着给建议，但你稳定的存在感本身就是一种承诺"},
+    {scene:"别人第一次见完你之后，最常跟你朋友反馈的评价是？",A:"「感觉不太好接近，但是让人很好奇」——你的气场先拦住了一些人，也筛选了一些人",B:"「好相处」「聊起来很舒服」——你有一种让人自动放下防备的体质",C:"「很有意思」「跟别人不太一样」——你身上有一种让人想多聊两句的东西",D:"「很稳」「让人觉得很放心」——你话不多，但你在场就是一种秩序感"},
+    {scene:"周末一个人在家，没有任何安排——你内心最真实的状态是？",A:"享受不用跟任何人打交道的安静——你不是孤僻，是独处时电量才真正充满",B:"待不住太久，总想约个人或者出门走走——你的能量来自和世界的温暖连接",C:"翻书、看纪录片、学一个奇怪的小技能——你没办法什么都不做，脑子里总有新念头在冒",D:"按自己的节奏做几件小事，不急不忙——你的满足感来自「今天也好好地过完了」"},
+    {scene:"参加一个聚会，你发现自己认识的人不超过三个，接下来你会？",A:"待在认识的人旁边，不主动扩展——不是高冷，是你不需要很多人才觉得安全",B:"自然地加入不同的小圈子聊天——你有一种让陌生人三分钟就觉得「我们好像以前见过」的能力",C:"拉着认识的人问「那个人是谁」「他们在聊什么」——你的好奇心总能帮你找到新入口",D:"该吃吃该喝喝，有人来找你就聊，没有就自在地待着——你不觉得「必须社交」是一种义务"},
+    {scene:"有人说了一句让你觉得「你完全误解我了」的话，你通常怎么回应？",A:"不急着解释，先在心里过一遍——不是不在乎，是你不想用情绪回应误解",B:"笑着说「不是这样的啦」，然后耐心地重新讲一遍——你不怕被误解，你怕对方尴尬",C:"追问「你为什么这么觉得」——你更想知道误解是怎么产生的，而不是急着纠正",D:"顿一下，说「可能我没说清楚」——你先把责任揽过来，不是软弱，是你知道解释比争辩有用"},
+    {scene:"最了解你的那个人，会用哪个词来形容你身上最特别的东西？",A:"「你有一种让人不敢随便对待的气质」——不是凶，是存在感本身带着一种边界",B:"「跟你在一起很安心」——你不是太阳，你是一间开着暖气的房间，进来就不想走了",C:"「你总能发现别人发现不了的东西」——你的眼睛里装着很多别人擦肩而过的细节",D:"「天塌下来你也是最后一个慌的」——你不是没有情绪，是情绪来了你知道怎么放好"},
+    {scene:"计划了很久的一件事突然泡汤了，你的反应最接近哪种？",A:"表面上看不出什么，但会在心里复盘很久——你的情绪不写在脸上，不代表它不在",B:"叹口气，然后马上想「那现在怎么办」——你的韧性在于你总能找到下一个温暖的方向",C:"失望五分钟，然后发现「那我是不是可以做那件一直没时间做的事」——你的脑子永远在找新的可能",D:"接受得比所有人都快——不是不在乎，是你有一种「事情就是这样，接着往下走」的本能"},
+    {scene:"你在公共场合注意到有人在哭，你通常会怎么做？",A:"注意到了，但不会马上过去——你觉得不是每个人都想在这个时候被打扰",B:"你通常是第一个递纸巾的人——你的温暖不是演出来的，是本能反应",C:"注意到了，会观察一会儿，确认对方需要什么——你不止看情绪，你看情绪背后的原因",D:"注意到了，安静地站到对方身边——你不说话，但你的存在就是一句「没事的」"},
+    {scene:"回头看看这些年，你最感谢自己身上哪个特质？",A:"感谢自己的边界感——它帮我筛掉了很多不值得的人和事，留下来的都是真的",B:"感谢自己能让人觉得暖——这个世界的冷已经够多了，我很高兴自己能做反方向的事",C:"感谢自己对世界保持好奇——它让我在很多「差不多就行了」的时刻，又往前走了一步",D:"感谢自己能稳住——不是没有崩溃过，是每次快崩的时候，我都知道自己能把自己接住"}
+  ],
+
+  types:{
+    A:{name:"清冷型气质",tag:"你有让世界在你面前认真起来的本事——这不是距离感，是存在感",icon:"🌙",
+       score:"清冷感 倾向 84%",
+       conclusion:"你身上有一种安静的、不需要任何人确认的存在感。你不是刻意保持距离——而是你天生知道：值得的人和事，不需要你追。你的清冷不是温度低，是温度给得很克制——但给了之后很暖。很多人第一眼觉得你不好接近，但那些真的走近你的人会发现：你的世界里，什么都在，只是声音小了一点。",
+       evidence_note:"你在陌生场合先观察再行动（Q1），被夸时保持克制、先想对方的用意（Q2），面对分歧不吵但也不轻易让步（Q3），安慰人时字斟句酌、想好了再开口（Q4），第一印象常被描述为「有距离感但让人好奇」（Q5）。这些选择共同指向一个你也许没注意到的特质：你身上有一种不怒自威的安静——不需要抬高音量，也不需要刻意表现，你在那里，别人就会认真对待你。这不是你要求的，是你存在的自然结果。",
+       quote:"你不是不好接近——你是在等值得的人走近。而那些认真走近你的人，会发现你给他们的，比他们期待的多得多。你的门不是锁着的，只是需要轻轻敲一下。",
+       modules:[
+         {title:"你的气质：清冷型——不是高冷，是安静的在场",content:"清冷型气质的人身上有一种不依赖表情和语言的「存在感」。你不是刻意保持距离——是你天生有一种不急着被所有人喜欢的从容。这种气质可能来自你早期的某些经历：你曾经因为太快敞开自己而失望过，或者你天生就需要比别人更长的时间来判断一个人是否值得信任。不管是哪种来路，它现在成了你身上最容易被注意到、也最容易被误读的特质。你话不多，但你在场的时候，气氛会自然变得认真一点——这不是你要求的，是你的存在本身带来的。"},
+         {title:"你的气质在替你说：请认真对待我，但不用怕我",content:"你的清冷感在无形中替你完成了一件重要的事：筛选。它帮你拦住那些只想随便对待你的人，留下那些愿意花时间了解你的人。你可能从来没意识到——但那些一开始觉得你「不太好接近」最后还是跟你成为朋友的人，都是被你的气质筛选过的。你不需要讨好世界，世界会因为你认真对待自己，而认真对待你。这不是傲慢——是你对自己的尊重，变成了世界对你的尊重。"},
+         {title:"别人注意到、但你可能不知道的信号",content:"有人在你不知道的时候悄悄观察过你——你一个人走路时的表情、你在会议上不说话但认真听的样子、你偶尔笑起来那一瞬间的反差。他们发现你不是冷，是热得很有门槛。有人在心里偷偷把你当成「如果我需要真话我就去找TA」的人，只是他们还没告诉你。你的存在本身就让人觉得：在这个人面前，我不能随便——不是因为怕你，是因为尊重你。"},
+         {title:"最容易被人误读的地方：你不是不想被靠近，你只是不习惯主动",content:"清冷型最常被误解为「高冷」「不好相处」「看不上别人」。但你自己知道——你只是不习惯主动，不是不愿意被靠近。你的温暖不给所有人看，但给了之后很认真、很深。你不必为了纠正这种误读而改变自己的本质，但可以在那些「你也觉得有点可惜」的关系里，试着少等一秒——先笑一下。那一秒的善意，从你这里发出的，比从别人那里更让人记住。"},
+         {title:"怎么让你的气质成为你的签名——不是改掉它，是驾驭它",content:"你的清冷感不是缺点，是风格。关键不是把它变成温暖，而是让你的清冷里有温度——那种「平时话不多，但说到做到」「不随便承诺，但承诺了就不辜负」的气质，是你最大的魅力来源。试着在关键的时刻释放一点点温度——不是对所有人，是对那些你判断过后觉得值得的人。一分的温度，从你这里比从别人那里更贵重。你的签名不是「冷」，是「冷的底下有很深的暖」。"}
+       ],
+       advice:["这一周，试着在三个人面前先笑——不用多，一个微笑就够了。观察他们的反应，也观察你自己的感受。","找到一件你一直想做但觉得「太热情了不适合我」的小事——帮陌生人指一次路、夸一句同事今天的搭配、给朋友发一句「今天想到你了」。做一次，看看自己会不会崩。","选一个你已经观察了很久、觉得值得靠近的人，主动约TA一次——咖啡、散步、任何你舒服的形式。这是给你自己的礼物，不是任务。","你不需要变成外向的人。你只需要让那些值得的人知道——你的门不是锁着的，只是需要轻轻敲一下。敲了之后，你会开的。"],
+       reminder:"你不是高冷——你只是在等值得的人走近。你的边界不是墙，是一道需要轻轻敲的门。那些敲门之后走进来的人，会看到你全部的温柔——那是你给他们最好的礼物，也是你给自己最珍贵的保护区。别因为别人说你「冷」就怀疑自己——他们只是还没走近。"
+    },
+    B:{name:"温暖型气质",tag:"你不声不响地让世界变得柔软了——这是你最被低估的超能力",icon:"☀️",
+       score:"温暖感 倾向 86%",
+       conclusion:"你身上有一种让人自动放松的温度——不是暖气片那种燥热，是冬天下午的阳光，你知道它在，但你不会觉得被晒。你可能从来没有觉得自己「做了什么特别的事」，但你在的场合，人们的表情会变柔和、肩膀会放下来、笑声会多一些。这是你最被低估的天赋：不声不响地让世界变得好一点。你不说「别紧张」——你只是存在，别人的紧张就少了一半。",
+       evidence_note:"你在陌生场合主动破冰（Q1），被夸时眼睛会亮并自然地回以温暖（Q2），分歧中更在意关系而不是对错（Q3），朋友难过时你秒回「我在」（Q4），第一印象总是「好相处」「舒服」（Q5）。这些选择说明你有一种稀有体质：你能让周围的人在你不刻意做什么的情况下，就自动放松下来。你的温暖不是表演——是你对他人情绪的敏锐感知，变成了一种自然而然的回应。",
+       quote:"你的存在就像冬天的暖炉——不刺眼、不灼人，但只要走近，就会觉得世界没那么冷了。这是你最被低估的力量，也是这个世界最需要的东西。",
+       modules:[
+         {title:"你的气质：温暖型——你不是讨好，是天生自带温度",content:"温暖型气质的人有一种让人自动放松的能力——你不说「别紧张」，你只是存在，别人的肩膀就放下来了。这种气质不是练出来的，是你天生对他人的情绪有一种敏锐的接收和理解。你可能从小就是那个「别人愿意跟你说心事」的人——同桌、室友、同事，她们不知道为什么，但就是觉得跟你说完之后好多了。但你也可能因为太擅长让别人舒服，而忘记问自己——「我今天舒服吗」。"},
+         {title:"你的气质在替你说：这里很安全，你可以做自己",content:"你的温暖感在无声地说一句话：「这里很安全，你可以做自己。」别人跟你在一起的时候，不需要表演、不需要防备、不需要想话题——你的存在本身就是一种允许。你不是刻意照顾谁，但你的每一次认真听、每一个「我懂」的眼神、每一句「然后呢」，都在告诉别人：你值得被温柔对待。你给了很多人一个他们自己都没意识到的礼物——一个可以不用假装的地方。"},
+         {title:"别人注意到、但你可能不知道的信号",content:"有人把你的存在当成自己的「安全区」——心情不好时第一个想找你，有好消息时也第一个想告诉你。有人在你没注意到的时候模仿你的说话方式、你的口头禅、你安慰人的句式——因为他们觉得那是一种「好的方式」。你温暖了很多你不认识的人——你只是不知道。有人在心里说「这个世界有她真好」——他们没说出口，但他们确实这么想了。"},
+         {title:"最容易被人误读的地方：你的温暖不是没有边界",content:"温暖型最容易被当成「好说话」「不会拒绝」「对谁都一样好」——但你自己知道，你的温暖是有选择的。你对值得的人好，对消耗你的人也在学着说不。你不需要为了证明自己有原则而变冷——你只需要让别人知道：我的温暖是我的选择，不是你的权利。那些因为你设了边界就说你「变了」的人——他们喜欢的不是你的温暖，是你的不设防。"},
+         {title:"怎么让你的气质成为你的签名——不是收敛温暖，是保护好它",content:"你的温暖是这个世界上最被低估的力量之一。关键不是把它藏起来，而是学会在温暖别人的同时温暖自己。给自己留一间「不营业」的房间——在那里你不用照顾任何人的情绪，只需要照顾自己。一个懂得给自己充电的温暖型，比一个燃烧到枯竭的温暖型，更能持久地照亮世界。你的签名不是「老好人」，是「有选择的太阳」。"}
+       ],
+       advice:["这一周，给自己找两个小时——不回消息、不接电话、不照顾任何人的情绪。看看「不温暖」的自己是什么样子。说不定你会喜欢她。","下次有人夸你「人真好」的时候，不要习惯性地说「没有啦」。试着说「谢谢你看到」——你值得被看到，而不只是被用到。","找一件你一直想做但觉得「别人可能会失望」的事——完全只为了你自己。做完之后问问自己：我开心吗？这个答案比别人的表情重要。","你不需要对所有人都温暖。对那些消耗你的人——沉默、距离、拒绝，也是你爱自己的一种方式。你的温暖是礼物，不是义务。"],
+       reminder:"你不是对谁都好——你是有选择地温暖，而这个世界需要更多你这样的人。但请记得：温暖自己不是自私，是给自己继续温暖世界的能力。你不需要燃烧到最后一滴——你只需要做一盏一直亮着的灯。不刺眼，但一直在。"
+    },
+    C:{name:"灵气型气质",tag:"你对世界有一种别人学不来的好奇——这就是你身上最亮的那道光",icon:"🌟",
+       score:"灵气感 倾向 82%",
+       conclusion:"你身上有一种让人想跟你分享好东西的冲动——不是因为你会夸，而是因为你在听的时候，眼睛是亮的。你像一本永远不让人无聊的书，每一页都有新东西，但你从来不是刻意的——你的好奇是天然的，你的新鲜感是你皮肤的一部分。跟你在一起，生活会变得更有细节、更值得被注意。你不是在找存在感——你本身就让人无法忽略。",
+       evidence_note:"你在陌生场合容易被环境里的细节吸引（Q1），被夸时会追问「哪方面」想知道更多（Q2），分歧让你兴奋因为那是了解世界的新入口（Q3），朋友难过时你用提问帮她梳理发生了什么（Q4），第一印象总是「有意思」「跟别人不太一样」（Q5）。你身上有一种驱动力：你对世界保持好奇，而这种好奇本身就让你在人群中与众不同。你不是在刻意表现——你就是自然地注意到了别人没注意到的东西。",
+       quote:"你的眼睛里有一种光——不是聚光灯，是萤火虫。不刺眼，但会动。跟在你身后的人，都是被这点光吸引的。别因为有人说「你想太多了」就关掉它——那是你最珍贵的部分。",
+       modules:[
+         {title:"你的气质：灵气型——你的好奇心是你身上最亮的那道光",content:"灵气型气质的人有一种让人想「给你看点什么」的吸引力——不是因为你说了什么，而是因为你眼睛里有一种「我对这个感兴趣」的认真。你对世界的反应比别人快半拍，你注意到别人没注意到的细节，你把无聊的日常变成一场小小的探索。你可能从小就是那个被说「坐不住」「想太多」的人——但那些人没发现，他们也在被你吸引。你的问题不止是问题——是你递给世界的一份邀请：让我看看你还有什么是我不懂的。"},
+         {title:"你的气质在替你说：带我看更大的世界，我会认真看的",content:"你的灵气在无形中邀请别人进入你的视角——跟你在一起，别人会发现自己也开始注意天空的颜色、路人的表情、一首歌里被忽略的编曲。你不是在炫耀你的发现，你只是在分享。而这种分享让身边的人觉得：原来世界还能这样看。你就是很多人生活中的「新鲜感」——他们自己没发现，但你走了之后他们会发现生活少了很多颜色。"},
+         {title:"别人注意到、但你可能不知道的信号",content:"有人在你说完某句话之后，自己偷偷想了很久——你随口说的一个观点，成了别人几天的思考素材。有人把你的推荐当成了「必看清单」——你推荐的书、电影、音乐，他们会优先去看，因为「你推荐的从来不会无聊」。有人在心里把你定义成「我认识的最有意思的人」——只是没找到合适的机会告诉你。你不是在找存在感——你的存在感比别人刻意制造的还要强。"},
+         {title:"最容易被人误读的地方：你的灵气不是「不认真」",content:"灵气型最容易被误解为「飘」「不够踏实」「想一出是一出」——但你自己知道，你的好奇心不是浅尝辄止，是深度学习的前奏。你对很多事情感兴趣，不代表你做不成任何事——你只是需要比别人更长的探索期。你不是不认真——你是认真地选择用哪一种认真来对待这个世界。那些说你「想太多」的人，可能只是习惯了「想太少」。"},
+         {title:"怎么让你的气质成为你的签名——不是压抑好奇，是给它方向",content:"你的灵气是你最不可替代的竞争力。关键不是抑制你的好奇心，而是给你的好奇心一个聚焦的容器。选一件你愿意深入一年以上的事——不需要放弃对其他事情的好奇，只是让其中一件成为你的「主脉络」。一个既有灵气又有深度的人，是这个世界最稀缺的物种。你的签名不是「爱玩」，是「玩出了深度」。"}
+       ],
+       advice:["选一个你感兴趣但一直没深入的方向，这周花两个小时只做这一件事——不切换、不跳跃、不分心。看看「专注的自己」能走到哪里。","把你脑子里最新冒出来的三个念头写下来——不筛选、不评价。一个月后回来看——你会惊讶自己当时的直觉有多准。","下次你在人群中觉得无聊时，不要滑手机——观察一个陌生人，给自己编一个关于TA的故事。你不是在浪费时间，你是在训练你最擅长的东西。","你的好奇心是你最宝贵的资产——但也需要一个「收」的动作。每季度复盘一次：今年我深入学会了什么新东西？有了答案，你就是深度玩家。"],
+       reminder:"你不是想太多——你是比别人多了一个看世界的角度。这个世界因为你的好奇心而变得有趣了一些。不要因为别人说「你想太多了」就关上你的雷达——但也记得，偶尔停下探索，回头看看自己已经走过的路。你的脚印本身就是一幅很有意思的地图。"
+    },
+    D:{name:"沉稳型气质",tag:"你在的地方，混乱自动减半——这不是运气，是你的气场在起作用",icon:"🏔️",
+       score:"沉稳感 倾向 80%",
+       conclusion:"你身上有一种让混乱自动减半的气场——不是因为你说了什么，而是因为你站在那里，事情好像就变得可以处理了。你的沉稳不是冷漠——是你经历过「慌也没用」之后，选择了一个更有效的姿态。你不知道的是：你在很多人心里，是一个「如果TA在我就放心了」的存在。这个角色，比任何头衔都重要。你不是没有情绪——你是把情绪管理变成了一种别人看不见的艺术。",
+       evidence_note:"你在陌生场合从容不迫、不急着找存在感（Q1），被夸时平静接受不过度反应（Q2），分歧中知道很多问题不需要当场解决（Q3），朋友难过时你用稳定的陪伴接住对方（Q4），第一印象总是「稳」「让人放心」（Q5）。你身上有一种定力：不是没有情绪波动，而是你知道怎么把波动放在合适的位置上。你的稳不是装出来的——是你在很多次「差点崩了」之后，练出来的一种本能。",
+       quote:"你不是没有遇到过风浪——你是那种在风浪里还能稳稳抓住船舵的人。这就是为什么有人在大风大浪时第一个想到你。不是因为你厉害，是因为你在。你的存在本身，就是别人的定心丸。",
+       modules:[
+         {title:"你的气质：沉稳型——你在的地方，世界好像没那么吵了",content:"沉稳型气质的人有一种让混乱自动减半的本事——不是因为你说了什么，而是因为你在那里，事情好像就没那么糟了。你的情绪不是没有，是你比别人更早学会了跟自己的情绪共处。你可能从小就是那个「别人慌了你会莫名冷静」的人——不是没有感受，是你的感受有自己的一套处理系统。你不急着反应，不是因为你迟钝——是因为你知道，很多反应不用在第一秒就给。"},
+         {title:"你的气质在替你说：别慌，我在这里，我们一起看看",content:"你的沉稳感在无形中给周围的人提供了一个「锚点」——他们可能自己都没意识到，但有你在的场合，大家的情绪会稳定一些。你不是在压抑气氛——你是在创造一个不需要表演的空间。别人跟你在一起的时候，可以不假装没事、不假装很好、不假装不怕——因为你也不假装。你给世界最好的礼物不是「答案」，是「我们一起看看」。"},
+         {title:"别人注意到、但你可能不知道的信号",content:"有人在遇到大事的时候第一个想到你——不是因为你能解决，是因为你会让他们觉得「这件事能被接住」。有人在模仿你的冷静——你深呼吸的时候他们也深呼吸，你沉着的时候他们试着不慌。你安静地影响了一些人的生活节奏——你只是没发现你的存在本身，就是一颗定心丸。有人把你当成「稳」的参照系——他们不知道你怎么做到的，但他们知道你做到了。"},
+         {title:"最容易被人误读的地方：你的沉稳不是「没情绪」",content:"沉稳型最常被误解为「什么都无所谓」「没脾气」「不在乎」——但你自己知道，你什么都在乎，只是你表达在意的方式不是爆发。你把情绪放在心里慢慢处理，不代表它们不存在。你不需要为了让别人觉得你「也有情绪」而表演崩溃——你只需要偶尔让信得过的人看到：我也是会累的，我也是犹豫过的，我也会怕的。"},
+         {title:"怎么让你的气质成为你的签名——不是隐藏情绪，是展示完整的力量",content:"你的沉稳是你和世界相处的方式——但偶尔的「不沉稳」也是一种力量。让信得过的人看到你犹豫、脆弱、不确定的那一面——那不是弱点，是让别人走进来的门。一个既稳得住又敢展露真实的人，是你可能还没发现的自己——也是那些真正值得的人最想看到的你。你的签名不是「没事」，是「有事，但我在这里」。"}
+       ],
+       advice:["这一周，找一个你信任的人，跟TA说一件让你焦虑但你没跟任何人提过的事。不是求助，只是分享——看看说出来之后你什么感觉。","偶尔允许自己不安——不安不丢人。试着在不安的时候不要第一时间「处理」它，先感受它。情绪来的时候不需要被解决，需要被承认。","约一个你平时不会主动约的人——不是因为有用，只是因为有趣。你的世界已经很稳了，偶尔让一点不确定性进来——它会让你更完整。","你不是没有需求——你只是太擅长把自己的需求往后排。这周做一件事：把你的一个需求放在第一位，看看结果。天不会塌的。"],
+       reminder:"你不是没情绪——你是把情绪管理变成了一种别人看不见的艺术。你接住了很多事，也接住了很多人。但请记得：你不需要每次都接住。有时候，让东西碎在地上——也是对自己的一种温柔。你值得被接住，就像你接住别人一样。"
+    }
+  },
+
+  productModules:[
+    "你的气质类型",
+    "这种气质在替你说什么",
+    "别人注意到但你不知道的信号",
+    "最容易被人误读的地方",
+    "怎么让你的气质成为你的签名"
+  ],
+
+  disclaimer:"本测试仅为自我探索参考，不构成任何诊断、职业建议或效果承诺。气质没有好坏之分，每个类型都有其独特的光芒。请结合自己的实际感受判断。"
+};
+
+// ========== 引擎 ==========
+let answers=[],currentQ=0,paid=false;
+
+function $(id){return document.getElementById(id)}
+const app = document.getElementById('app');
+
+function cover(){
+  app.innerHTML=`
+    <div class="screen active cover">
+      <div class="icon">✨</div>
+      <h1>${DATA.title}</h1>
+      <div class="sub">${DATA.subtitle}</div>
+      <button class="btn-start" onclick="start(true)">开始测试</button>
+      <div class="trust">前5题免费 · 记下答案左滑查看报告预览</div>
+    </div>`;
+}
+
+function start(free){answers=[];currentQ=0;paid=!free;renderQ()}
+
+function renderQ(){
+  if(currentQ>=DATA.questions.length){showResult();return;}
+  if(currentQ===5 && !paid){showGate();return;}
+  const q=DATA.questions[currentQ];
+  const pct=Math.round((currentQ/DATA.questions.length)*100);
+  const letters=['A','B','C','D'];
+  app.innerHTML=`
+    <div class="screen active">
+      <div class="progress-wrap">
+        <div class="progress-bar"><div class="progress-fill" style="width:${pct}%"></div></div>
+        <div class="progress-label">第 ${currentQ+1}/${DATA.questions.length} 题</div>
+      </div>
+      <div class="q-area">
+        <div class="q-num">${currentQ<5?'免费测试 · 第'+(currentQ+1)+'题':'深度解锁 · 第'+(currentQ+1)+'题'}</div>
+        <div class="q-text">${q.scene}</div>
+        <div class="options">
+          ${letters.map(l=>`<div class="opt" onclick="pick('${l}')"><div class="letter">${l}</div><div class="txt">${q[l]}</div></div>`).join('')}
+        </div>
+      </div>
+      ${currentQ===4?'<div style="text-align:center;font-size:13px;color:#6a6558;padding:8px 0">记下5个答案，左滑查看报告预览 →</div>':''}
+    </div>`;
+}
+
+function pick(letter){
+  answers.push(letter);
+  currentQ++;
+  renderQ();
+  window.scrollTo(0,0);
+}
+
+function showGate(){
+  app.innerHTML=`
+    <div class="screen active gate-screen">
+      <div class="lock-icon">🔓</div>
+      <h2>前5题只是气质轮廓<br>完整12题才能看清你独特的光</h2>
+      <div class="gate-desc">后7题继续挖掘：你的气质在替你说什么、别人注意到了但没告诉你的信号、怎么让这种气质成为你的签名</div>
+      <ul class="unlock-list">
+        ${DATA.productModules.map(m=>`<li>${m}</li>`).join('')}
+      </ul>
+      <button class="btn-gate" onclick="unlock()">继续完成12题 · 解锁完整报告</button>
+      <div class="price">完整12题报告 · 做完自动解锁</div>
+    </div>`;
+}
+
+function unlock(){paid=true;renderQ()}
+
+function showResult(){
+  const counts={A:0,B:0,C:0,D:0};
+  for(let i=5;i<answers.length;i++){counts[answers[i]]++}
+  const sorted=Object.entries(counts).sort((a,b)=>b[1]-a[1]);
+  let typeKey=sorted[0][0];
+  if(sorted[0][1]===sorted[1][1]&&sorted[0][0]==='A'&&(sorted[1][0]==='C'||sorted[1][0]==='D'))typeKey=sorted[1][0];
+  if(sorted[0][1]===sorted[1][1]&&sorted[0][0]==='B'&&sorted[1][0]==='D')typeKey='D';
+  const type=DATA.types[typeKey];
+
+  const freeAnswers=answers.slice(0,5);
+  const freeLabels=['陌生场合反应','被夸时的本能','分歧处理风格','安慰人的方式','第一印象评价'];
+  const freeDesc=[
+    ['先观察全场——你不是慢热，是习惯用自己的节奏进入任何场合','主动破冰——你的温暖是天生的，不是学来的社交技巧','被环境细节吸引——你的好奇雷达比别人多一根天线','从容不迫——你的节奏感让你在任何新场合都不慌'],
+    ['保持克制、先想对方的用意——你的信任需要先确认对方的真诚','眼睛亮起来、自然回夸——你不是客套，是真心觉得善意应该流动','想知道具体夸的是什么——你对自己的认知来自多个角度的反馈','平静接受、不过度反应——你知道一句夸赞不需要被放大'],
+    ['不吵但也不轻易让步——你有自己的立场，不需要任何人的批准','先找共同点——在你这里，关系比输赢重要得多','追问对方的逻辑——分歧不是冲突，是了解世界的新入口','知道有些问题不急——你的耐心不是逃避，是一种成熟的智慧'],
+    ['想好了再开口——你的安慰很少但是很准，因为你不随便给','秒回陪伴——你本身就是最好的安慰，不需要多余的话','帮对方理清发生了什么——你相信理解是治愈的第一步','用安静的陪伴接住对方——你不急着给答案，但你的存在就是答案'],
+    ['别人觉得你「不太好接近但让人好奇」——你是需要时间才能打开的书','别人觉得你「一见面就很舒服」——你让「陌生」这个词变得不成立','别人觉得你「跟别人不一样」——你身上有某种让人想多聊两句的引力','别人觉得你「很让人放心」——你的稳不是装出来的，是长在骨子里的']
+  ];
+
+  let evidenceHTML='<h3>📋 答案证据</h3><p>';
+  for(let i=0;i<5;i++){
+    const a=freeAnswers[i];
+    const descIdx=a==='A'?0:a==='B'?1:a==='C'?2:3;
+    evidenceHTML+=`<strong>Q${i+1}「${DATA.questions[i].scene.slice(0,18)}…」</strong>你选了${a}——${freeDesc[i][descIdx]}。<br><br>`;
+  }
+  evidenceHTML+=type.evidence_note+'</p>';
+
+  let modulesHTML='';
+  for(const m of type.modules){
+    modulesHTML+=`<div class="module"><h3>${m.title}</h3><p>${m.content}</p></div>`;
+  }
+
+  let adviceHTML='';
+  for(let i=0;i<type.advice.length;i++){
+    adviceHTML+=`<div class="advice-item"><span class="n">0${i+1}</span><span>${type.advice[i]}</span></div>`;
+  }
+
+  app.innerHTML=`
+    <div class="screen active result">
+      <div class="badge">你的气质类型</div>
+      <div class="type-name">${type.name}</div>
+      <div class="type-sub">${type.tag}</div>
+
+      <div style="font-size:15px;color:#d4b87a;margin-bottom:4px">${type.icon} ${type.score}</div>
+      <p style="font-size:15px;color:#b8b0a0;line-height:1.75;margin-bottom:20px">${type.conclusion}</p>
+
+      <div class="evidence-box">${evidenceHTML}</div>
+      ${modulesHTML}
+
+      <div class="summary-box">
+        <div class="q-mark">"</div>
+        <p>${type.quote}</p>
+      </div>
+
+      <div class="advice-box">
+        <h3>📅 未来30天建议</h3>
+        ${adviceHTML}
+      </div>
+
+      <div class="reminder-box">
+        <h3>⚠️ 关键提醒</h3>
+        <p>${type.reminder}</p>
+      </div>
+
+      <div style="font-size:13px;color:#6a6558;line-height:1.6;text-align:center;margin-bottom:24px">${DATA.disclaimer}</div>
+      <div class="footer">以上结果为自我探索参考 · 每个选择都是了解自己的线索</div>
+    </div>`;
+  window.scrollTo(0,0);
+}
+
+// start
+cover();
+</script>
+</body>
+</html>

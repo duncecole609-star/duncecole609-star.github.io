@@ -1,0 +1,318 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
+<title>品味心理测试</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:"PingFang SC","Microsoft YaHei",sans-serif;background:#0f0f1a;color:#e8e0d0;min-height:100vh;display:flex;justify-content:center}
+.app{width:100%;max-width:500px;min-height:100vh;position:relative;overflow:hidden}
+.screen{display:none;flex-direction:column;min-height:100vh;padding:28px 22px 40px}
+.screen.active{display:flex}
+
+.cover{justify-content:center;align-items:center;text-align:center;gap:20px}
+.cover .icon{font-size:52px}
+.cover h1{font-size:29px;font-weight:900;line-height:1.4;letter-spacing:1.5px;padding:0 6px}
+.cover h1 .hl{color:#c9a96e}
+.cover .sub{font-size:15px;color:#8a8070;line-height:1.7;max-width:300px}
+.cover .btn-start{margin-top:10px;padding:15px 50px;font-size:18px;font-weight:700;background:linear-gradient(135deg,#c9a96e,#a6844d);color:#0f0f1a;border:none;border-radius:40px;cursor:pointer;letter-spacing:2px}
+.cover .btn-start:active{transform:scale(.96)}
+.cover .trust{font-size:12px;color:#4a4538;margin-top:6px}
+
+.progress-wrap{padding:4px 0 14px}
+.progress-bar{height:3px;background:#1e1e2e;border-radius:2px;overflow:hidden}
+.progress-fill{height:100%;background:linear-gradient(90deg,#c9a96e,#d4b87a);border-radius:2px;transition:width .3s}
+.progress-label{font-size:13px;color:#5a5548;margin-top:6px;text-align:right}
+
+.q-area{flex:1;display:flex;flex-direction:column;gap:16px}
+.q-area .q-num{font-size:13px;color:#6a6558;letter-spacing:2px}
+.q-area .q-text{font-size:23px;font-weight:700;line-height:1.5}
+.options{display:flex;flex-direction:column;gap:10px}
+.opt{padding:18px 16px;border-radius:14px;background:#16162a;border:1.5px solid #252540;cursor:pointer;transition:all .2s;display:flex;align-items:flex-start;gap:13px}
+.opt:active{transform:scale(.98);border-color:#c9a96e;background:#1e1e34}
+.opt .letter{width:33px;height:33px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:15px;font-weight:700;flex-shrink:0;background:rgba(201,169,110,.12);color:#c9a96e}
+.opt .txt{font-size:15px;line-height:1.55;color:#c8c0b0;flex:1}
+
+.gate-screen{justify-content:center;align-items:center;text-align:center;gap:24px}
+.gate-screen .lock-icon{font-size:48px}
+.gate-screen h2{font-size:26px;font-weight:800;line-height:1.4}
+.gate-screen .gate-desc{font-size:15px;color:#a09880;line-height:1.7;max-width:300px}
+.gate-screen .unlock-list{text-align:left;background:#16162a;border-radius:16px;padding:20px 24px;width:100%;max-width:320px}
+.gate-screen .unlock-list li{font-size:14px;color:#b8b0a0;line-height:2;list-style:none}
+.gate-screen .unlock-list li::before{content:"✓ ";color:#c9a96e;font-weight:700}
+.gate-screen .btn-gate{margin-top:8px;padding:14px 44px;font-size:18px;font-weight:700;background:linear-gradient(135deg,#c9a96e,#a6844d);color:#0f0f1a;border:none;border-radius:40px;cursor:pointer;letter-spacing:2px}
+.gate-screen .btn-gate:active{transform:scale(.96)}
+.gate-screen .price{font-size:14px;color:#6a6558;margin-top:4px}
+
+.loading{justify-content:center;align-items:center;text-align:center;gap:24px}
+.loading .spinner{width:52px;height:52px;border:3px solid #1e1e2e;border-top-color:#c9a96e;border-radius:50%;animation:spin .8s linear infinite}
+@keyframes spin{to{transform:rotate(360deg)}}
+.loading .msg{font-size:16px;color:#a09880;letter-spacing:1px}
+
+.result{padding:28px 22px 48px}
+.result .badge{display:inline-block;padding:7px 16px;border:1px solid rgba(201,169,110,.25);border-radius:16px;font-size:13px;color:#c9a96e;letter-spacing:2px;margin-bottom:14px}
+.result .type-name{font-size:36px;font-weight:900;margin-bottom:6px;line-height:1.2}
+.result .type-sub{font-size:18px;color:#d4b87a;margin-bottom:20px;line-height:1.4}
+
+.evidence-box{background:#16162a;border-radius:16px;padding:20px;margin-bottom:22px;border-left:3px solid #c9a96e}
+.evidence-box h3{font-size:14px;color:#c9a96e;letter-spacing:2px;margin-bottom:10px}
+.evidence-box p{font-size:14px;color:#b8b0a0;line-height:1.7}
+
+.module{margin-bottom:20px}
+.module h3{font-size:16px;color:#a09880;letter-spacing:1.5px;margin-bottom:10px;padding-bottom:8px;border-bottom:1px solid #1e1e2e}
+.module p{font-size:14px;color:#b8b0a0;line-height:1.75;margin-bottom:6px}
+
+.summary-box{background:linear-gradient(135deg,#1a1a2e,#1f1f34);border-radius:16px;padding:24px;margin:24px 0;text-align:center;border:1px solid rgba(201,169,110,.15)}
+.summary-box .q-mark{font-size:28px;color:#c9a96e;margin-bottom:8px}
+.summary-box p{font-size:17px;color:#d4b87a;line-height:1.7;letter-spacing:.5px}
+
+.advice-box{margin-bottom:24px}
+.advice-box h3{font-size:16px;color:#a09880;letter-spacing:2px;margin-bottom:12px}
+.advice-box .advice-item{padding:12px 14px;margin-bottom:8px;background:#16162a;border-radius:12px;font-size:14px;color:#b8b0a0;line-height:1.6;display:flex;gap:10px}
+.advice-box .advice-item .n{color:#c9a96e;font-weight:700;flex-shrink:0}
+
+.reminder-box{background:#16162a;border-radius:16px;padding:20px;margin-bottom:28px;border:1px solid #2a2a40}
+.reminder-box h3{font-size:15px;color:#c9a96e;letter-spacing:2px;margin-bottom:8px}
+.reminder-box p{font-size:14px;color:#a09880;line-height:1.7}
+
+.footer{text-align:center;padding:16px;font-size:11px;color:#3a3a48;border-top:1px solid #16162a;margin-top:auto}
+</style>
+</head>
+<body>
+<div class="app" id="app"></div>
+<script>
+// ========== 内容数据 ==========
+const DATA = {
+  title:"你的品味，其实比你以为的<br><span class='hl'>高一个层级</span>",
+  subtitle:"不是测你懂不懂审美——<br>是测你身上那些被你忽略的品味天赋",
+
+  questions:[
+    {scene:"走进一家从没去过的咖啡店，你最先注意到什么？",A:"吧台灯光打在铜色器具上的反光——氛围对了，我才想坐下来看菜单",B:"桌椅的高度、间距和墙角的收边条——细节决定我愿意在这儿待多久",C:"它和我想象中「好咖啡店」的差距——我的判断标准一直很稳定",D:"空气里的气味和音乐让我想坐下还是离开——身体的反应比大脑诚实"},
+    {scene:"朋友让你推荐一部「好看」的电影，你的推荐逻辑最接近哪种？",A:"说不出具体原因，但看完就知道它对——直觉比分析快好几拍",B:"镜头语言、色调、配乐切入的时机——我会从技术层面确认它好在哪",C:"放在我喜欢的电影谱系里看——它和我之前推荐过的东西能互相印证",D:"它让我想起人生中某个阶段的心情——情绪共鸣是我的推荐第一标准"},
+    {scene:"你挑手机壳、电脑贴纸或社交头像时，选择过程是怎样的？",A:"一眼扫过去，有几个选项会自己跳出来——剩下的我根本不会再看",B:"先排除材质/清晰度不行的，再从剩下的里看图案的线条、配色和留白比例",C:"先想它和我已有的东西搭不搭——我必须确保它们放在一起不会打架",D:"看哪个让我觉得「这就是现在的我」——不是好不好看，是像不像自己"},
+    {scene:"别人夸你「品味好」的时候，你内心最真实的反应是？",A:"有点意外——我没觉得自己特别挑了，就是选了心里觉得对的那个",B:"我知道自己在某些细节上确实比旁人敏感——只是平时不太会主动说",C:"挺开心的，因为这证明我的选择体系被看见了——不是单次运气好而已",D:"谢谢，但心里知道他们看到的只是冰山一角——我选东西花了大量内在功夫"},
+    {scene:"你在餐厅点了一道没吃过的菜，结果很好吃。你的第一反应是？",A:"「我就知道这个搭配不会差」——也说不上来为什么，就是有种隐隐的预感",B:"研究一下它是怎么做的——酱汁的层次、火候的控制、食材之间的比例",C:"把它加入我的「可复点清单」——以后类似口味的方向都可以大胆试",D:"立刻想带某个重要的人来吃——好东西要和懂的人分享，才有完整的意义"},
+    {scene:"你的手机相册里，被你反复翻出来看的照片，通常有什么共同点？",A:"光线、构图、氛围浑然天成——不是刻意拍的，却刚好捕捉到了什么说不清的东西",B:"画面某个角落里藏着一个别人大概率会忽略、但我觉得是点睛之笔的细节",C:"把它们拼在一起就像在看一本我的审美档案——每一张都是同一个人的视角",D:"每一张都对应着一个我舍不得忘掉的情绪——翻相册对我来说等于翻心情"},
+    {scene:"你有没有过「大家都说好看，但你就是欣赏不来」的经历？内心活动是？",A:"不急着否定，但也不会勉强自己点头——我相信自己第一反应给出的判断",B:"我会仔细看看到底是哪个地方让我不舒服——通常能找到一个很具体的原因",C:"它不在我的审美坐标系里——不是它不好，是它和我的体系暂时没有交集",D:"它没有触动我——这世上好看的东西太多了，但不是每一件都能走进我心里"},
+    {scene:"布置房间或工位时，你最在意的那个「别人可能注意不到」的点是什么？",A:"整体气息对不对——东西摆对位置的时候，整个空间会有一种「在呼吸」的感觉",B:"电线怎么走、标签怎么对齐、角落收口怎么处理——干净不是空，是没有杂乱",C:"新东西和旧东西之间的协调程度——不能有任何一件看起来「不属于这里」",D:"我待在里面会产生什么感觉——放松、专注还是想逃——感觉不对就全部重来"},
+    {scene:"刷小红书、逛展或翻杂志时，什么样的内容会让你手指停下来？",A:"配色和构图本身就「对」——不是流行意义上的对，是我自己心里那把尺子量的",B:"出现了一个我没见过的工艺或处理方式——哪怕只是一个小小的收口手法",C:"刚好接上了我正在收集的某个审美主题——像拼图又多了一块，很满足",D:"让我心里「咯噔」了一下的东西——说不出具体理由，但就是被击中了某个开关"},
+    {scene:"给别人挑礼物时，从开始选到对方拆开，你最享受的是哪个瞬间？",A:"找到「就是它了」的那一刻——不需要任何理由，但感觉准得让自己都惊讶",B:"挑到一件对方自己都没意识到需要、但我确信TA会喜欢的东西——比TA更懂TA",C:"让这份礼物和之前送过的东西形成一个叙事——每次送礼都是连续剧的新一集",D:"想象TA打开时脸上的表情——那个画面比礼物本身更让我兴奋和期待"},
+    {scene:"如果有人当面评价你「品味一般」，你的第一反应更接近哪一种？",A:"不太放在心上——品味不是用来被所有人理解的，我选东西首先是为了取悦自己",B:"我会好奇TA的具体标准是什么——说不定能学到一套新的观察角度",C:"可以理解，因为我的品味需要一段时间才能被看见——它不是第一眼型的",D:"TA可能不了解我选东西背后的情感逻辑——我不是为了秀给所有人看的"},
+    {scene:"在你看来，「品味好」这件事，最接近下面哪一种描述？",A:"是一种本能——像动物知道什么草可以吃，你天然就知道什么是对的",B:"是一种观察力——你能看到大多数人跳过的层次，美藏在细节的缝隙里",C:"是一种一致性——你选的每一件东西都在讲同一个故事，那个故事就是你自己",D:"是一种感受力——你把情绪转化成选择，让每件物品都带着你独有的温度"}
+  ],
+
+  types:{
+    A:{name:"本能型品味",tag:"你的品味是天生的雷达——不需要上课，你就是知道什么是对的",icon:"🫧",
+       score:"本能审美 倾向 88%",
+       conclusion:"你的品味不是「学来的」——它是一种直觉层面的判断力。你走进一个空间、看到一件东西、听到一首歌的时候，身体的反应比大脑快：对的东西会让你安静下来，不对的东西会让你想离开。你不需要用语言去解释你的选择为什么好，因为好就是好——你的直觉比你想象的精准得多。这不是玄学，是你长期积累的审美经验已经内化成了「肌肉记忆」，只是你自己还没意识到它有多可靠。",
+       evidence_note:"你进咖啡店先感受氛围而不是看菜单（Q1），推荐电影时直觉先于分析（Q2），挑东西时相信「第一眼跳出」的选项（Q3），被夸品味好时甚至有点意外——因为你根本没觉得自己在「用力挑」（Q4）。这些选择共同指向一个事实：你的品味判断在意识层面介入之前，就已经完成了。你不是在「做选择」——你是在「认出对的」。",
+       quote:"你的品味不用解释——对的东西出现时，你的身体会比你的嘴先点头。相信那个点头，它比你想象的更懂你。",
+       modules:[
+         {title:"你的品味人格：直觉型审美者",content:"你有一个藏在潜意识里的「审美雷达」。别人需要对比、分析、参考攻略，你只需要看一眼——对的东西会自己从背景里浮出来。这种能力不是天生的玄学，而是你长期用「感受」的方式和生活打交道的结果。你看过足够多的好东西，只是你从来没把它们整理成「知识点」——你整理成了「感觉」。当你觉得「这个很对」的时候，其实是你的大脑在瞬间完成了大量模式匹配，只是速度快到你以为是直觉。"},
+         {title:"你忽略的审美优势：先于语言的判断力",content:"大多数人需要「想清楚」才能「选对」，你恰恰相反——你先选对了，然后才去想「为什么对」。这个顺序意味着你的审美判断跳过了「自我审查」这个环节。很多人的品味被压抑，不是因为感受力不够，而是因为选之前先问了一堆「别人会怎么想」「这够不够高级」「我配不配」。你不太问这些——你直接选了。这种「不自我审查」的自由度，本身就是一种稀缺的品味天赋。"},
+         {title:"为什么你的选择其实很有道理",content:"你以为自己是「随便选的」，但其实每一次「随便」背后都有一套高度一致的审美逻辑。你本能排斥的东西——材质廉价的东西、配色刺眼的东西、造型过度设计的东西——往往也确实经不起细看。你本能被吸引的东西——有呼吸感的留白、自然的材质、不刻意的比例——也往往确实是耐看的。你的直觉不是任性，它是一套被反复验证过的「快速判断系统」。你只是没给它建一个说明书而已。"},
+         {title:"别人从你的品味里读到了什么",content:"别人可能读到了「松弛」——你选东西的时候不纠结、不焦虑、不需要反复问别人的意见。这种松弛本身就在传递一个信号：你不需要靠身外之物来证明自己是谁。也有人读到了「不可复制」——想学你买同款，但穿在自己身上就是不对味。因为他们只复制了你选的东西，没有复制你用直觉做选择的那种自由。你的品味最迷人的部分，是你做选择时的那份「不解释」。"},
+         {title:"怎么让你的品味被更多人看见",content:"你不太会主动展示自己的品味——因为你觉得「我就是选了自己喜欢的而已，没什么好说的」。但你的选择里藏着大量可以被讲述的故事：为什么挑这个颜色、为什么这件东西跟了你很多年、为什么你一进那家店就知道「对了」。试着把这些「说不清」的感觉翻译成几句话——不是为了说服谁，而是让那些和你同频的人，有机会认出你。你的品味值得被看见，不是因为它「高级」，而是因为它「真实」。"}
+       ],
+       advice:["这周找一件你「说不清为什么但就是喜欢」的东西，试着用三句话讲清楚它好在哪——不是为了说服别人，是让自己看到你的直觉其实有逻辑。","下次选东西被人问「为什么选这个」的时候，不要再说「随便选的」——说「它让我觉得很舒服」。舒服就是理由，而且是很好的理由。","翻一翻你近一年买的最满意的三件东西，把它们放在一起看——你可能会发现它们之间有某种你从未意识到的共同气质。那个气质，就是你的品味指纹。","相信你的第一反应。如果你走进一家店觉得「不对」，转身就走——不需要给任何人解释。你的直觉值得你为它撑腰。"],
+       reminder:"你不是「不会挑东西」——你是太会挑了，以至于忘了这件事有多难。你的直觉是别人花很多年想训练出来的东西，而你天生就有。别再把它当「随便」了——它是你身上最珍贵的审美资产。"
+    },
+    B:{name:"细节型品味",tag:"你的品味藏在细节里——你能看见大多数人跳过的那一层",icon:"🔍",
+       score:"细节敏感 倾向 85%",
+       conclusion:"你的品味不在于「选了什么」，而在于「你看见了什么」。同一件东西摆在面前，大多数人看到的是一个整体印象，你看到的是材质的纹理、缝线的走向、转角收口的方式、两个颜色交界处那条不足一毫米的过渡。你不是在「挑剔」——你是真的能看到更多层次。而这个能力，让你在不经意间避开了大量「乍看还行、细看翻车」的陷阱。别人以为你选东西「讲究」，其实你只是不想被粗糙的东西冒犯。",
+       evidence_note:"你进咖啡店先注意到桌椅间距和收边条（Q1），推荐电影时会从镜头语言、配乐切入这些技术细节去确认它好在哪里（Q2），挑东西先排除材质不过关的再谈审美（Q3），点了一道好吃的菜会下意识研究它的做法（Q5）。你的模式很清晰：先过质量关，再过审美关。这个顺序保护了你不被「看起来好但经不起细看」的东西消耗。",
+       quote:"品味不是你知道什么贵——是你知道什么经得起看。而你，看得到别人看不到的那一层。",
+       modules:[
+         {title:"你的品味人格：工匠型观察者",content:"你的眼睛是一台高精度的扫描仪。别人看到「一个杯子」，你看到釉面的均匀度、杯口曲线的弧度、杯底和桌面的接触面积。这不是职业病——是你对「物」的尊重。你觉得一件东西之所以值得被拥有，不是因为它的品牌或价格，而是因为做它的人认真了。你能认出那种「认真」——在缝线的密度里、在倒角的弧度里、在两个材质拼接的过渡里。这种识别能力，让你成了一个「好作品的知音」。很多工匠一辈子等的那种「懂的人」，就是你。"},
+         {title:"你忽略的审美优势：防坑体质",content:"你有没有发现——你很少买到「买回来就后悔」的东西？不是因为你运气好，是因为你在买之前已经看完了大多数人买回来之后才发现的问题。你的「挑剔」其实是一种高效的风险过滤系统：材质会不会起球、颜色会不会褪、结构会不会用半年就散架——这些问题在你拿起它的三秒内就已经有答案了。别人需要试错成本，你不需要。久而久之，你身边留下的都是经得起时间考验的好东西——这个累积优势，比你想象的大得多。"},
+         {title:"为什么你的选择其实很有道理",content:"你可能会觉得自己「太事儿了」——买个东西要看半天。但你的「看半天」不是在犹豫，是在收集证据。你需要确认这件东西在你看重的维度上都过关了，才会把它纳入你的生活。这种审慎不是纠结，是一种对自己的忠诚——你不愿意让随便一件东西进入你的日常，因为它会成为你每天看到的背景。你相信：每天看到的东西的质量，会悄悄影响你的心情和标准。这个信念，是站得住脚的。"},
+         {title:"别人从你的品味里读到了什么",content:"别人可能读到了「严格」——你不太轻易夸什么东西好看。但你一旦夸了，身边人就知道「这个肯定是真好」。你的认可有含金量，因为大家都知道你不会被表面功夫糊弄。也有人读到了「可靠」——你推荐的东西，买回去真的不踩雷。在这个种草满天飞的时代，你的「不轻易点头」反而成了一种稀缺的信用。别人可能说不出来为什么，但他们会记得——你选的东西，一直在水平线以上。"},
+         {title:"怎么让你的品味被更多人看见",content:"你有一个习惯：看到好细节会自己在心里「嗯」一下，但不会说出来。试着说出来。当你在朋友家注意到水龙头的把手弧度做得很舒服——说出来；在商场里发现某件衣服的里衬材质比外层面料还讲究——说出来。不是在「显摆」你的观察力，而是在分享一种大多数人不具备的视角。你看到的那一层，是别人完全没注意到但一旦被指出就会「哇真的诶」的东西。你不需要改变选择方式，你只需要多一步：把心里的「嗯」变成嘴上的「你看这儿」。"}
+       ],
+       advice:["下次逛街时，找一件东西，只用手摸不用眼看——感受它的表面温度、纹理节奏、重量分布。你的触觉判断力可能比视觉更敏锐。","在社交媒体上分享一次「我为什么选了这个」的细节拆解——不用写长篇大论，三张细节图加一句点评就够了。让更多人看到你的观察角度。","找一个你觉得「品质过关但不够出彩」的空间——比如茶水间、玄关——只改一个细节（换一个开关面板、贴一条收边条），看看整体气质有没有变化。","约一个品味被你信任的朋友，互相看对方的家/工位/衣柜——不是评判，是互相指出对方可能没注意到的「好细节」。你会收获很多「原来这个被看到了」的惊喜。"],
+       reminder:"你觉得自己「太事儿」的那些标准——其实是你最值钱的审美资产。那些被你一眼淘汰的东西，确实配不上你。不是因为你苛刻，是因为你值得被好东西围绕着生活。继续挑剔——你的挑剔，是对自己温柔的另一种形式。"
+    },
+    C:{name:"一致型品味",tag:"你的品味不是散落的点——它们连在一起，画出了你的形状",icon:"🧩",
+       score:"体系一致 倾向 83%",
+       conclusion:"你的品味最厉害的地方，不是某一个选择有多惊艳，而是你所有的选择放在一起时，会呈现出一种令人舒服的「自洽」。你选的音乐、你穿的风格、你家里的摆设、你推荐的书——它们看起来像是同一个人选的。不是因为你刻意维持某种人设，而是因为你心里有一套很清晰的审美坐标系。你知道自己喜欢什么、不喜欢什么、以及为什么。这套体系让你在选择时很少纠结——因为不符合的东西，在门口就被拦住了。",
+       evidence_note:"你判断新事物时会把它放在自己的「审美谱系」里对照（Q2），挑日常用品时先确保它和已有的东西不冲突（Q3），吃到好东西会把它加入自己的「可复点清单」作为体系扩展（Q5），送礼物时在意连续性和叙事感（Q10）。你在不同领域的选择遵循同一套底层逻辑——不是为了「统一风格」，而是因为你的审美标准本身就是跨领域一致的。",
+       quote:"你选的每一件东西，都是同一本书里的不同章节。把它们放在一起——那本书的封面，就是你自己。",
+       modules:[
+         {title:"你的品味人格：体系型建构者",content:"你不是在「买东西」——你是在为你的生活构建一个审美生态系统。每一件新进来的东西，都要和已有的东西对话：颜色是否兼容、材质是否匹配、气质是否共振。不符合的东西不是不美——是它不属于你正在写的这个故事。这种建构需要时间、耐心和大量的自我觉察，而你做到了。你拥有的不是一个「好看的衣柜」或「有品位的书架」，你拥有的是一套完整的审美语言。每个单品是词汇，组合方式是你的语法——别人可能说不清楚，但他们能感受到：这个人选的东西，是「一套」的。"},
+         {title:"你忽略的审美优势：免纠结体质",content:"很多人都被「选择困难」折磨——面对两件都喜欢的东西不知道选哪个。你不太有这个问题。不是因为你不喜欢，而是因为你的体系会帮你过滤：哪一件更符合我已有的审美方向？哪一件能和我拥有的东西产生更多可能的对话？哪一件是「一次性的好看」、哪一件是「可以反复咀嚼的好看」？这些问题的答案在你心里是清晰的。你的体系就像一个自动分拣机——不符合的直接筛掉，符合的之间再慢慢挑。你省下了大量「纠结」的精力，用来享受选择本身。"},
+         {title:"为什么你的选择其实很有道理",content:"有人可能会觉得你在审美上「太一贯」了——好像你选的每件东西都有某种相似的味道。但这不是缺点——这说明你的品味是「真的」，不是「表演的」。很多人的「品味」是东拼西凑的：别人说这个高级就买这个，那个流行就跟那个。这种品味经不起时间检验——因为拼凑出来的东西之间没有内在逻辑，过两年自己再看都会觉得「我当初怎么买了个这个」。你不会。你选的每件东西在你心里都有一个位置，它们互相支撑、互相解释。十年后回头看——你的品味轨迹会是一条清晰的、向上的、只属于你的线。"},
+         {title:"别人从你的品味里读到了什么",content:"别人可能读到了「确定感」——你不需要通过追逐潮流来确认自己的审美坐标在哪里。你不太会被种草帖带跑，也不太会因为别人说「这个现在很火」就动摇自己的判断。这种确定感让人觉得你「有根」——不是固执，是你知道自己是谁。也有人读到了「深度」——你的品味不是广撒网型的，是在一个方向上不断深入。你选的东西经得起反复看、反复用、反复理解。和这样的人在一起，别人也会慢慢学会：不是选最火的，是选最像自己的。"},
+         {title:"怎么让你的品味被更多人看见",content:"你已经搭好了一套完整的审美体系，但你可能低估了它的「展示价值」。试着把你选的几件来自不同领域、但有内在联系的东西放在一起给人看——比如你手机里的歌单封面、你书架上的几本书、你桌上的一个摆件——然後讲一讲它们之间的关联。这种「跨领域的连贯性」是非常令人印象深刻的品味证据。你的品味不需要「更多」——你需要的是让别人看到「已有的东西之间的关系」。让它们替你说话：看，这就是我。"}
+       ],
+       advice:["做一次「品味自画像」：从你拥有的东西里，挑出五件最能代表你的，拍一张合影。看看它们之间有什么共同语言——那个语言就是你的品味基因。","偶尔故意打破一下自己的体系——挑一件「完全不像你会选的」东西，看看它能不能在你的系统里找到一个你没想到的位置。打破是为了更清楚边界在哪。","把你近三个月收藏的、喜欢的、买下的东西列一个清单，试着用一段话描述它们之间的关联。你会发现——哦，原来我一直都在被同一种东西吸引。","下一次被人问「你的风格是什么」时，不要只回答一个词——试着讲你最早喜欢的那件东西开始的故事。品味不是标签，是你审美的成长史。"],
+       reminder:"你花了很多年建立起来的那套审美体系，不是「框住你的条条框框」——是你给自己建立的一个秩序。在这个秩序里，你不需要什么都试一遍才知道什么适合自己。这不是封闭——是成熟。继续保持你的方向感，偶尔往边上走一走看看风景，但不用怀疑脚下的路。"
+    },
+    D:{name:"情绪型品味",tag:"你的品味是感受力——你选东西不是因为它们好看，是因为它们能走进你心里",icon:"🌊",
+       score:"情绪共鸣 倾向 86%",
+       conclusion:"你的品味不是关于颜色、比例或材质——而是关于「这件东西让我产生了什么样的感受」。你走进一个空间，判断它好的标准不是设计是否合理，而是「我想不想在这儿多待一会儿」。你听一首歌，判断它好的标准不是编曲是否精妙，而是「它是不是让我想起了某个重要时刻的自己」。你把情绪当成了审美的第一入口。这不是「不够理性」——这是一种被严重低估的品味能力：你能感受到一件物品、一个空间、一段旋律里藏着的情感信息，而这个能力让你选的东西，天然地带有「故事感」和「人情味」。",
+       evidence_note:"你进咖啡店最在意的不是设计而是氛围和身体感受（Q1），推荐东西时以「情绪共鸣」为首要标准（Q2），日常选择中反复确认「这是不是现在的我」（Q3），吃到好吃的第一反应是「带某个重要的人来」——因为好东西对你来说必须有情感连接的维度（Q5）。你的选择不是关于「好」——是关于「这个好和我有什么关系」。这种关联感让你的品味有一种独特的温度。",
+       quote:"你的品味不看参数——它看的是「它有没有走进我心里」。而走进你心里的东西，被你看过一眼之后，就再也不是之前那件普通的东西了。",
+       modules:[
+         {title:"你的品味人格：感受驱动型选择者",content:"你做的每一个选择，背后都有一个情感锚点。你选的颜色——不是因为它流行，是因为它让你想起某个下午的光线。你买的杯子——不是因为它的造型得奖，是因为你握着它的时候觉得安心。你推荐的那首歌——不是因为它在榜单上，是因为它陪过你一个很难熬的晚上。你选东西的方式，本质上是在为你自己的情感体验建一个博物馆。每一件东西都不是「东西」，是被你赋予了叙事感的「记忆容器」。这种能力让你身边的所有物品都有了一种别人模仿不来的东西——温度。"},
+         {title:"你忽略的审美优势：情感翻译力",content:"你能把「感觉」翻译成「选择」。这是很多人做不到的。大多数人说不清楚自己为什么喜欢某样东西，只能说「好看」——然后就停了。你能往深里走：「好看，因为它让我觉得被拥抱了」「好看，因为它让我想起第一次独自旅行的那个早晨」「好看，因为它好像懂我最近的心事」。你这种把情绪和物品关联起来的能力，让你的选择永远不会「空洞」。别人买的是设计，你买的是共鸣。共鸣的东西不过时——因为你的情感记忆不会过时。"},
+         {title:"为什么你的选择其实很有道理",content:"你可能会在某些时候怀疑自己是不是「太感性了」——别人选东西看参数、看品牌、看口碑，你只看「它有没有戳到我」。但「戳到你」这件事，背后其实有一套极其复杂的心理机制在运转：它涉及到你的记忆、你的价值观、你的情感需求、你对「美好」的身体感受。你以为你只是「凭感觉」——实际上你的感觉是所有这些信息在海马体和前额叶之间瞬间整合的结果。你的感觉，比你想象的更「有道理」。那些被你感觉选中的东西，最终也往往经得起时间的检验——因为真正好的东西，本来就应该能「戳到人」。"},
+         {title:"别人从你的品味里读到了什么",content:"别人可能读到了「柔软」——你的空间、你的穿搭、你分享的东西都有一种让人放松的质感。不是因为你用了什么特定的颜色或材质，而是因为你的东西身上有种「被用心对待过」的气息。也有人读到了「故事感」——你身边的东西看起来都不像是批量采购的，每一件都像是在某个特定的时间、因为某个具体的理由、被你带回家的。这种故事感让进入你空间的人不自觉地想坐下来、想待一会儿、想问「诶这个是从哪里来的」——你的品味，是最好的社交开场白。"},
+         {title:"怎么让你的品味被更多人看见",content:"你有一个巨大的优势但你可能没意识到：你的品味是可以「被讲述」的。别人选的东西只能被展示，你选的东西可以被讲述。每一个被你选中的东西背后都有一个情感故事——你对它的第一感觉、它让你想起了什么、它在你生活中扮演了什么角色。试着把这些故事讲出来。不用写成专业测评，就像跟一个朋友聊天那样——「你知道吗，我买这个是因为那天下午的阳光……」。你的品味传播力，不在视觉冲击力——在你的故事里。"}
+       ],
+       advice:["做一个「情感物品清单」：挑三件你身边最普通的、但对你意义最大的东西，写下它们让你想起了什么。你会发现——你的品味不是关于「审美」，是关于「你爱过什么」。","下次买东西时，在「好看吗」之外多问一句：「它让我想起了什么？」如果答案是正面的——买它。你的感觉值得被你的钱包尊重。","邀请一个朋友来你家，让他/她随机拿起三件东西问你「为什么有这个」——你的回答会让你自己惊讶：原来我的生活里有这么多被用心对待过的瞬间。","偶尔试着把你的「感觉」翻译成别人的语言：为什么这首歌值得听、为什么这个地方值得去、为什么这件东西值得买——不是为了说服，是为了让你的品味「可传播」。"],
+       reminder:"你觉得自己「太跟着感觉走」？你的感觉是你身上最精密的一套审美仪器。它整合了你过去所有快乐、感动、被治愈和被打动的时刻。别怀疑它。那些被你感觉选中的东西，是你给未来的自己预留的温暖锚点。等你再看到它们的时候，你会想起来——哦，原来我一直都被自己好好地照顾着。"
+    }
+  },
+
+  productModules:[
+    "你的品味人格",
+    "你忽略的审美优势",
+    "为什么你的选择其实很有道理",
+    "别人从你的品味里读到了什么",
+    "怎么让你的品味被更多人看见"
+  ],
+
+  disclaimer:"本测试仅为自我探索参考，不构成任何诊断、职业建议或效果承诺。品味是个人选择，请结合自己的实际感受判断。"
+};
+
+// ========== 引擎 ==========
+let answers=[],currentQ=0,paid=false;
+
+function $(id){return document.getElementById(id)}
+const app = document.getElementById('app');
+
+function cover(){
+  app.innerHTML=`
+    <div class="screen active cover">
+      <div class="icon">✨</div>
+      <h1>${DATA.title}</h1>
+      <div class="sub">${DATA.subtitle}</div>
+      <button class="btn-start" onclick="start(true)">开始测试</button>
+      <div class="trust">前5题免费 · 记下答案左滑查看报告预览</div>
+    </div>`;
+}
+
+function start(free){answers=[];currentQ=0;paid=!free;renderQ()}
+
+function renderQ(){
+  if(currentQ>=DATA.questions.length){showResult();return;}
+  if(currentQ===5 && !paid){showGate();return;}
+  const q=DATA.questions[currentQ];
+  const pct=Math.round((currentQ/DATA.questions.length)*100);
+  const letters=['A','B','C','D'];
+  app.innerHTML=`
+    <div class="screen active">
+      <div class="progress-wrap">
+        <div class="progress-bar"><div class="progress-fill" style="width:${pct}%"></div></div>
+        <div class="progress-label">第 ${currentQ+1}/${DATA.questions.length} 题</div>
+      </div>
+      <div class="q-area">
+        <div class="q-num">${currentQ<5?'免费测试 · 第'+(currentQ+1)+'题':'深度解锁 · 第'+(currentQ+1)+'题'}</div>
+        <div class="q-text">${q.scene}</div>
+        <div class="options">
+          ${letters.map(l=>`<div class="opt" onclick="pick('${l}')"><div class="letter">${l}</div><div class="txt">${q[l]}</div></div>`).join('')}
+        </div>
+      </div>
+      ${currentQ===4?'<div style="text-align:center;font-size:13px;color:#6a6558;padding:8px 0">记下5个答案，左滑查看报告预览 →</div>':''}
+    </div>`;
+}
+
+function pick(letter){
+  answers.push(letter);
+  currentQ++;
+  renderQ();
+  window.scrollTo(0,0);
+}
+
+function showGate(){
+  app.innerHTML=`
+    <div class="screen active gate-screen">
+      <div class="lock-icon">🔓</div>
+      <h2>前5题只是倾向<br>完整12题才能看清全貌</h2>
+      <div class="gate-desc">后7题继续拆解：你的品味天赋藏在哪、别人从你的选择里读到了什么、你最深的审美优势是什么</div>
+      <ul class="unlock-list">
+        ${DATA.productModules.map(m=>`<li>${m}</li>`).join('')}
+      </ul>
+      <button class="btn-gate" onclick="unlock()">继续完成12题 · 解锁完整报告</button>
+      <div class="price">完整12题报告 · 做完自动解锁</div>
+    </div>`;
+}
+
+function unlock(){paid=true;renderQ()}
+
+function showResult(){
+  const counts={A:0,B:0,C:0,D:0};
+  for(let i=5;i<answers.length;i++){counts[answers[i]]++}
+  const sorted=Object.entries(counts).sort((a,b)=>b[1]-a[1]);
+  let typeKey=sorted[0][0];
+  if(sorted[0][1]===sorted[1][1]&&sorted[0][0]==='A'&&(sorted[1][0]==='C'||sorted[1][0]==='D'))typeKey=sorted[1][0];
+  if(sorted[0][1]===sorted[1][1]&&sorted[0][0]==='B'&&sorted[1][0]==='D')typeKey='D';
+  const type=DATA.types[typeKey];
+
+  const freeAnswers=answers.slice(0,5);
+  const freeLabels=['第一注意力落点','推荐判断逻辑','日常选择过程','被夸时的内心反应','意外惊喜反应'];
+  const freeDesc=[
+    ['你更在意的不是菜单而是空间给你的整体感受','你先注意到了别人忽略的物理细节','你下意识在对照自己内心的标准','你让身体和情绪先于大脑做出判断'],
+    ['直觉比分析快——你相信说不清但很准的那个声音','你会从技术层面拆解——确认「它到底好在哪」','你把它放进自己的审美谱系——看它和之前喜欢的是否呼应','情绪共鸣是排在第一位的——它让你想起了什么'],
+    ['第一眼跳出来的选项直接锁定——你不会再看别的','先过质量关、再挑审美——你的筛选顺序保护了你','先确保和已有系统兼容——不打架是前提','先确认它像不像自己——审美判断从自我认知出发'],
+    ['有点意外——你没觉得自己用力了，就是自然选中的','心里清楚自己在细节上的敏感度——只是不主动提','开心是因为完整的审美体系被一个具体的夸奖验证了','谢谢但心里清楚对方看到的只是你内在世界的冰山一角'],
+    ['直觉被验证的满足——身体比大脑更早知道答案','好奇心驱动——好东西值得被拆解和学习','系统性扩展——这个方向以后可以大胆尝试','连接驱动——好东西的意义在于和重要的人分享']
+  ];
+
+  let evidenceHTML='<h3>📋 答案证据</h3><p>';
+  for(let i=0;i<5;i++){
+    const a=freeAnswers[i];
+    const descIdx=a==='A'?0:a==='B'?1:a==='C'?2:3;
+    evidenceHTML+=`<strong>Q${i+1}「${DATA.questions[i].scene.slice(0,18)}…」</strong>你选了${a}——${freeDesc[i][descIdx]}。<br><br>`;
+  }
+  evidenceHTML+=type.evidence_note+'</p>';
+
+  let modulesHTML='';
+  for(const m of type.modules){
+    modulesHTML+=`<div class="module"><h3>${m.title}</h3><p>${m.content}</p></div>`;
+  }
+
+  let adviceHTML='';
+  for(let i=0;i<type.advice.length;i++){
+    adviceHTML+=`<div class="advice-item"><span class="n">0${i+1}</span><span>${type.advice[i]}</span></div>`;
+  }
+
+  app.innerHTML=`
+    <div class="screen active result">
+      <div class="badge">你的品味人格</div>
+      <div class="type-name">${type.name}</div>
+      <div class="type-sub">${type.tag}</div>
+
+      <div style="font-size:15px;color:#d4b87a;margin-bottom:4px">${type.icon} ${type.score}</div>
+      <p style="font-size:15px;color:#b8b0a0;line-height:1.75;margin-bottom:20px">${type.conclusion}</p>
+
+      <div class="evidence-box">${evidenceHTML}</div>
+      ${modulesHTML}
+
+      <div class="summary-box">
+        <div class="q-mark">"</div>
+        <p>${type.quote}</p>
+      </div>
+
+      <div class="advice-box">
+        <h3>📅 未来30天建议</h3>
+        ${adviceHTML}
+      </div>
+
+      <div class="reminder-box">
+        <h3>⚠️ 关键提醒</h3>
+        <p>${type.reminder}</p>
+      </div>
+
+      <div style="font-size:13px;color:#6a6558;line-height:1.6;text-align:center;margin-bottom:24px">${DATA.disclaimer}</div>
+      <div class="footer">以上结果为自我探索参考 · 每个选择都是了解自己的线索</div>
+    </div>`;
+  window.scrollTo(0,0);
+}
+
+// start
+cover();
+</script>
+</body>
+</html>
