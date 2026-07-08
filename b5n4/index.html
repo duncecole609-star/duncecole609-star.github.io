@@ -1,4 +1,340 @@
-<!doctype html><html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>你总被哪种人吸引？</title>
-<style>*{box-sizing:border-box}body{margin:0;background:#eaf2f5;color:#152d3b;font-family:-apple-system,BlinkMacSystemFont,'Microsoft YaHei',sans-serif}.app{max-width:520px;margin:0 auto;min-height:100vh;padding:22px 18px 34px}.top{display:flex;justify-content:space-between;border-bottom:1px solid #c4d7e0;padding-bottom:14px;color:#4d7fa1;font-weight:800;font-size:14px}.hero{padding:34px 0}.pill{display:inline-flex;padding:7px 14px;border-radius:999px;background:#c4d7e0;color:#4d7fa1;font-weight:800;font-size:13px;margin-bottom:16px}h1{font-size:30px;line-height:1.25;margin:0;font-weight:900}.sub{font-size:15px;line-height:1.7;margin-top:14px;color:#617682}.card,.summary,.quote,.section{background:#fffdf8;border:1px solid #e0d0ba;border-radius:18px;padding:18px;margin-top:16px;color:#211c18}button{border:none;border-radius:14px;padding:14px 16px;font-size:16px;font-weight:850;cursor:pointer}.primary{width:100%;background:#152d3b;color:#eaf2f5;margin-top:14px}.secondary{background:#eee2d3;color:#201b16}.quiz,.result{display:none}.progress{height:8px;background:#eadcca;border-radius:99px;overflow:hidden;margin-bottom:18px}.bar{height:100%;background:#4d7fa1;width:0}.qnum{color:#4d7fa1;font-size:13px;font-weight:850;margin-bottom:8px}.qtext{font-size:21px;line-height:1.4;font-weight:900;margin-bottom:18px;color:#211c18}.option{width:100%;display:grid;grid-template-columns:34px 1fr;gap:12px;align-items:start;background:#fff;border:1px solid #e1d1bb;border-radius:14px;margin:10px 0;padding:13px 12px;text-align:left;font-size:15px;line-height:1.5;color:#211c18}.letter{width:30px;height:30px;border-radius:50%;display:grid;place-items:center;background:#c4d7e0;color:#4d7fa1;font-weight:900}.actions{display:flex;gap:10px;margin-top:16px}.result{text-align:center}.score{font-size:48px;color:#4d7fa1;font-weight:950;margin:14px 0 4px}.quote{background:#152d3b;color:#eaf2f5;font-weight:850;text-align:left;line-height:1.7}.section{text-align:left;line-height:1.7}.section h3{margin:0 0 10px;color:#4d7fa1;font-size:15px}.section p{margin:0;color:#3b332c;font-size:14px;line-height:1.75}.section-title{margin:24px 0 10px;color:#4d7fa1;font-size:15px;font-weight:900;text-align:left}.grid div,.list div{padding:12px;border-radius:12px;background:#f6efe5;margin:10px 0;font-size:14px;line-height:1.55}.tags{display:flex;flex-wrap:wrap;gap:8px;justify-content:center;margin:14px 0}.tag{padding:8px 12px;border-radius:999px;background:#c4d7e0;color:#4d7fa1;font-size:13px;font-weight:800}.footer{font-size:12px;line-height:1.6;margin-top:18px;text-align:center}</style></head>
-<body><main class="app"><div class="top"><span>吸引对象报告</span><span>12题报告</span></div><section id="intro" class="hero"><span class="pill">自我探索测试</span><h1>你总被哪种人吸引？</h1><p class="sub">按直觉选择。它会帮你看清，你总被哪种人吸引，以及那种吸引背后真正的需求。</p><div class="card"><div class="list"><div>你的吸引对象类型</div><div>你最容易被牵动的原因</div><div>关系里的熟悉感来源</div><div>容易误判心动的地方</div></div><button class="primary" onclick="startTest()">开始测试</button></div></section><section id="quiz" class="card quiz"><div class="progress"><div id="bar" class="bar"></div></div><div id="qnum" class="qnum"></div><div id="qtext" class="qtext"></div><div id="options"></div><div class="actions"><button class="secondary" onclick="prevQuestion()">上一题</button></div></section><section id="result" class="result hero"><span class="pill">你的完整报告</span><h1 id="rname"></h1><p id="rsub" class="sub"></p><div id="score" class="score"></div><div class="tags" id="tags"></div><div id="summary" class="summary"></div><div id="quote" class="quote"></div><div class="section"><h3>一、你现在最明显的信号</h3><p id="signal"></p></div><div class="section"><h3>二、真正卡住你的地方</h3><p id="root"></p></div><div class="section"><h3>三、你容易误判自己的地方</h3><p id="mistake"></p></div><div class="section"><h3>四、更适合你的表达方式</h3><p id="path"></p></div><div class="section"><h3>五、接下来要避开的坑</h3><p id="risk"></p></div><div class="section-title">你的30天行动建议</div><div class="grid" id="actions"></div><div class="section-title">你的关键提醒</div><div class="list" id="checks"></div><p class="footer">本测试为自我探索参考，不构成诊断、志愿填报建议、职业建议或承诺。请结合现实情况判断。</p></section></main>
-<script>const data={"account": "账号2", "folder": "03_beixiyin-leixing", "path": "b5n4", "time": "晚上10点", "title": "你总被哪种人吸引？", "note_title": "你总被哪种人吸引", "product_title": "吸引对象报告", "cover": "你总被哪种人吸引？", "cover_sub": "有些心动不是喜欢，是你熟悉的情绪又出现了。", "eyebrow": "RELATION PATTERN", "visual": "phone", "bg": "#eaf2f5", "ink": "#152d3b", "accent": "#4d7fa1", "soft": "#c4d7e0", "muted": "#617682", "card_fill": "#fffdf7", "q_bg": "#fbf8f2", "q_ink": "#151515", "q_accent": "#4d7fa1", "q_muted": "#948a80", "q_soft": "#edf2f5", "q_line": "#d7d1c7", "report_bg": "#13181d", "report_ink": "#f2efe6", "report_muted": "#aeb8bf", "report_line": "#2d3942", "report_card": "#1e272e", "locked_bg": "#fff8ed", "locked_ink": "#28211c", "preview_type": "熟悉感牵引型", "preview_sub": "你被吸引的，可能不是对方，而是一种熟悉的关系节奏。", "core": "你的心动里混着安全感、挑战感和旧经验带来的熟悉感。", "locked_points": ["你最容易被哪类人牵动", "这类人满足了你什么需求", "你该靠近还是先保持观察"], "lock_sub": "免费5题看倾向，完整版看清你的吸引模式", "pay_reason": "看清自己为什么心动，比反复猜对方更值得。", "product_main": "你不是喜欢同一类人，是熟悉同一种情绪", "product_desc": "这不是恋爱脑评判，而是帮你看清：你为什么总被某类人吸引，那类人满足了你什么需求，又容易带来什么误判。", "gains": ["你的吸引对象类型", "你最容易被牵动的原因", "关系里的熟悉感来源", "容易误判心动的地方", "更稳定的靠近方式"], "h5_intro": "按直觉选择。它会帮你看清，你总被哪种人吸引，以及那种吸引背后真正的需求。", "body": "有些人一出现，你就会被牵动。\n\n不是因为对方一定适合你，而是那种感觉太熟悉了。这5题看你的吸引模式。凭直觉选，记下5个答案。", "tags": "#恋爱测试 #关系模式 #心动类型 #情感测试 #自我探索 #小红书测试", "questions": [{"text": "你最容易被哪种人吸引？", "options": ["稳定温和，让你不用猜。你会在这种人身上感到安全，好像关系终于不用费力确认", "有距离感，让你想靠近。对方越不轻易交出自己，你越想知道里面藏着什么", "很懂你，像一下看穿你的情绪。你会被这种被理解的感觉迅速击中", "有光芒，让你觉得自己也会被带亮。对方像另一种生活的入口，让你忍不住靠近"]}, {"text": "对方忽冷忽热时，你通常会？", "options": ["先观察，不马上投入。你会提醒自己不要把每一次温度变化都当成答案", "更想知道自己哪里做错了。关系一变冷，你会先从自己身上找原因", "被牵动，但努力装作没事。你不想显得太需要，可情绪已经被带走了", "反而更容易上头，想确认关系。越不确定，你越想抓住一个明确答案"]}, {"text": "你心动最强的瞬间通常是？", "options": ["对方认真回应你的细节。那会让你觉得自己被放在心上，而不是被随便对待", "对方在人群里只注意到你。被特殊对待的一刻，会让你迅速确认自己的位置", "对方表现出脆弱或需要你。你会因为被需要而靠近，也容易把照顾误会成心动", "对方让你看到另一种生活可能。你被吸引的不是人本身，还有他带来的世界"]}, {"text": "你最怕在关系里变成什么样？", "options": ["太依赖，失去节奏。你怕自己因为喜欢一个人，就把生活重心全部交出去", "太主动，显得不被珍惜。你怕自己走得太快，对方反而觉得你不值钱", "太懂事，最后委屈自己。你怕为了维持关系，把真正的需求都藏起来", "太上头，看不清现实。你怕自己被感觉带走，忽略了那些本该看见的信号"]}, {"text": "你真正想从对方那里得到的是？", "options": ["稳定回应。不用每天猜对方在不在意，你可以在关系里慢慢放松下来", "被坚定选择。你想确认自己不是备选，也不是对方无聊时才想起的人", "被理解和需要。你希望对方看见你那些没说出口的情绪，也愿意靠近真实的你", "被带去更大的世界。你会被有光的人吸引，因为那像是你也可以变成的样子"]}], "result_base": [{"name": "稳定回应型", "sub": "你不是没有感觉，只是还在确认它值不值得被认真对待。", "tags": ["观察型", "低风险", "慢确认"], "summary": "你对“被某类人吸引”有反应，但不会立刻把它当成答案。你更需要一点真实反馈，而不是被情绪推着走。", "quote": "先看见自己，再决定要不要改变。", "signal": "你会被某些场景触动，但还保留理性距离，不容易马上上头。", "root": "真正卡住你的不是不想要，而是不确定这个选择会不会带来新的负担。", "mistake": "你容易把谨慎误会成没渴望，把慢热误会成没方向。", "path": "更适合先做小范围尝试，用真实反馈确认自己的感受。", "risk": "不要因为暂时没冲动，就否定自己长期想要的东西。", "actions": ["记录3个最常触发你的场景", "做一次低成本小尝试", "观察自己是放松还是更紧绷", "再决定要不要扩大行动"], "checks": ["你需要的是验证，不是立刻推翻生活", "慢一点不等于没答案", "先保留选择权"]}, {"name": "熟悉感牵引型", "sub": "你已经有明确倾向，只是还在等一个让自己安心的理由。", "tags": ["清晰型", "价值确认", "需要行动"], "summary": "你对“被某类人吸引”的反应比较稳定。它不是一时兴起，而是你长期在意但没有完全说出口的部分。", "quote": "你不是总爱错人，你只是还没看清自己被什么牵动。", "signal": "你会反复被同类问题吸引，说明它正在触碰你的价值感、自我形象或关系需求。", "root": "真正卡住你的，是你既想改变，又不想显得自己太用力、太需要、太不安。", "mistake": "你容易把别人的眼光当作判断标准，忘了自己真实想要什么。", "path": "更适合把答案拆成具体动作：一个风格调整、一次表达练习、一次消费/关系边界复盘。", "risk": "不要只停在评论答案里，真正影响你的往往是题目背后的冲突。", "actions": ["写下你最想被看见的一面", "找出一个最拉低状态的习惯", "保留一个可执行的小改变", "7天后看反馈是否更轻松"], "checks": ["你已经不只是好奇", "你需要完整拆解而不是一句标签", "你的选择可以更主动"]}, {"name": "高光投射型", "sub": "这个问题已经不是兴趣，而是你正在反复逃避的自我提醒。", "tags": ["强倾向", "高敏感", "需要重建"], "summary": "你的答案说明，“被某类人吸引”已经是一个强信号。它影响你的判断、情绪，甚至你怎么看待自己。", "quote": "你不是想太多，是有些地方真的需要被重新整理。", "signal": "你会快速代入，并把题目联想到自己的身份、关系、消费或未来状态。", "root": "你不是没有答案，而是一直在用旧方式维持安全感，所以新的可能性总是被拖住。", "mistake": "你容易把强烈反应包装成无所谓，结果越压越耗能。", "path": "更适合进入主动调整阶段，先改一个最具体的触发点。", "risk": "不要等到完全失控、完全厌倦、完全后悔才承认自己早就想变。", "actions": ["确定一个30天调整主题", "减少一个消耗型行为", "保留一个能让你变轻的选择", "每周复盘一次真实反馈"], "checks": ["你已经看见问题了", "别再只靠忍", "真正的变化从一个小动作开始"]}], "h5_questions": [{"text": "你最容易被哪种人吸引？", "options": ["稳定温和，让你不用猜。你会在这种人身上感到安全，好像关系终于不用费力确认", "有距离感，让你想靠近。对方越不轻易交出自己，你越想知道里面藏着什么", "很懂你，像一下看穿你的情绪。你会被这种被理解的感觉迅速击中", "有光芒，让你觉得自己也会被带亮。对方像另一种生活的入口，让你忍不住靠近"]}, {"text": "对方忽冷忽热时，你通常会？", "options": ["先观察，不马上投入。你会提醒自己不要把每一次温度变化都当成答案", "更想知道自己哪里做错了。关系一变冷，你会先从自己身上找原因", "被牵动，但努力装作没事。你不想显得太需要，可情绪已经被带走了", "反而更容易上头，想确认关系。越不确定，你越想抓住一个明确答案"]}, {"text": "你心动最强的瞬间通常是？", "options": ["对方认真回应你的细节。那会让你觉得自己被放在心上，而不是被随便对待", "对方在人群里只注意到你。被特殊对待的一刻，会让你迅速确认自己的位置", "对方表现出脆弱或需要你。你会因为被需要而靠近，也容易把照顾误会成心动", "对方让你看到另一种生活可能。你被吸引的不是人本身，还有他带来的世界"]}, {"text": "你最怕在关系里变成什么样？", "options": ["太依赖，失去节奏。你怕自己因为喜欢一个人，就把生活重心全部交出去", "太主动，显得不被珍惜。你怕自己走得太快，对方反而觉得你不值钱", "太懂事，最后委屈自己。你怕为了维持关系，把真正的需求都藏起来", "太上头，看不清现实。你怕自己被感觉带走，忽略了那些本该看见的信号"]}, {"text": "你真正想从对方那里得到的是？", "options": ["稳定回应。不用每天猜对方在不在意，你可以在关系里慢慢放松下来", "被坚定选择。你想确认自己不是备选，也不是对方无聊时才想起的人", "被理解和需要。你希望对方看见你那些没说出口的情绪，也愿意靠近真实的你", "被带去更大的世界。你会被有光的人吸引，因为那像是你也可以变成的样子"]}, {"text": "如果身边人不理解你的选择，你最真实的反应是？", "options": ["先不解释，自己观察一阵。你不想为了证明自己，把还没想清楚的东西说得太满", "有点失落，但还是会继续。你希望被支持，可你也知道这件事最后只能由自己负责", "开始怀疑是不是自己太在意。别人一句话就能让你重新审视自己的判断", "反而更想证明这件事对你重要。被不理解时，你会更想把答案做出来"]}, {"text": "你最怕完整报告里看见什么？", "options": ["我其实没有想象中稳定，只是一直靠习惯撑着，让日子看起来没有问题", "我一直在用旧方式保护自己，所以很多新选择还没开始就被我先否定了", "我真正想要的和现在差很多，这意味着我可能要承认自己已经不满足很久了", "我已经忍了太久却还没行动，最怕报告把那个被我压下去的念头说出来"]}, {"text": "你希望这个测试最后帮你解决什么？", "options": ["给我一个更清楚的倾向。至少让我知道自己不是随便被情绪带着走", "告诉我真正卡住我的点。我想知道自己为什么反复在同一个地方犹豫", "让我知道怎么开始改变。不要太宏大，只要给我一个能马上做的小入口", "帮我确认我不是一个人在这样。有些感受被说出来，本身就会轻一点"]}, {"text": "别人评价你时，哪句话最容易让你记很久？", "options": ["你其实很有潜力。因为这句话像是在提醒你，自己还有没被用出来的一面", "你不用这么辛苦。听到这句会突然松一下，也会发现自己真的撑了很久", "你很有自己的感觉。这会让你确认自己不是普通复制粘贴的人", "你该更相信自己一点。因为你知道很多时候不是没能力，是太常怀疑自己"]}, {"text": "如果只能改一个地方，你会先改？", "options": ["日常习惯。先让自己的生活更稳一点，别总靠临时情绪做决定", "表达方式。把想法说得更清楚，不再让别人误会你其实无所谓", "消费和选择标准。少一点被外界带跑，多一点真正适合自己的判断", "关系边界。减少被别人情绪牵着走，把自己的节奏拿回来一点"]}, {"text": "你最想在30天后看到什么变化？", "options": ["更松弛。不是所有事都要马上证明，整个人能慢慢放下来", "更有方向。知道自己下一步该往哪里用力，而不是每天被情绪推着走", "更敢选择。哪怕不完美，也能为自己想要的东西迈出一步", "更像自己。少一点迎合和硬撑，多一点真正舒服的状态"]}, {"text": "完整报告里你最想看哪一部分？", "options": ["类型结论。想先知道自己属于哪种模式，给现在的状态一个名字", "形成原因。想知道为什么自己会这样，而不是只拿到一个标签", "误判点。想看自己最容易在哪些地方把需求、关系或选择看错", "具体建议。想知道接下来怎么做，才能不只停留在看懂自己"]}], "results": {"A": {"name": "稳定回应型", "sub": "你不是没有感觉，只是还在确认它值不值得被认真对待。", "score": "42", "tags": ["观察型", "低风险", "慢确认"], "summary": "你对“被某类人吸引”有反应，但不会立刻把它当成答案。你更需要一点真实反馈，而不是被情绪推着走。", "quote": "先看见自己，再决定要不要改变。", "signal": "你会被某些场景触动，但还保留理性距离，不容易马上上头。", "root": "真正卡住你的不是不想要，而是不确定这个选择会不会带来新的负担。", "mistake": "你容易把谨慎误会成没渴望，把慢热误会成没方向。", "path": "更适合先做小范围尝试，用真实反馈确认自己的感受。", "risk": "不要因为暂时没冲动，就否定自己长期想要的东西。", "actions": ["记录3个最常触发你的场景", "做一次低成本小尝试", "观察自己是放松还是更紧绷", "再决定要不要扩大行动"], "checks": ["你需要的是验证，不是立刻推翻生活", "慢一点不等于没答案", "先保留选择权"]}, "B": {"name": "熟悉感牵引型", "sub": "你已经有明确倾向，只是还在等一个让自己安心的理由。", "score": "68", "tags": ["清晰型", "价值确认", "需要行动"], "summary": "你对“被某类人吸引”的反应比较稳定。它不是一时兴起，而是你长期在意但没有完全说出口的部分。", "quote": "你不是总爱错人，你只是还没看清自己被什么牵动。", "signal": "你会反复被同类问题吸引，说明它正在触碰你的价值感、自我形象或关系需求。", "root": "真正卡住你的，是你既想改变，又不想显得自己太用力、太需要、太不安。", "mistake": "你容易把别人的眼光当作判断标准，忘了自己真实想要什么。", "path": "更适合把答案拆成具体动作：一个风格调整、一次表达练习、一次消费/关系边界复盘。", "risk": "不要只停在评论答案里，真正影响你的往往是题目背后的冲突。", "actions": ["写下你最想被看见的一面", "找出一个最拉低状态的习惯", "保留一个可执行的小改变", "7天后看反馈是否更轻松"], "checks": ["你已经不只是好奇", "你需要完整拆解而不是一句标签", "你的选择可以更主动"]}, "C": {"name": "高光投射型", "sub": "这个问题已经不是兴趣，而是你正在反复逃避的自我提醒。", "score": "86", "tags": ["强倾向", "高敏感", "需要重建"], "summary": "你的答案说明，“被某类人吸引”已经是一个强信号。它影响你的判断、情绪，甚至你怎么看待自己。", "quote": "你不是想太多，是有些地方真的需要被重新整理。", "signal": "你会快速代入，并把题目联想到自己的身份、关系、消费或未来状态。", "root": "你不是没有答案，而是一直在用旧方式维持安全感，所以新的可能性总是被拖住。", "mistake": "你容易把强烈反应包装成无所谓，结果越压越耗能。", "path": "更适合进入主动调整阶段，先改一个最具体的触发点。", "risk": "不要等到完全失控、完全厌倦、完全后悔才承认自己早就想变。", "actions": ["确定一个30天调整主题", "减少一个消耗型行为", "保留一个能让你变轻的选择", "每周复盘一次真实反馈"], "checks": ["你已经看见问题了", "别再只靠忍", "真正的变化从一个小动作开始"]}}};const letters=["A","B","C","D"];let index=0;const answers=[];function startTest(){document.getElementById("intro").style.display="none";document.getElementById("quiz").style.display="block";renderQuestion();}function renderQuestion(){const q=data.h5_questions[index];document.getElementById("bar").style.width=(index/data.h5_questions.length*100)+"%";document.getElementById("qnum").textContent=`第 ${index+1} / ${data.h5_questions.length} 题`;document.getElementById("qtext").textContent=q.text;document.getElementById("options").innerHTML=q.options.map((text,i)=>`<button class="option" onclick="choose(${i})"><span class="letter">${letters[i]}</span><span>${text}</span></button>`).join("");}function choose(i){answers[index]=i;if(index<data.h5_questions.length-1){index++;renderQuestion();}else showResult();}function prevQuestion(){if(index>0){index--;renderQuestion();}}function showResult(){const sum=answers.reduce((a,b)=>a+b,0);const key=sum<=10?"A":(sum<=23?"B":"C");const r=data.results[key];document.getElementById("quiz").style.display="none";document.getElementById("result").style.display="block";document.getElementById("rname").textContent=r.name;document.getElementById("rsub").textContent=r.sub;document.getElementById("score").textContent=r.score;document.getElementById("tags").innerHTML=r.tags.map(x=>`<span class="tag">${x}</span>`).join("");document.getElementById("summary").textContent=r.summary;document.getElementById("quote").textContent=r.quote;document.getElementById("signal").textContent=r.signal;document.getElementById("root").textContent=r.root;document.getElementById("mistake").textContent=r.mistake;document.getElementById("path").textContent=r.path;document.getElementById("risk").textContent=r.risk;document.getElementById("actions").innerHTML=r.actions.map(x=>`<div>${x}</div>`).join("");document.getElementById("checks").innerHTML=r.checks.map(x=>`<div>${x}</div>`).join("");window.scrollTo({top:0,behavior:"smooth"});}</script></body></html>
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
+<title>回复心理测试</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:"PingFang SC","Microsoft YaHei",sans-serif;background:#0f0f1a;color:#e8e0d0;min-height:100vh;display:flex;justify-content:center}
+.app{width:100%;max-width:500px;min-height:100vh;position:relative;overflow:hidden}
+.screen{display:none;flex-direction:column;min-height:100vh;padding:28px 22px 40px}
+.screen.active{display:flex}
+
+.cover{justify-content:center;align-items:center;text-align:center;gap:20px}
+.cover .icon{font-size:52px}
+.cover h1{font-size:29px;font-weight:900;line-height:1.4;letter-spacing:1.5px;padding:0 6px}
+.cover h1 .hl{color:#c9a96e}
+.cover .sub{font-size:15px;color:#8a8070;line-height:1.7;max-width:300px}
+.cover .btn-start{margin-top:10px;padding:15px 50px;font-size:18px;font-weight:700;background:linear-gradient(135deg,#c9a96e,#a6844d);color:#0f0f1a;border:none;border-radius:40px;cursor:pointer;letter-spacing:2px}
+.cover .btn-start:active{transform:scale(.96)}
+.cover .trust{font-size:12px;color:#4a4538;margin-top:6px}
+
+.progress-wrap{padding:4px 0 14px}
+.progress-bar{height:3px;background:#1e1e2e;border-radius:2px;overflow:hidden}
+.progress-fill{height:100%;background:linear-gradient(90deg,#c9a96e,#d4b87a);border-radius:2px;transition:width .3s}
+.progress-label{font-size:13px;color:#5a5548;margin-top:6px;text-align:right}
+
+.q-area{flex:1;display:flex;flex-direction:column;gap:16px}
+.q-area .q-num{font-size:13px;color:#6a6558;letter-spacing:2px}
+.q-area .q-text{font-size:23px;font-weight:700;line-height:1.5}
+.options{display:flex;flex-direction:column;gap:10px}
+.opt{padding:18px 16px;border-radius:14px;background:#16162a;border:1.5px solid #252540;cursor:pointer;transition:all .2s;display:flex;align-items:flex-start;gap:13px}
+.opt:active{transform:scale(.98);border-color:#c9a96e;background:#1e1e34}
+.opt .letter{width:33px;height:33px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:15px;font-weight:700;flex-shrink:0;background:rgba(201,169,110,.12);color:#c9a96e}
+.opt .txt{font-size:15px;line-height:1.55;color:#c8c0b0;flex:1}
+
+.gate-screen{justify-content:center;align-items:center;text-align:center;gap:24px}
+.gate-screen .lock-icon{font-size:48px}
+.gate-screen h2{font-size:26px;font-weight:800;line-height:1.4}
+.gate-screen .gate-desc{font-size:15px;color:#a09880;line-height:1.7;max-width:300px}
+.gate-screen .unlock-list{text-align:left;background:#16162a;border-radius:16px;padding:20px 24px;width:100%;max-width:320px}
+.gate-screen .unlock-list li{font-size:14px;color:#b8b0a0;line-height:2;list-style:none}
+.gate-screen .unlock-list li::before{content:"✓ ";color:#c9a96e;font-weight:700}
+.gate-screen .btn-gate{margin-top:8px;padding:14px 44px;font-size:18px;font-weight:700;background:linear-gradient(135deg,#c9a96e,#a6844d);color:#0f0f1a;border:none;border-radius:40px;cursor:pointer;letter-spacing:2px}
+.gate-screen .btn-gate:active{transform:scale(.96)}
+.gate-screen .price{font-size:14px;color:#6a6558;margin-top:4px}
+
+.loading{justify-content:center;align-items:center;text-align:center;gap:24px}
+.loading .spinner{width:52px;height:52px;border:3px solid #1e1e2e;border-top-color:#c9a96e;border-radius:50%;animation:spin .8s linear infinite}
+@keyframes spin{to{transform:rotate(360deg)}}
+.loading .msg{font-size:16px;color:#a09880;letter-spacing:1px}
+
+.result{padding:28px 22px 48px}
+.result .badge{display:inline-block;padding:7px 16px;border:1px solid rgba(201,169,110,.25);border-radius:16px;font-size:13px;color:#c9a96e;letter-spacing:2px;margin-bottom:14px}
+.result .type-name{font-size:36px;font-weight:900;margin-bottom:6px;line-height:1.2}
+.result .type-sub{font-size:18px;color:#d4b87a;margin-bottom:20px;line-height:1.4}
+
+.evidence-box{background:#16162a;border-radius:16px;padding:20px;margin-bottom:22px;border-left:3px solid #c9a96e}
+.evidence-box h3{font-size:14px;color:#c9a96e;letter-spacing:2px;margin-bottom:10px}
+.evidence-box p{font-size:14px;color:#b8b0a0;line-height:1.7}
+
+.module{margin-bottom:20px}
+.module h3{font-size:16px;color:#a09880;letter-spacing:1.5px;margin-bottom:10px;padding-bottom:8px;border-bottom:1px solid #1e1e2e}
+.module p{font-size:14px;color:#b8b0a0;line-height:1.75;margin-bottom:6px}
+
+.summary-box{background:linear-gradient(135deg,#1a1a2e,#1f1f34);border-radius:16px;padding:24px;margin:24px 0;text-align:center;border:1px solid rgba(201,169,110,.15)}
+.summary-box .q-mark{font-size:28px;color:#c9a96e;margin-bottom:8px}
+.summary-box p{font-size:17px;color:#d4b87a;line-height:1.7;letter-spacing:.5px}
+
+.advice-box{margin-bottom:24px}
+.advice-box h3{font-size:16px;color:#a09880;letter-spacing:2px;margin-bottom:12px}
+.advice-box .advice-item{padding:12px 14px;margin-bottom:8px;background:#16162a;border-radius:12px;font-size:14px;color:#b8b0a0;line-height:1.6;display:flex;gap:10px}
+.advice-box .advice-item .n{color:#c9a96e;font-weight:700;flex-shrink:0}
+
+.reminder-box{background:#16162a;border-radius:16px;padding:20px;margin-bottom:28px;border:1px solid #2a2a40}
+.reminder-box h3{font-size:15px;color:#c9a96e;letter-spacing:2px;margin-bottom:8px}
+.reminder-box p{font-size:14px;color:#a09880;line-height:1.7}
+
+.footer{text-align:center;padding:16px;font-size:11px;color:#3a3a48;border-top:1px solid #16162a;margin-top:auto}
+</style>
+</head>
+<body>
+<div class="app" id="app"></div>
+<script>
+// ========== 内容数据 ==========
+const DATA = {
+  title:"秒回和不回，<br>不是同一个<span class='hl'>人在决定</span>",
+  subtitle:"你的回复速度不是性格问题——<br>是你和世界之间的一场认知差",
+
+  questions:[
+    {scene:"收到一条消息，你秒回了。对方是谁？",A:"一个让我感到安全的人——不是因为TA重要，是因为我知道回错了也不会被审判",B:"一个我很在意的人——秒回是一种位置确认：你在我这里的优先级，用速度标好了",C:"一个不会对我提太多要求的人——秒回是因为安全：这条消息不会把我卷进任何情绪黑洞",D:"一个刚好在我心情好的时候发消息的人——和TA是谁关系不大，和我此刻的状态关系更大"},
+    {scene:"收到一条消息，你看到了但假装没看到。那条消息大概率是什么？",A:"一条需要我做决定的——\"在吗\"后面跟着的，大概率不是闲聊，是任务",B:"一条我暂时不想回的人发的——不是不喜欢TA，是回复TA需要消耗的能量我今天没有",C:"一条带着情绪的消息——不是不想面对TA，是不想面对接下来可能蔓延过来的情绪",D:"一条很正常的消息——但我今天就是不想和任何人说话，哪怕是最好的朋友"},
+    {scene:"你给别人发了一条消息，对方过了一天才回。你的第一反应是？",A:"\"可能TA在忙\"——先给对方找理由。你不喜欢把沉默解读成冷落，因为你也不希望别人这样解读你",B:"\"TA是不是在排优先级\"——不是生气，是在心里默默把TA的位置往下调了一格",C:"松了一口气——\"还好TA回了\"。你之前一直在想是不是自己说错了什么",D:"看看那天你发了什么——如果是重要的，你觉得失落；如果是闲聊，你觉得TA只是没看到"},
+    {scene:"翻聊天记录时，你发现你对某些人几乎从不主动发起对话，但你回得很快。为什么？",A:"安全但不亲近——回得快是我的礼貌，不主动是我的边界。这两件事不矛盾",B:"我在等他们先来——回复速度慢的人对我来说是一种隐形的地位确认：你先找我，我再决定",C:"我害怕——一旦我主动，关系就进入了另一个阶段。我不知道我准备好了没有",D:"没有为什么——有些人就是刚好卡在那个位置：不够重要到让我主动，但也不讨厌到让我不回"},
+    {scene:"你微信上有多少条未读消息，你现在大概看一眼？",A:"不超过10条。未读对你来说像未完成的任务——你受不了红点，清完才能安心",B:"几十条。你已读但没回的不算未读——你把\"看到了\"和\"需要回\"分得很开",C:"很多。未读对你来说是一种保护——只要我没点开，这条消息就没有发生",D:"看时期。状态好的时候清得很勤快，状态差的时候直接红点免疫——管它多少条"},
+
+    {scene:"你最怕收到哪种类型的消息？",A:"\"在吗\"后面没有下文——不是怕这个格式，是怕接下来的内容自己兜不住",B:"一个你不想回但不得不回的人发来的——礼貌和真实感受之间的撕扯比消息本身更累",C:"大段的语音或情绪输出——不是不关心TA，是听完之后不知道该怎么接才\"对\"",D:"深夜的消息——白天还扛得住的事，到了晚上每一条都像沉下去的锚"},
+    {scene:"一个人从来不主动找你，但你每次找TA时TA回得很快。你心里怎么想？",A:"\"TA只是忙，不是不重视我\"——你倾向于相信行为和动机之间不一定有因果",B:"\"TA在被动维持——说明我在这段关系里是高位\"。你甚至会因此觉得安全",C:"\"TA是不是在等我主动——如果我不找TA，是不是就断了\"。这种不确定让你有点心慌",D:"\"挺舒服的——我需要TA的时候TA在，不需要的时候TA也不打扰。完美关系\""},
+    {scene:"你发现你在回复不同人时，语气和速度差别非常大。你觉得这种差别本质上是什么？",A:"情绪预算分配——对每个人能投入的情绪总额不同，秒回的人是从预算里拨出来的",B:"隐性排序——你的聊天列表就是一个排行榜，速度=位置。你自己可能都没意识到在这么做",C:"安全距离传感器——回得快的人让你觉得安全，回得慢的人让你觉得需要保护自己",D:"情绪晴雨表——你的回复质量不取决于对方是谁，取决于你自己今天过得好不好"},
+    {scene:"有人对你说\"你上次回得好慢\"——你最有可能是哪种情况？",A:"当时那条消息需要你做决定，而你还没想好——不是不想回，是不想给出一个没准备好的回答",B:"对方在你的排序里位置不靠前——但你不会告诉TA这个真相",C:"那段时间你状态不好——你怕一回消息就会被人发现\"我不太好\"，干脆不回",D:"你自己都没注意到——可能看了、想了、然后忘了。你的注意力当时被别的东西吃掉了"},
+    {scene:"如果让你把微信好友按\"回复速度\"分成几档，你的规则是什么？",A:"不是按人分的——是按消息类型。需要决策的慢，确认性的快。人对不上速度，任务对得上",B:"按重要性——重要的人置顶+秒回，中间的人定时回复，边缘的人可能忘了回也没负担",C:"按关系的安全程度——越是安全的越敢慢慢来，越是不确定的越要快点回以免被误会",D:"不按人也不按类型——主要看我的精力槽还剩多少。满格时人人秒回，见底时已读不回"},
+    {scene:"你觉得\"秒回\"和\"在意\"这俩词之间的关系是什么？",A:"不完全对等。秒回是一种能力，不是一种心意——不回的人可能比秒回的人更在意，只是他们怕说错",B:"秒回就是在意——但不是在意对方，是在意这段关系对你的价值。你在用速度做投资",C:"秒回有时候是不安——怕不回对方会多想，怕沉默会被当成拒绝。这种\"在意\"考验的是自己的承受力",D:"没有固定关系。我能在意一个人但三天不回——不是不在意，是我需要三天的时间来把自己修好"},
+    {scene:"如果有一天你不再用\"回复速度\"来衡量任何关系了，你觉得会是因为什么？",A:"我终于找到了足够安全的人——我不需要靠速度来维持连接，TA们会在原地等我",B:"我不需要排序了——不是放弃了关系，是终于没那么在乎谁在上谁在下了",C:"我敢让别人等我了——敢让人等，是因为相信对方不会因为等待而放弃我",D:"我情绪稳定了——回复速度终于回归到它本来的功能：信息交换，不是人格测试"}
+  ],
+
+  types:{
+    A:{name:"安全优先型",tag:"你秒回的不是重要的人——是让你感到安全的人",icon:"🛡️",
+       score:"安全优先 倾向 78%",
+       conclusion:"你不是不挑人——你挑了，只是你的排序标准不是「重不重要」，而是「安不安全」。秒回的人多半是那些不会因为你说错话就审判你的人。你以为自己是在凭感觉回复，其实你的神经系统早就帮你筛过一遍：这个人的消息能接，不会翻车。",
+       evidence_note:"你秒回的触发条件是「安全」而非「重要」（Q1），你怕收到「在吗」是因为担心后续内容兜不住（Q6），你把回复速度差解释为「安全距离传感器」而不是地位排序（Q8）。你的底层逻辑是：回复快慢不取决于对方在你心里的位置，而取决于你在对方那里会不会受伤。",
+       quote:"你不是回得快——你是终于遇到了一个让你不必斟酌每一个字的人。秒回不是礼貌，是安全感溢出了。",
+       modules:[
+         {title:"你的回复人格：安全感过滤型",content:"你的聊天列表实际上是一个安全指数排名——排在前面的不是老板和恋人，是那些「回了不会出事」的人。你曾经因为回错一句话被人揪住过，或者因为没回一条消息被误解过，从那以后你的神经系统就学会了预判：这条消息后面，会不会跟着一场你不想打的仗。秒回对你来说不是热情，是确认过安全之后的放松。"},
+         {title:"你的回复速度在替你说什么",content:"它在说：「我需要确认你不会伤害我，然后我才能对你快。」你以为自己在区别对待别人——其实你是在保护自己。回复慢不是不在意，是你在评估：这句话如果回得不够好，代价有多大。那些被你秒回的人，不是运气好——是他们在无意中通过了你的安全审查，连他们自己都不知道。"},
+         {title:"别人从你的回复里读到了什么（可能不是你想表达的）",content:"别人可能读到了「她对有些人特别热情」——但你没在热情，你只是在放松。也可能有人觉得「你回得慢就是不喜欢我」——但他们不知道，有时候你回得慢不是因为不喜欢，是太喜欢了反而不敢随便回。还有人读到了「你好像很好相处」——那是因为你把不安全的人都挡在外面了，所以他们看到的你，只是你愿意让人看到的那一面。"},
+         {title:"最容易掉进的回复误区",content:"你有时候会把「安全」和「好」搞混。安全的回复让你舒服，但不一定让你成长。你一直待在安全区里回消息，久了会发现：你秒回的那些人，可能恰恰是最不会挑战你的人——而你需要被挑战。另一个误区是：你太依赖对方给你的安全感了，忘了安全感也可以来自你自己——来自「哪怕回错了我也接得住」的底气。"},
+         {title:"怎么让你的回复更贴近你想成为的人",content:"每周挑一个你平时回得慢的人，加快回复速度一次——不是要你讨好TA，是测试一下：快回了之后，天有没有塌。如果塌了，说明你的慢是对的；如果没塌，你可能多了一个可以快回的人。安全区是可以扩大的——不是要你冒险，是要你确认哪些地方其实没有你想象的危险。"}
+       ],
+       advice:[
+         "翻出你最近三天秒回过的所有聊天记录，问问自己：这些人里，有几个是因为「安全」才秒回的，有几个是因为「在意」？你会对自己的答案感到意外的。",
+         "下一次收到一个你本能想慢回的消息时，先不慢回——用30秒回一个简短但真诚的回复。然后观察：你担心的灾难发生了吗？",
+         "找一个你一直回得慢但其实很在意的人，主动发一条消息——不等TA先来。看看TA的回复速度会让你安心还是更焦虑，答案就是你对这段关系的真实评分。",
+         "把你聊天列表里所有人都问一遍：如果我现在给TA发一条很蠢的消息，TA会怎么对我？那些「不会怎样」的人——以后回快一点。"
+       ],
+       reminder:"你不是天生回复慢——你是太早就知道，回错一句话在有些关系里的代价有多大。但现在你可以重新校准了：那些值得你回得快的人，不会因为你说得不够完美就收回对你的好。"
+    },
+    B:{name:"地位排序型",tag:"你的回复速度不是反应——是一个持续的、精确的排名系统",icon:"👑",
+       score:"地位排序 倾向 82%",
+       conclusion:"你的聊天记录如果拉成一张图，就是一张隐形的排行榜。你可以嘴硬说自己没在排序——但你的回复速度已经把你卖了。秒回、中等回、轮回、不回——你对不同人设置了不同的响应时间，而且这个设置是动态的：某人做了让你加分的事，回复加速；让你减分，立刻延时。你不是情绪化——你是精确。",
+       evidence_note:"你的秒回是一种「位置确认」——用速度标注优先级（Q1），别人回复慢时你会默默在心里把TA的位置往下调一格（Q3），你把回复差异解释为「隐性排序」而非安全距离（Q8），你承认自己在用速度做投资——秒回是一种关系价值确认（Q11）。你的底层逻辑是：回复速度是关系的货币，你比任何人都清楚你在给谁花钱。",
+       quote:"你以为你在回消息——其实你在打分。秒回是给高排名者的令牌，延迟是给低排名者的信号。你不是拖延症，你是一台运行中的关系评估系统。",
+       modules:[
+         {title:"你的回复人格：隐性排序型",content:"你有一个你甚至不愿承认的回复速度表——不是写在纸上的，是刻在肌肉记忆里的。看到某个头像亮起时你的手会自动伸过去；看到另一个头像时你会想「等会儿再说」。你不是故意的——但这个排序确实存在，而且更新很快。谁最近帮了你一次，谁最近让你觉得被冒犯——你的回复速度会如实反映，比你的嘴诚实多了。"},
+         {title:"你的回复速度在替你说什么",content:"它在说：「每个人在我这里都有一个位置，回复速度就是位置牌。」你不是冷漠——你对高排名者可以深夜秒回大段语音；你不是讨好——你对低排名者的消息可以理直气壮地三天不回。你的回复速度是一条清晰的信号线：那些被你秒回的人，不是运气好——是积了很多分。那些被延迟的人，也不是你不喜欢——是你还没想好要不要继续投资。"},
+         {title:"别人从你的回复里读到了什么（可能不是你想表达的）",content:"别人可能读到了「势利」或「功利」——但你其实不是在算计，你只是把关系管理变成了一套自动化的系统。对你好的人，你回快一点，这有什么问题？让你累的人，你回慢一点，这不是很正常？也有些人读到了你的「边界感」——觉得你分的很清楚，不拖泥带水。但可能有人觉得被你默默排序了，自己还不知道自己在名单上的哪个位置——如果TA们知道，可能会受伤。"},
+         {title:"最容易掉进的回复误区",content:"你有时候会把排序当成真实关系的替代品。你把某人设置成置顶、秒回、特别关注——然后以为自己真的在经营这段关系。但排序本身不是连接，它只是连接的预告片。另一个误区是：你的排序可能会过时。有人被你放在低优先级，可能是因为三年前的某件事——但TA早就变了，你还在用旧数据评估新版本的人。"},
+         {title:"怎么让你的回复更贴近你想成为的人",content:"做一次「回复速度审计」：拿一张纸，按回复速度从快到慢，把你最常聊的10个人排出来。然后问自己：这个排序真的反映了我现在对TA们的重视程度吗？如果让你感到不舒服——是时候重新校准了。某些被低估的人值得提速；某些被高估的人值得降级。"}
+       ],
+       advice:[
+         "把手机里所有被你「延迟回复」的人找出来——选一个你其实觉得还不错但就是回得慢的人，今天之内回TA一条不敷衍的消息。看看TA的反应。",
+         "关掉所有置顶三天。用人脑而不是算法来决定该回谁——测试一下：没有了置顶，你的回复优先级会乱吗？还是会变得不一样？",
+         "写下来你最常秒回的三个人和最常延迟的三个人，然后问自己：如果我把自己在这个排序里对调——我是那个被延迟的人，我会怎么想？答案里的不适感就是你可以调整的地方。",
+         "做一次「排序重置」：把所有人的回复速度都调成一档——快。坚持一周。你会发现：有些人配得上你的快，有些人确实不配——但你终于有意识地在做这个判断了，而不是交给惯性。"
+       ],
+       reminder:"你不是势利——你是太擅长用速度来丈量关系了，擅长到你自己都没意识到在这样做。但排序是会过时的，有些人值得你用一天的时间，重新测一次速度。"
+    },
+    C:{name:"回避保护型",tag:"你延迟回复不是因为不在乎——是怕一开口，情绪就漫过来了",icon:"🕯️",
+       score:"回避保护 倾向 76%",
+       conclusion:"你不是不回——你是怕回了之后，事情就开了头。你经历过那种回了一条消息之后被卷进去的经历：对方的情绪、期待、追问——像潮水一样涌过来，你一个人站在岸边，不知道该怎么接。所以你学会了延迟。延迟不是冷漠——是你给自己建的一道堤坝：等水位降一降，我再进去。",
+       evidence_note:"你假装没看到的消息多半带着情绪（Q2），别人晚回时你第一反应是「是不是我说错了什么」（Q3），你对不主动的人有隐隐的不确定感（Q7），你把回复差异解释为安全距离传感器（Q8），你觉得秒回有时候是不安——怕沉默被当成拒绝（Q11）。你的底层逻辑是：回复=打开一扇门，你不知道门后面会进来什么——所以你选择先不开门。"},
+       quote:"你不是在假装没看到——你是在等自己准备好。那些被你延迟回复的人不知道的是：你不回不是因为TA们不重要，是因为TA们太重要了，你怕接不住。",
+       modules:[
+         {title:"你的回复人格：堤坝防御型",content:"你的「已读不回」不是不在乎——恰恰相反，有时候是因为太在乎了，所以不敢随便回。你害怕一个简短的回复会被解读成冷淡，一个认真的回复会把你拖进一场你不知道该怎么收场的对话。你曾经被别人的消息压垮过——不是被消息本身，是被消息后面带着的东西：期待、情绪、需要你做出回应的那种重量。从那以后你学会了：先不回，等自己状态好了再回——但有时候等着等着就忘了，或者更不敢回了。"},
+         {title:"你的回复速度在替你说什么",content:"它在说：「不是不关心你——是我关心得太多了，所以需要时间消化。」你的回得慢和冷漠不是同一种东西。冷漠的人不回是因为不在乎，你不回是因为太在乎——在乎到你觉得自己必须给出一个完美的、不伤人的、对得起对方的回复。这种期待压得你喘不过气，于是延迟成了唯一的出口。"},
+         {title:"别人从你的回复里读到了什么（可能不是你想表达的）",content:"别人可能读到「你不在乎我」——但他们不知道你恰恰是因为在乎才不敢回。也可能读到「你故意冷落我」——但他们不知道你只是怕自己的回复不够好、不够对、不够配得上对方发过来的那份心情。还有人读到了「你不善于沟通」——但你不是不善于沟通，你是太擅长预判沟通的后果了，预判到不敢开始。"},
+         {title:"最容易掉进的回复误区",content:"你有时候会把延迟当成解决方案——但延迟只是推迟了问题，没有解决它。你不回的那条消息，不会因为时间过去就消失——它会在你的聊天列表里变成一堵堵隐形的墙，隔在你和那些人之间。另一个误区是：你以为你是在保护自己，但你可能是在慢慢切断连接。延迟太久的关系，就像放在冰箱里的食物——你以为它还在，但打开看的时候可能已经过期了。"},
+         {title:"怎么让你的回复更贴近你想成为的人",content:"练习一种「不完美的回复」——不需要每个回复都满分。一个简单的「看到了，晚点回你」就能拆掉堤坝上的第一块砖。你不需要每次都接住对方的全部情绪——有时候你只需要让对方知道：我在这里，我还活着，我没有不理你。不完美的回复也是连接——甚至比完美的沉默更温暖。"}
+       ],
+       advice:[
+         "今天找出一条你拖了最久没回的消息——不管多久了，回一条简单的。不需要解释为什么这么久没回，只需要一句：我看到了。你会发现，对方等的那口气终于松了——你也是。",
+         "面对下一条带着强烈情绪的消息时，不用想怎么回复对方——先回一句话给自己：「我不需要解决TA的所有问题。」然后回给对方一个简单的确认，不需要解决方案。",
+         "把你躲避过的消息全部翻出来——看看有多少是「其实可以简单回一条的」和「确实需要认真回复的」。前者你现在就回掉，后者你给自己设一个三天内的deadline。",
+         "对三个你信任的人公布你的回复困境——直接告诉TA们：「有时候我不回不是因为不在乎，是我不知道该说什么。你可以再提醒我一次。」给他们一张可以推开你的门的许可证。"
+       ],
+       reminder:"你不是不会沟通——你是太想给出一个完美的回应了，完美到连开始都变得困难。但那些等了你很久的人，不需要完美的回复——他们只需要你的消息框亮起来。"
+    },
+    D:{name:"波动反应型",tag:"你的回复速度不取决于对方是谁——取决于你自己今天过得好不好",icon:"🌊",
+       score:"波动反应 倾向 74%",
+       conclusion:"你不是在筛人——你是在筛自己的状态。状态好的时候你是个群聊暖场王，谁的都回、回得比发的还多；状态差的时候你从地球表面消失，连最好的朋友都找不到你。你的回复速度是一张情绪心电图——不是对别人负责，是对自己的电量负责。别人猜不透你什么时候在线、什么时候消失——因为你自己也猜不透。",
+       evidence_note:"你秒回的条件是「刚好心情好」——和对方是谁关系不大（Q1），你已读不回的原因是「今天不想和任何人说话」（Q2），未读数量随时期波动——状态好清零、状态差免疫（Q5），回复差异的本质是情绪晴雨表而非关系评估（Q8），你承认自己需要三天时间修好自己再回消息（Q11）。你的底层逻辑是：回复=输出能量，能量满了才能输出——和人本身没关系。"},
+       quote:"你不是忽冷忽热——你只是在用自己的温度调节系统。那些在你冷的时候还在原地等的人，是你的外接热源。",
+       modules:[
+         {title:"你的回复人格：电量依赖型",content:"你不是对人不公平——你是对自己的能量太诚实了。有些人能把回复当成喝水一样自然的事，但对你来说，每回一条消息都是一次能量输出——你需要判断：对方值不值得、现在的电量够不够、回完这条我还有没有力气回下一条。这种计算发生在毫秒之内，快到你以为是「感觉」。但你清楚：状态好的时候你会在群里连回十几条，状态差的时候你连「嗯」都不想打。"},
+         {title:"你的回复速度在替你说什么",content:"它在说：「别用我的回复速度判断我的感情——我的感情是恒定的，但我的可用电量是波动的。」你没有在忽冷忽热——冷的时候不是不喜欢了，是电量见底了；热的时候也不是突然上头，是电量回血了。你的回复速度是一面镜子，照的不是别人——是你自己今天的情绪基调。"},
+         {title:"别人从你的回复里读到了什么（可能不是你想表达的）",content:"别人可能读到「忽冷忽热」「捉摸不透」「任性」——但你其实不是在任性，你是在自救。你知道自己状态差的时候回消息会伤人——语气不对、用词不当、回完后悔——所以你宁愿不回，等自己调整好了再来。但也有人读到了「真实」——觉得你不装，不会在心情不好的时候强撑一个热情的假人。这种真实很珍贵，但不是所有人都愿意等。"},
+         {title:"最容易掉进的回复误区",content:"你有时候会把「等我好了再回」变成一个无限期的延迟。状态好的时候觉得一切都来得及，状态差的时候觉得一切都不重要——中间的温差太大了，大到有些人等不了那么久。另一个误区是：你以为沉默是安全的——但沉默本身也是一种信息。你什么都没说，但别人什么都读到了。你以为你在控制输出，其实沉默也在输出。"},
+         {title:"怎么让你的回复更贴近你想成为的人",content:"在状态差的时候，试着发一条最简短的消息而不是完全消失。不需要聊天，不需要解释——只需要让对方知道：「今天状态不好，过两天找你。」这句话花不了你五秒钟，但能让那些等着你的人不至于在黑暗中猜你是不是出事了。你不欠任何人解释——但你在意的人值得一个信号灯。"}
+       ],
+       advice:[
+         "在手机桌面上设置一个快捷回复模板：「今天状态不好，过两天回你。」下一次你不想回任何人消息的时候，花五秒钟把这个模板发给你最在意的那个人——就一个。",
+         "把你最近一个月的聊天记录翻出来——看看你的回复高峰期和低谷期有什么规律。是不是和生理期、工作压力、睡眠有关？找到那个触发模式的开关，你就能提前通知别人。",
+         "找一个你信任的人，提前告诉TA：「如果我三天没回你消息，你可以再发一条。我不是不回——我只是忘了。」把你的撤退模式提前说明，对方就不会把沉默解读成拒绝。",
+         "下一次你状态好的时候，主动给一个你在状态差时冷落过的人发一条消息——不需要道歉，不需要解释。就正常聊。让他们看到：状态好的你，还是会想起他们。"
+       ],
+       reminder:"你不是忽冷忽热——你是在用自己的节奏保护自己不崩溃。但那些在你冷的时候还愿意等的人，值得你在状态好的时候用一条消息让TA们知道：我回来了。"
+    }
+  },
+
+  productModules:[
+    "你的回复人格类型——秒回和不回背后的底层逻辑",
+    "你的回复速度在替你说什么——那些你没说的话",
+    "别人从你的回复里读到了什么——可能不是你想表达的",
+    "最容易掉进的回复误区——你以为在保护自己，其实在隔离别人",
+    "怎么让你的回复更贴近你想成为的人——从惯性回到选择"
+  ],
+
+  disclaimer:"本测试仅为自我探索参考，不构成任何诊断、心理治疗建议或效果承诺。回复习惯受多种因素影响，请结合自己的实际感受判断。"
+};
+
+// ========== 引擎 ==========
+let answers=[],currentQ=0,paid=false;
+
+function $(id){return document.getElementById(id)}
+const app = document.getElementById('app');
+
+function cover(){
+  app.innerHTML=`
+    <div class="screen active cover">
+      <div class="icon">💬</div>
+      <h1>${DATA.title}</h1>
+      <div class="sub">${DATA.subtitle}</div>
+      <button class="btn-start" onclick="start(true)">开始测试</button>
+      <div class="trust">前5题免费 · 记下答案左滑查看报告预览</div>
+    </div>`;
+}
+
+function start(free){answers=[];currentQ=0;paid=!free;renderQ()}
+
+function renderQ(){
+  if(currentQ>=DATA.questions.length){showResult();return;}
+  if(currentQ===5 && !paid){showGate();return;}
+  const q=DATA.questions[currentQ];
+  const pct=Math.round((currentQ/DATA.questions.length)*100);
+  const letters=['A','B','C','D'];
+  app.innerHTML=`
+    <div class="screen active">
+      <div class="progress-wrap">
+        <div class="progress-bar"><div class="progress-fill" style="width:${pct}%"></div></div>
+        <div class="progress-label">第 ${currentQ+1}/${DATA.questions.length} 题</div>
+      </div>
+      <div class="q-area">
+        <div class="q-num">${currentQ<5?'免费测试 · 第'+(currentQ+1)+'题':'深度解锁 · 第'+(currentQ+1)+'题'}</div>
+        <div class="q-text">${q.scene}</div>
+        <div class="options">
+          ${letters.map(l=>`<div class="opt" onclick="pick('${l}')"><div class="letter">${l}</div><div class="txt">${q[l]}</div></div>`).join('')}
+        </div>
+      </div>
+      ${currentQ===4?'<div style="text-align:center;font-size:13px;color:#6a6558;padding:8px 0">记下5个答案，左滑查看报告预览 →</div>':''}
+    </div>`;
+}
+
+function pick(letter){
+  answers.push(letter);
+  currentQ++;
+  renderQ();
+  window.scrollTo(0,0);
+}
+
+function showGate(){
+  app.innerHTML=`
+    <div class="screen active gate-screen">
+      <div class="lock-icon">🔓</div>
+      <h2>前5题只是倾向<br>完整12题才能看清全貌</h2>
+      <div class="gate-desc">后7题继续拆解：你的回复速度在替你说什么、别人读到了什么、你最深的回复需求是什么</div>
+      <ul class="unlock-list">
+        ${DATA.productModules.map(m=>`<li>${m}</li>`).join('')}
+      </ul>
+      <button class="btn-gate" onclick="unlock()">继续完成12题 · 解锁完整报告</button>
+      <div class="price">完整12题报告 · 做完自动解锁</div>
+    </div>`;
+}
+
+function unlock(){paid=true;renderQ()}
+
+function showResult(){
+  const counts={A:0,B:0,C:0,D:0};
+  for(let i=5;i<answers.length;i++){counts[answers[i]]++}
+  const sorted=Object.entries(counts).sort((a,b)=>b[1]-a[1]);
+  let typeKey=sorted[0][0];
+  if(sorted[0][1]===sorted[1][1]&&sorted[0][0]==='A'&&(sorted[1][0]==='C'||sorted[1][0]==='D'))typeKey=sorted[1][0];
+  if(sorted[0][1]===sorted[1][1]&&sorted[0][0]==='B'&&sorted[1][0]==='D')typeKey='D';
+  const type=DATA.types[typeKey];
+
+  const freeAnswers=answers.slice(0,5);
+  const freeLabels=['第一选择逻辑','试衣间内心对话','外界评价','冲动购买动机','陌生场合策略'];
+  const freeDesc=[
+    ['你秒回的触发条件是——安全，不是重要','你的秒回是位置确认——用速度标注优先级','你秒回是因为安全——消息不会卷进情绪黑洞','你秒回是刚好心情好——和对方是谁关系不大'],
+    ['你假装没看到的是——需要你做决定的任务型消息','你不回的是——回复需要消耗太多能量的人','你躲避的是——带着情绪、可能蔓延过来的消息','你不回是因为——今天不想和任何人说话'],
+    ['你的第一反应——给对方找理由，不喜欢把沉默解读成冷落','你的第一反应——在心里默默调低TA的排名位置','你的第一反应——松了一口气，之前一直在想是不是自己说错了什么','你的第一反应——看当时发了什么内容再决定感受'],
+    ['你不主动但回得快——安全但不亲近，回得快是礼貌不主动是边界','你在等对方先找——回复谁先发起是一种隐形的地位确认','你不敢主动——怕一旦主动，关系就进入了另一个阶段','没有特别原因——有些人刚好卡在那个位置'],
+    ['你的未读管理——像未完成的任务，受不了红点','你的未读管理——已读没回的算另一类，分得很开','你的未读管理——未读是保护，没点开就没发生','你的未读管理——状态好清零，状态差免疫']
+  ];
+
+  let evidenceHTML='<h3>📋 答案证据</h3><p>';
+  for(let i=0;i<5;i++){
+    const a=freeAnswers[i];
+    const descIdx=a==='A'?0:a==='B'?1:a==='C'?2:3;
+    evidenceHTML+=`<strong>Q${i+1}「${DATA.questions[i].scene.slice(0,18)}…」</strong>你选了${a}——${freeDesc[i][descIdx]}。<br><br>`;
+  }
+  evidenceHTML+=type.evidence_note+'</p>';
+
+  let modulesHTML='';
+  for(const m of type.modules){
+    modulesHTML+=`<div class="module"><h3>${m.title}</h3><p>${m.content}</p></div>`;
+  }
+
+  let adviceHTML='';
+  for(let i=0;i<type.advice.length;i++){
+    const label = i < 2 ? '7天观察' : '30天练习';
+    adviceHTML+=`<div class="advice-item"><span class="n">${label}</span><span>${type.advice[i]}</span></div>`;
+  }
+
+  app.innerHTML=`
+    <div class="screen active result">
+      <div class="badge">你的回复人格</div>
+      <div class="type-name">${type.name}</div>
+      <div class="type-sub">${type.tag}</div>
+
+      <div style="font-size:15px;color:#d4b87a;margin-bottom:4px">${type.icon} ${type.score}</div>
+      <p style="font-size:15px;color:#b8b0a0;line-height:1.75;margin-bottom:20px">${type.conclusion}</p>
+
+      <div class="evidence-box">${evidenceHTML}</div>
+      ${modulesHTML}
+
+      <div class="summary-box">
+        <div class="q-mark">"</div>
+        <p>${type.quote}</p>
+      </div>
+
+      <div class="advice-box">
+        <h3>📅 未来30天建议</h3>
+        ${adviceHTML}
+      </div>
+
+      <div class="reminder-box">
+        <h3>⚠️ 关键提醒</h3>
+        <p>${type.reminder}</p>
+      </div>
+
+      <div style="font-size:13px;color:#6a6558;line-height:1.6;text-align:center;margin-bottom:24px">${DATA.disclaimer}</div>
+      <div class="footer">以上结果为自我探索参考 · 每个选择都是了解自己的线索</div>
+    </div>`;
+  window.scrollTo(0,0);
+}
+
+// start
+cover();
+</script>
+</body>
+</html>

@@ -1,0 +1,319 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
+<title>进食心理测试</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:"PingFang SC","Microsoft YaHei",sans-serif;background:#0f0f1a;color:#e8e0d0;min-height:100vh;display:flex;justify-content:center}
+.app{width:100%;max-width:500px;min-height:100vh;position:relative;overflow:hidden}
+.screen{display:none;flex-direction:column;min-height:100vh;padding:28px 22px 40px}
+.screen.active{display:flex}
+
+.cover{justify-content:center;align-items:center;text-align:center;gap:20px}
+.cover .icon{font-size:52px}
+.cover h1{font-size:29px;font-weight:900;line-height:1.4;letter-spacing:1.5px;padding:0 6px}
+.cover h1 .hl{color:#c9a96e}
+.cover .sub{font-size:15px;color:#8a8070;line-height:1.7;max-width:300px}
+.cover .btn-start{margin-top:10px;padding:15px 50px;font-size:18px;font-weight:700;background:linear-gradient(135deg,#c9a96e,#a6844d);color:#0f0f1a;border:none;border-radius:40px;cursor:pointer;letter-spacing:2px}
+.cover .btn-start:active{transform:scale(.96)}
+.cover .trust{font-size:12px;color:#4a4538;margin-top:6px}
+
+.progress-wrap{padding:4px 0 14px}
+.progress-bar{height:3px;background:#1e1e2e;border-radius:2px;overflow:hidden}
+.progress-fill{height:100%;background:linear-gradient(90deg,#c9a96e,#d4b87a);border-radius:2px;transition:width .3s}
+.progress-label{font-size:13px;color:#5a5548;margin-top:6px;text-align:right}
+
+.q-area{flex:1;display:flex;flex-direction:column;gap:16px}
+.q-area .q-num{font-size:13px;color:#6a6558;letter-spacing:2px}
+.q-area .q-text{font-size:23px;font-weight:700;line-height:1.5}
+.options{display:flex;flex-direction:column;gap:10px}
+.opt{padding:18px 16px;border-radius:14px;background:#16162a;border:1.5px solid #252540;cursor:pointer;transition:all .2s;display:flex;align-items:flex-start;gap:13px}
+.opt:active{transform:scale(.98);border-color:#c9a96e;background:#1e1e34}
+.opt .letter{width:33px;height:33px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:15px;font-weight:700;flex-shrink:0;background:rgba(201,169,110,.12);color:#c9a96e}
+.opt .txt{font-size:15px;line-height:1.55;color:#c8c0b0;flex:1}
+
+.gate-screen{justify-content:center;align-items:center;text-align:center;gap:24px}
+.gate-screen .lock-icon{font-size:48px}
+.gate-screen h2{font-size:26px;font-weight:800;line-height:1.4}
+.gate-screen .gate-desc{font-size:15px;color:#a09880;line-height:1.7;max-width:300px}
+.gate-screen .unlock-list{text-align:left;background:#16162a;border-radius:16px;padding:20px 24px;width:100%;max-width:320px}
+.gate-screen .unlock-list li{font-size:14px;color:#b8b0a0;line-height:2;list-style:none}
+.gate-screen .unlock-list li::before{content:"✓ ";color:#c9a96e;font-weight:700}
+.gate-screen .btn-gate{margin-top:8px;padding:14px 44px;font-size:18px;font-weight:700;background:linear-gradient(135deg,#c9a96e,#a6844d);color:#0f0f1a;border:none;border-radius:40px;cursor:pointer;letter-spacing:2px}
+.gate-screen .btn-gate:active{transform:scale(.96)}
+.gate-screen .price{font-size:14px;color:#6a6558;margin-top:4px}
+
+.loading{justify-content:center;align-items:center;text-align:center;gap:24px}
+.loading .spinner{width:52px;height:52px;border:3px solid #1e1e2e;border-top-color:#c9a96e;border-radius:50%;animation:spin .8s linear infinite}
+@keyframes spin{to{transform:rotate(360deg)}}
+.loading .msg{font-size:16px;color:#a09880;letter-spacing:1px}
+
+.result{padding:28px 22px 48px}
+.result .badge{display:inline-block;padding:7px 16px;border:1px solid rgba(201,169,110,.25);border-radius:16px;font-size:13px;color:#c9a96e;letter-spacing:2px;margin-bottom:14px}
+.result .type-name{font-size:36px;font-weight:900;margin-bottom:6px;line-height:1.2}
+.result .type-sub{font-size:18px;color:#d4b87a;margin-bottom:20px;line-height:1.4}
+
+.evidence-box{background:#16162a;border-radius:16px;padding:20px;margin-bottom:22px;border-left:3px solid #c9a96e}
+.evidence-box h3{font-size:14px;color:#c9a96e;letter-spacing:2px;margin-bottom:10px}
+.evidence-box p{font-size:14px;color:#b8b0a0;line-height:1.7}
+
+.module{margin-bottom:20px}
+.module h3{font-size:16px;color:#a09880;letter-spacing:1.5px;margin-bottom:10px;padding-bottom:8px;border-bottom:1px solid #1e1e2e}
+.module p{font-size:14px;color:#b8b0a0;line-height:1.75;margin-bottom:6px}
+
+.summary-box{background:linear-gradient(135deg,#1a1a2e,#1f1f34);border-radius:16px;padding:24px;margin:24px 0;text-align:center;border:1px solid rgba(201,169,110,.15)}
+.summary-box .q-mark{font-size:28px;color:#c9a96e;margin-bottom:8px}
+.summary-box p{font-size:17px;color:#d4b87a;line-height:1.7;letter-spacing:.5px}
+
+.advice-box{margin-bottom:24px}
+.advice-box h3{font-size:16px;color:#a09880;letter-spacing:2px;margin-bottom:12px}
+.advice-box .advice-item{padding:12px 14px;margin-bottom:8px;background:#16162a;border-radius:12px;font-size:14px;color:#b8b0a0;line-height:1.6;display:flex;gap:10px}
+.advice-box .advice-item .n{color:#c9a96e;font-weight:700;flex-shrink:0}
+
+.reminder-box{background:#16162a;border-radius:16px;padding:20px;margin-bottom:28px;border:1px solid #2a2a40}
+.reminder-box h3{font-size:15px;color:#c9a96e;letter-spacing:2px;margin-bottom:8px}
+.reminder-box p{font-size:14px;color:#a09880;line-height:1.7}
+
+.footer{text-align:center;padding:16px;font-size:11px;color:#3a3a48;border-top:1px solid #16162a;margin-top:auto}
+</style>
+</head>
+<body>
+<div class="app" id="app"></div>
+<script>
+// ========== 内容数据 ==========
+const DATA = {
+  title:"你吃东西的速度，<br>就是你被生活<br><span class='hl'>追赶的速度</span>",
+  subtitle:"不是测你吃得多快——是测你的生活正在用多快的速度追你",
+
+  questions:[
+    {scene:"坐下来准备吃饭时，你最接近下面哪种状态？",A:"低头就开始吃，三分钟扫光一碗面——不是饿，是「吃饭」已经被你排进了「快点做完好去忙下一件」的清单里",B:"先摆好碗筷，看一眼，吃一口，放下——吃饭是今天少数没人能催你的时刻。你不赶，因为你已经赶了一整天了",C:"看心情。今天顺利就细嚼慢咽，今天烦躁就狼吞虎咽——你的胃和你的神经，共用了同一个开关",D:"先看看旁边的人怎么吃。一个人时你一分钟扫光，一群人时你能拖到最后一个——你自动匹配节奏，自己都没发现自己在调"},
+    {scene:"吃到一半有人跟你说话，你最可能？",A:"嘴里含着东西点头回应——不是不想聊，是饭和话对你来说都是任务，哪个都不能先停",B:"放下筷子，咽干净，认真回答完再继续吃——聊天时不咀嚼，咀嚼时不说话。这是你的秩序，乱了对谁都不舒服",C:"看对方是谁。让你有压力的人会让你加速吃完好快点结束；让你放松的人你能边吃边聊坐到最后——菜凉了你都没注意",D:"看大家在怎么做。别人边吃边说你就跟着，别人停下来你也停——你没注意到自己在观察，但这个「雷达」从来没关过"},
+    {scene:"你判断一顿饭「吃好了」的标准是什么？",A:"饱了，不饿了，可以继续干活了——三秒判定，没有中间地带。「好吃不好吃」是次要问题",B:"整个过程没有被催促、没有被打断、没有被迫加速——饭好不好吃其次，「怎么吃完的」才决定一切",C:"吃完之后心情有没有变好。有时候食物本身一般，但它帮你把焦虑吞下去了——那就算吃好了",D:"桌上的人是不是都吃得舒服。如果有人没吃好，你就算吃饱了也觉得这顿饭没有真正结束"},
+    {scene:"你一个人吃饭时看手机吗？",A:"必看。不刷点什么觉得白吃了——饭是背景音，手机才是正片。嘴巴在嚼，手指在划，脑子在别处",B:"不看。吃饭就是吃饭——不是刻意自律，是真的觉得「专心咀嚼」比「刷到什么」更能让你从一天的嘈杂里回到自己这来",C:"必看。但不是想看什么内容——是一个人吃的时候不想跟自己单独待着。屏幕亮着，就不算一个人",D:"不一定。有人发消息就回，没人就不看——你一个人吃饭时处于「待机模式」，随时准备连接上谁"},
+    {scene:"在外面吃饭时最让你烦躁的是什么？",A:"上菜太慢。不是因为饿——是「等」这件事让你焦虑。在你的人生系统里，「等」和「浪费」指向同一个感受",B:"旁边有人催你——催菜可以，催我不行。吃饭是我给今天最后的交代，不接受任何人的时间表",C:"环境不对——太吵吃不下，太安静也不自在。你需要恰到好处的白噪音，就像你需要恰到好处的情绪状态才能做任何事",D:"没人等你。一个人吃饭最怕的不是孤单，是服务员收走对面碗筷时那种「好了你可以走了」的暗示"},
+
+    {scene:"你记忆中最近一次「吃得很深刻」的一餐——不是因为好吃，而是因为？",A:"饿到发抖时三分钟扫光一碗面，缓过来才意识到——刚才不是在吃饭，是在急救。你太常把自己用到「低电量」才肯停下来",B:"一个人在家慢慢吃了一小时，每一口都嚼够了——那种不被任何人、任何事催促的感觉，比米其林还奢侈",C:"边吃边哭。哭了半包纸巾，吃完发现哭完了、轻了——那顿饭什么都没留下，除了一个干净的自己",D:"一群人吃火锅吃到最后一个——不是贪吃，是你太舍不得「大家都在」的感觉。散场的那一刻，你总会找理由多留一会儿"},
+    {scene:"如果有人对你说「你吃饭好快啊」，你内心最接近的反应是？",A:"「是吗？我没注意。」——不是敷衍。你确实从来没注意过自己吃饭的速度，因为你的注意力永远在「下一件要赶的事」上",B:"「我知道。但我选了这个速度。」——你不是不能慢，是你觉得快慢是自己的事，不需要为任何人改",C:"「哦今天比较赶。」——条件反射地给出一个合理的外部理由。你早就习惯了替自己的状态找一个「说得通的借口」",D:"「对不起那我慢一点。」——不管对方是开玩笑还是认真的，你先调整自己。你习惯让别人的感受优先于自己的节奏"},
+    {scene:"你什么时候会觉得「吃饭是一件麻烦事」？",A:"忙到没时间吃但又不得不吃的时候——吃饭变成了日程表上最不重要却最绕不过去的bug。你想跳过它，但身体不同意",B:"有人替你安排了吃饭的时间和内容——一旦吃饭有了外部KPI，你的掌控感就像被抽走了。吃饭从享受变成任务",C:"没胃口但理智告诉你该吃饭了——你的身体和情绪在拔河。这种时候你会随便塞点什么，完成任务一样吞下去",D:"要跟一群不太熟的人吃饭——你要同时管理夹菜频率、话题参与度、表情管理、吃速匹配。一顿饭比上班还累"},
+    {scene:"你觉得自己对食物的态度里，藏了什么你不太想承认的东西？",A:"藏着急——你总觉得不快点吃、不快点做、不快点赶，时间就会从指缝里漏掉。你吃的是饭，咽下去的是焦虑",B:"藏着倔——在所有你无法控制的事情里，至少你可以控制自己放进嘴里的每一口。慢慢地、按顺序地、不被任何人打乱",C:"藏着洞——有时候不是饿了才找吃的。胃满了，心里那个空的地方好像暂时就不那么明显了",D:"藏着怕——怕被落下、怕跟别人不一样、怕在餐桌上显得奇怪。所以你早就学会了让「和大家一样」看起来像自己的选择"},
+    {scene:"吃自助餐的时候你最接近什么状态？",A:"先快速扫一圈，锁定最贵和最想吃的——在规定时间内最大化回报率。自助餐对你来说不是享受，是资源优化项目",B:"先走一圈看完全部选项，然后从冷盘开始按顺序吃——顺序不能乱，乱了你会觉得这一餐「不对了」",C:"拿多少吃多少，但会偷偷瞥别人拿了什么——不是贪心，是你怕自己拿太少显得假，拿太多显得贪。连吃自助都在做印象管理",D:"跟在同行的人后面拿——他们拿什么你拿什么。不是因为没主见，是「一起做同一件事」比「吃到什么」让你更满足"},
+    {scene:"你记忆里关于「吃」最清晰的一个画面是？",A:"小时候放学饿到不行，冲回家五分钟扫光一碗面——那种「来不及咀嚼就要吞下去」的急迫感，到现在还在你的身体里",B:"某天饭后一个人慢慢洗碗，擦桌子，倒一杯水——那十分钟的安静比一顿饭本身记得更清楚。那是你少数「完全属于自己」的时刻",C:"某次不开心时买了一个很甜很甜的东西，一个人坐在路边吃完——甜到发腻，但吃完确实好了一点点。后来你经常回去找那种「好了一点点」",D:"过年或聚餐的圆桌——人比菜重要，转盘转一圈大家都在笑。你记住的不是吃了什么，是谁坐在你旁边、谁给你夹了菜"},
+    {scene:"如果吃饭习惯可以替你向世界说一句话，你最希望它说什么？",A:"「我知道时间不够用——但我不会让自己掉队。我会用最快的速度赶上，不管要吞下多少来不及咀嚼的东西。」",B:"「你们想要的"快"我给不了——至少在我自己碗里的这顿饭，我想按我的节奏来。世界在外面，我在里面。」",C:"「别催我——我咀嚼的速度就是我消化生活的速度。给不了快的，但给得了真的。」",D:"「我在看着你——不一定学你，但会自动调到让你舒服的频率。你舒服了，我才能放松下来。」"}
+  ],
+
+  types:{
+    A:{name:"追赶型",tag:"你吃得快，是因为生活从来没教过你——「慢慢来，也可以」",icon:"⚡",
+       score:"生活追赶感 88%",
+       conclusion:"你的吃饭速度暴露了一个你早就习惯了的真相：你一直在被什么东西追着。不是饿让你吃得快——是「来不及」这三个字刻进了你的进食本能。你的筷子不是在夹菜，是在抢时间。你咽下去的每一口都带着一种没说出口的急迫——快点吃完、快点去做下一件、今天还有好多事没做完。吃饭对你来说不是享受，是给自己「加油」。你不是在吃东西，你是在维持运转。",
+       evidence_note:"你在Q1选了快速扫光模式——「低头就吃」是你的默认设置；Q2你嘴里含着东西也要回应别人——饭和话都不能停；Q3你判定「吃好了」的标准是「饱了、可以继续干活了」——满足感来自任务完成而非食物本身；Q5你受不了上菜慢——「等」在你字典里等于浪费。这些选择拼出一个完整的图景：你吃饭时从来没有真正「在场」——你的身体在餐桌前，注意力已经在下一个目的地。",
+       quote:"你咽下去的每一口，都带着一个没说出口的「来不及」。但你不需要跑赢生活——你只需要和它并肩走一走。",
+       modules:[
+         {title:"你的进食人格：速度型生存者",content:"你的吃饭速度不是食欲决定的——是生存模式决定的。在某个很早的时刻，你学会了「慢下来就会被落下」——可能是一个赶不上的校车、一个抢不上的名额、一段追不上的期待。从那以后，你把「快」内化成了一种本能：吃饭要快、做事要快、连休息都要快——因为休息也是「为下一件事充电」，而不是「让自己停下来」。你的胃一直在替你的生活扛着焦虑。"},
+         {title:"你的吃饭速度在替你说什么",content:"它在说：「我在赶——不是赶着去哪里，是在逃避一种「来不及」的感觉。」你吃这么快，周围人可能觉得你很忙、很拼、很有效率——但他们没看到的是，你不敢慢。慢了就会想起那些被落下的时刻，慢了就会觉得「我在浪费时间」，慢了就会焦虑。所以快，是你给安全感买的单。"},
+         {title:"别人从你的吃饭习惯里读到了什么（可能你自己从没发现）",content:"别人可能读到了「急躁」「不讲究」「不用心」——但他们没看到你从小的成长轨迹里「赶时间」是常态。你小时候可能真的没有足够的时间吃完一顿饭。现在条件变了，但那个「赶」的节奏还住着。也有人读到了「高效」「干脆」——这倒不算读错：你确实擅长把事情一件件解决掉，只是你把自己也当成了「要解决的事」之一。"},
+         {title:"你最容易掉进的进食误区",content:"你把「快」和「有效率」画了等号——但吃饭不是任务，不需要KPI。当你太快的时候，你的胃来不及告诉大脑「饱了」，你吃进去的比实际需要的多；更重要的是你失去了「品尝」的能力——不是味觉失灵，是你根本没给食物一个被品尝的机会。另一个误区是：你以为快是你在追赶生活——其实是生活在追你，而你的筷子只是方向盘。"},
+         {title:"怎么让吃饭速度从「追赶」变成「节奏」",content:"「慢下来」不是让你变成另一个人——是在你的快节奏里，留一小块安全的「慢」。不需要每顿都慢，只需要有一顿。那一顿里，你不需要赶——天不会塌、事不会跑、你在乎的人不会因为你多嚼了两下就不等你了。试试看。一次的慢，就能松动你身体里那个「来不及」的设定。"}
+       ],
+       advice:["【7天观察】找一顿饭，用比平时慢一倍的速度吃。中间放下筷子两次，每次至少三十秒。不是为了吃——是为了感受「慢下来」的时候，你的焦虑在身体的哪个位置。","【7天观察】连续记录一周每顿饭花了多少时间。不是要你改——是让你先看见：你给自己的每一餐分配了多长的时间。把这个数字和你分配给别人的时间对比一下。","【30天练习】每周选一顿饭，不看手机、不赶时间、不惦记下一件事。只做一件事：咀嚼。每一口至少嚼十五下。不是训练——是让你的身体重新学会「我在吃饭」这四个字。","【30天练习】在你的日程表里给每顿饭多留出十分钟。不是多十分钟吃饭——是多十分钟什么也不做，就坐着。让「吃完」和「起身去做下一件事」之间，有一个属于自己的缓冲。不填任何内容，就空着。空着也是重要的。"],
+       reminder:"你不是天生吃太快——你是太早就学会了「慢等于掉队」。但现在你可以松开了。那个催你的人已经不在了。剩下的那个声音——是你自己。那个声音可以改。"
+    },
+    B:{name:"控制型",tag:"你吃得慢，不是天生优雅——是食物给了你世界上最稀缺的东西：掌控感",icon:"🎯",
+       score:"掌控需求 85%",
+       conclusion:"你把吃饭变成了一件有秩序的事——不是因为你对食物有多讲究，而是因为在你的生活里，能被你全盘掌控的东西太少了。饭怎么吃、先吃什么后吃什么、嚼多少下、停下来想多久——这些都是你说了算。你在餐桌上建立了一套只属于你的规则——不是强迫症，是安全感。当外面的世界一直在要求你配合、适应、妥协的时候，你碗里的这顿饭是最后一个你可以不跟任何人商量就决定的事。",
+       evidence_note:"Q1你选了先摆好再吃——吃饭在你这里有一个启动仪式；Q2别人跟你说话你要放下筷子咽干净再回——「一件事做完再做下一件」；Q3你判断「吃好了」的标准是过程没有被打破——饭好不好吃倒在其次；Q5你最烦被催——催菜可以催你不行。Q8进一步确认：一旦吃饭被安排了外部时间表，你的享受就变成了负担。你的底层逻辑一致：在自己的碗里，自己做主。",
+       quote:"你在碗里建立秩序，不是因为碗外太乱了——是因为碗外的事，你说了不算。但碗里的这口，是你的。",
+       modules:[
+         {title:"你的进食人格：秩序型守护者",content:"你对吃饭有一种「仪式感」——不是摆盘拍照那种仪式，是流程上的完整：先吃什么后吃什么，嚼到什么时候停，中间要不要放下筷子想一会儿。这套流程帮你从混乱的日常里切出一块「我说了算」的领地。你可能经历过一段什么都抓不住的日子——工作、关系、健康、方向——所以你把控制欲安放在了一件最小、最安全的事上：吃饭。"},
+         {title:"你的吃饭速度在替你说什么",content:"它在说：「我不赶——因为赶了一辈子了，现在这顿饭，我只想自己定速度。」你吃得慢不是因为不饿——是你在用「慢」告诉世界：这件事你不能催我。你可以催我开会、催我交东西、催我回消息——但你不能催我吃饭。吃饭是你的最后一道防线。那些觉得你「磨蹭」的人——他们没看到你在用勺子保卫什么。"},
+         {title:"别人从你的吃饭习惯里读到了什么（可能你自己从没发现）",content:"别人可能读到了「慢吞吞」「太讲究」「不好伺候」——但他们不知道你的「慢」是经过思考的选择，不是天生的拖拉。你吃什么、怎么吃、吃多久——每一个决定都是你的自主权在发声。也有人读到了「会生活」「懂吃」——这倒没错：你确实比大多数人更尊重食物，也更尊重咀嚼这个动作。你只是同时也在尊重自己。"},
+         {title:"你最容易掉进的进食误区",content:"你有时候会把「控制」当成唯一舒服的姿势——一旦顺序被打乱、时间被压缩、旁边的人没按你的节奏来，你就会不舒服。但那个不舒服不一定来自被打乱的饭——它可能来自你身体里那个「如果这个都控制不了那还剩下什么」的恐惧。另一个误区是：你的慢有时候也让你错失了一些随性的快乐——比如和朋友抢着夹菜、烫到嘴还笑出声。秩序很好，但偶尔的混乱也是活的证明。"},
+         {title:"怎么让吃饭从「控制」变成「享受」",content:"偶尔让你的碗出一次轨——先吃菜再吃饭、用手代替筷子、站着吃完一碗面。不是要推翻你的秩序——是让身体体验一次「乱掉也没关系」。你会发现天还是亮的、胃还是会饱、你身上的控制力没有因为你松手一次就消失了。控制是你的能力——不是你的牢笼。"}
+       ],
+       advice:["【7天观察】找一顿你觉得「必须按某个方式吃才对」的饭，故意打乱一次——先吃菜后吃饭、不用惯用的碗、换个位置坐。看看「不对」的是秩序，还是你心里的焦虑。","【7天观察】连续七天问自己同一个问题：今天我有没有用「控制吃饭」来弥补「今天我控制不了的事」？只记录，不批判。七天后看看答案里有没有重复的句子。","【30天练习】每周约一个人吃饭——不选餐厅、不定时间、不控制上菜顺序。练习把一部分控制权交出去。看看会不会发生你担心的那种事——大概率，什么也不会发生。","【30天练习】学会一道不需要「严格按步骤来」的菜——乱炒也能吃、少了某个调料也不怕、火候不对也下肚。让食物偶尔变成「可以随便对付」的事。就像生活——有时候也可以。"],
+       reminder:"你的慢不是缺点——它是你给自己留的最后一块自留地。但也请记住：控制感不需要每顿饭都来一遍才能确认。你已经是一个能掌控自己生活的人了——少吃一口、乱了一次，不会把你打回原形。"
+    },
+    C:{name:"逃离型",tag:"你的吃饭速度会变——不是胃口在变，是情绪在变。食物是你没挂牌的心理咨询师",icon:"🌊",
+       score:"情绪进食 82%",
+       conclusion:"你的吃饭速度没有一个稳定的基准线——它像心电图一样跟着情绪起伏。开心时吃得慢、焦虑时吃得快、难过时吃得多、空虚时停不下来。食物对你来说不只是营养——它是你调节情绪的最早工具，也许在你还不会说话的时候就已经学会了。你不是「管不住嘴」——你是在用嘴，去填补一些别的地方填不了的洞。你吃下去的不是热量，是暂时不被情绪淹没的那一口气。",
+       evidence_note:"Q1你选了看心情——速度随情绪波动；Q3你判定「吃好了」的标准是心情有没有变好；Q4你一个人吃饭必看手机——不是想看什么，是不想跟自己单独坐在一起；Q6你记忆最深的一餐是边吃边哭——吃完轻松了；Q9你承认食物帮你填的不是胃。每一道题的答案都在说同一件事：你的胃一直在替你的心加班。",
+       quote:"你不是饿了才吃的——你是空了。食物是你从小到大最可靠的朋友，它从不对你说「你怎么又来了」。",
+       modules:[
+         {title:"你的进食人格：情绪型进食者",content:"食物在你的世界里担任了一个特别重的角色——它是安慰剂、是陪伴者、是情绪开关。开心时你用它来庆祝，难过时你用它来压住什么，焦虑时你用咀嚼来转移注意力。这不是你的错——你可能在很早就学会了：情绪是危险的、不被允许的、没人接的——但食物不会拒绝你。于是你养成了一条神经通路：情绪来了→找东西吃→暂时好了。这条通路你已经走了很多年。"},
+         {title:"你的吃饭速度在替你说什么",content:"它说实话。今天吃很快——因为焦虑在追你；今天吃很慢——因为今天没什么需要逃避的；今天吃了很多——因为有一个洞需要今晚被填满；今天什么都吃不下——因为情绪太多，已经没有空间给食物了。你的吃饭速度是你情绪的测谎仪——它从来不对你自己撒谎。你只是还没习惯听它说话。"},
+         {title:"别人从你的吃饭习惯里读到了什么（可能你自己从没发现）",content:"别人可能读到了「没节制」「情绪化」「不稳定」——但他们没看到的是，你每次「乱吃」的背后都有一个你没说出口的情绪事件。你可能正在经历一个很难开口的下午、一个憋回去的委屈、一个你告诉自己「不算什么」但其实很算什么的瞬间。也有人读到了「随性」「好相处」——你确实不是一个在吃上较劲的人。你只是有时候需要食物给你一个拥抱。"},
+         {title:"你最容易掉进的进食误区",content:"你把食物和「安慰」绑定得太紧了。食物能给的安慰是真的——但它只能维持一顿饭的时间。吃完之后那个洞还是会在，除非你愿意见一见它。另一个误区是：你用食物应对情绪的速度太快了，快到你自己都没注意到中间有一个「选一下」的空隙。你觉得是情绪一来就想吃——其实是情绪一来→不想面对→找吃的。那个「不想面对」才是关键。"},
+         {title:"怎么让吃饭从「逃离」变成「回归」",content:"在每次想吃之前，给自己三十秒。这三十秒不是不让你吃——是让你做一个选择：是胃饿了，还是哪里空了？如果是胃饿了——你吃。如果是别的——你知道该去哪里了。食物一直对你很好。但你不是只有食物。你值得一些不吃也能被接住的方式。"}
+       ],
+       advice:["【7天观察】每次想吃东西前停三十秒，问自己：是胃饿了，还是哪里空了？如果是胃——吃。如果是别的地方——先喝一杯水，再决定要不要吃。只观察，不批判。","【7天观察】记录一周的「情绪进食时刻」——什么情绪让你想吃？什么情绪让你吃不下？什么情绪让你停不下来？七天之后看这条连线——那是一条你走了很多年的路。","【30天练习】找到一种「不用吃也能安抚自己」的方式——散步、洗澡、写三行字、听一首歌。在情绪来找你的时候先用它——再用食物。慢慢把顺序换过来。","【30天练习】每个月给自己做一顿「庆祝餐」——不是因为难过才吃，是因为今天值得。让食物重新和「快乐」建立连接，而不只是和「安慰」。你值得为开心而吃。"],
+       reminder:"食物没有背叛过你——但你不需要让它一个人扛所有的情绪。有些洞，食物填不了一辈子——它们需要被看见、被说出来、被接住。你值得食物以外的安慰。"
+    },
+    D:{name:"社交型",tag:"你的吃饭速度是个变色龙——不是没主见，是「和别人同步」比「按自己节奏」让你更安心",icon:"🫂",
+       score:"社交同步 80%",
+       conclusion:"你在餐桌上有一种别人看不到的「隐形劳动」——你一直在观察、在调整、在匹配。谁吃快了你跟着加速，谁吃慢了你跟着刹车，谁还没吃完你就不会先放下筷子。你不是没有自己吃饭的速度——你是把「让大家舒服」放在了「让自己舒服」的前面。你怕因为自己太快显得粗鲁、太慢显得拖累、太不一样显得奇怪。所以你把吃饭变成了一场无声的配合——而你是那个永远在调音的人。",
+       evidence_note:"Q1你先看别人怎么吃——节奏匹配是你的默认设置；Q2你看大家在怎么做——社交雷达从不关闭；Q3你判断「吃好了」要看别人有没有吃好——你的满足感和同桌的人是绑定的；Q9你承认怕被落下、怕不一样——合群不是选择，是本能。Q12你要替世界说的那句话是「你舒服了我才能放松」——你把别人的舒适当成了自己放松的前提条件。",
+       quote:"你在餐桌上把自己调成了静音模式——不是你没有音量，是你怕你的声音和别人的不合。但你不需要每一餐都当配乐。你可以是主旋律。",
+       modules:[
+         {title:"你的进食人格：镜像型同步者",content:"你的吃饭速度不是胃决定的，也不是心情决定的——是桌面上的「社会节奏」决定的。你在很小的时候就学会了观察：别人怎么吃、吃多快、筷子放哪、碗怎么端——然后不动声色地跟上。这项技能让你在任何餐桌上游刃有余、从不突兀。但它也让你累——因为你每一餐都在做一件别人不用做的事：计算。「我现在可以吃下一口了吗」「TA吃完这口大概还要多久」「我是不是吃太快了」——你的大脑在吃饭时从来没休息过。"},
+         {title:"你的吃饭速度在替你说什么",content:"它在说：「我在看着你——不是要模仿你，是在确保我没有让任何人觉得不舒服。」你把自己的舒适建立在了所有人的舒适之上——这太累了。但你在意的不是别人怎么评价你吃相——你在意的是「不被接纳」的可能。你经历过被人觉得「不一样」的时刻——也许是在某个饭桌上被说了什么、被看了什么——从那以后你就学会了：先合群，再吃饭。"},
+         {title:"别人从你的吃饭习惯里读到了什么（可能你自己从没发现）",content:"别人可能什么也没读到——因为你太会配合了，配合到没有任何破绽。你的「隐形劳动」成功到了连你自己有时候都忘了你在做这件事。但也有人读到了「没什么个性」「好像什么都行」——这不是真实的你。你有个性、有偏好、有自己爱吃的和不想吃的——你只是把它们收起来了，因为你怕它们会打扰到别人。但你的偏好不是打扰。它们是邀请——邀请别人来了解你。"},
+         {title:"你最容易掉进的进食误区",content:"你把「合群」执行得太过，以至于有时候吃完了都不知道自己到底吃了什么——你的注意力全在人身上，不在食物上。另一个误区是：你把自己吃饭的速度交给别人去定——久了之后你会忘记自己本来是什么速度。如果让你一个人吃、不做任何「调整」——你还能不能说出「饱了」的感觉是来自胃，还是来自「大家都饱了」的暗示？"},
+         {title:"怎么让吃饭从「适应别人」变成「找到自己」",content:"下一顿饭，试一件小事：不看任何人的碗。不看他们吃多快、不看他们拿了什么、不看他们的筷子有没有放下。就看自己的碗。问你的胃：饱了吗？还想吃吗？味道好吗？这是一次小小的练习——不是要你从此不关心别人，是让你偶尔也关心一下自己。你可以是桌面上第一个放下筷子的人，也可以是最后一个——这两个位置你都可以坐。"}
+       ],
+       advice:["【7天观察】下一顿饭，给自己一个实验：不看任何人的碗和筷子。只关注自己的胃——饱了吗？还想吃吗？用你的真实速度吃完。看看有没有人注意到——大概率，没有人在看。","【7天观察】记录一周：和谁吃饭时你最快？和谁吃时你最慢？这个差异本身就在告诉你——哪些人让你需要「加速配合」，哪些人让你可以「慢下来做自己」。","【30天练习】每个月至少安排一次——一个人去你想去的餐厅，点你想吃的菜，用你的速度吃完。不是练习孤独——是练习「不用配合任何人」的放松。你会慢慢想起来自己本来是什么速度。","【30天练习】下次和别人吃饭时，做一件你一直不敢做的事：不等别人。想快就快、想慢就慢、想吃哪个就夹哪个。如果有人觉得奇怪——那是他们不习惯「你原来也有自己的节奏」。让他们习惯一下。"],
+       reminder:"你不是没有主见——你只是太早学会了把别人的舒服放在第一位。但你的舒服也是舒服。你的速度也是速度。你可以不用为任何人调音——懂你的人，会在你本来的频率上找到你。"
+    }
+  },
+
+  productModules:[
+    "你的进食人格类型 —— 四种吃饭方式背后藏着四种活法",
+    "你的吃饭速度在替世界说什么",
+    "别人从你吃饭习惯里读到了什么（可能你自己从没发现）",
+    "吃饭这件小事里藏着的深层需求",
+    "怎么从吃饭速度重新理解你的生活节奏"
+  ],
+
+  disclaimer:"本测试仅为自我探索参考，不构成任何诊断、医疗建议或饮食指导。每个人的饮食习惯由多种因素综合形成，请结合自己的实际感受判断。"
+};
+
+// ========== 引擎 ==========
+let answers=[],currentQ=0,paid=false;
+
+function $(id){return document.getElementById(id)}
+const app = document.getElementById('app');
+
+function cover(){
+  app.innerHTML=`
+    <div class="screen active cover">
+      <div class="icon">🍜</div>
+      <h1>${DATA.title}</h1>
+      <div class="sub">${DATA.subtitle}</div>
+      <button class="btn-start" onclick="start(true)">开始测试</button>
+      <div class="trust">前5题免费 · 记下答案左滑查看报告预览</div>
+    </div>`;
+}
+
+function start(free){answers=[];currentQ=0;paid=!free;renderQ()}
+
+function renderQ(){
+  if(currentQ>=DATA.questions.length){showResult();return;}
+  if(currentQ===5 && !paid){showGate();return;}
+  const q=DATA.questions[currentQ];
+  const pct=Math.round((currentQ/DATA.questions.length)*100);
+  const letters=['A','B','C','D'];
+  app.innerHTML=`
+    <div class="screen active">
+      <div class="progress-wrap">
+        <div class="progress-bar"><div class="progress-fill" style="width:${pct}%"></div></div>
+        <div class="progress-label">第 ${currentQ+1}/${DATA.questions.length} 题</div>
+      </div>
+      <div class="q-area">
+        <div class="q-num">${currentQ<5?'免费测试 · 第'+(currentQ+1)+'题':'深度解锁 · 第'+(currentQ+1)+'题'}</div>
+        <div class="q-text">${q.scene}</div>
+        <div class="options">
+          ${letters.map(l=>`<div class="opt" onclick="pick('${l}')"><div class="letter">${l}</div><div class="txt">${q[l]}</div></div>`).join('')}
+        </div>
+      </div>
+      ${currentQ===4?'<div style="text-align:center;font-size:13px;color:#6a6558;padding:8px 0">记下5个答案，左滑查看报告预览 →</div>':''}
+    </div>`;
+}
+
+function pick(letter){
+  answers.push(letter);
+  currentQ++;
+  renderQ();
+  window.scrollTo(0,0);
+}
+
+function showGate(){
+  app.innerHTML=`
+    <div class="screen active gate-screen">
+      <div class="lock-icon">🔓</div>
+      <h2>前5题只是倾向<br>完整12题才能看清全貌</h2>
+      <div class="gate-desc">后7题继续拆解：你的吃饭速度在替你说什么、别人读到了什么、你最深的进食需求是什么</div>
+      <ul class="unlock-list">
+        ${DATA.productModules.map(m=>`<li>${m}</li>`).join('')}
+      </ul>
+      <button class="btn-gate" onclick="unlock()">继续完成12题 · 解锁完整报告</button>
+      <div class="price">完整12题报告 · 做完自动解锁</div>
+    </div>`;
+}
+
+function unlock(){paid=true;renderQ()}
+
+function showResult(){
+  const counts={A:0,B:0,C:0,D:0};
+  for(let i=5;i<answers.length;i++){counts[answers[i]]++}
+  const sorted=Object.entries(counts).sort((a,b)=>b[1]-a[1]);
+  let typeKey=sorted[0][0];
+  if(sorted[0][1]===sorted[1][1]&&sorted[0][0]==='A'&&(sorted[1][0]==='C'||sorted[1][0]==='D'))typeKey=sorted[1][0];
+  if(sorted[0][1]===sorted[1][1]&&sorted[0][0]==='B'&&sorted[1][0]==='D')typeKey='D';
+  const type=DATA.types[typeKey];
+
+  const freeAnswers=answers.slice(0,5);
+  const freeLabels=['进食启动模式','用餐专注模式','饱足判断标准','吃饭与手机的关系','外出就餐的敏感点'];
+  const freeDesc=[
+    ['你把吃饭当"任务"——快速完成，好赶去下一件事','你把吃饭当"仪式"——少数没有人能催你的时刻','你的进食速度不是胃决定的，是今天的情绪决定的','你的吃饭节奏会自动匹配环境——你自己都没注意到'],
+    ['你擅长多线程处理——但饭和话同时进行，意味着哪个都没被完整对待','你的秩序感延伸到了餐桌上——「一件事做完再做下一件」','你的人际关系直接影响你的进食模式——压力让你加速，放松让你减速','你是一个餐桌上的「社交雷达」——随时在扫描、随时在调整'],
+    ['你的满足感来自"任务完成"——吃饱了=这一项可以划掉了','你判断"吃好了"不看食物——看的是一段不被打扰的时间有没有被完整兑现','你的胃和情绪是连着的——吃饱了但心情没好，这顿饭等于没吃','你的满足感有一半来自同桌的人——别人吃好了，你才觉得这顿饭结束了'],
+    ['吃饭时也在处理信息——你的大脑没有"休息模式"，只有"换一个频道"','你能把吃饭当成一件完整的事来做——在这个时代，这是一种稀缺能力','你不是想看手机，是不想跟自己单独坐在一起——屏幕亮着，就不算一个人','你一个人吃饭时处于"待机模式"——随时准备连接上别人'],
+    ['"等"让你焦虑——在你的人生系统里，等待和浪费触发的是同一种不适','你抗拒任何外部时间表——吃饭是你最后一项不用交差的自主权','你需要恰到好处的环境——就像你需要恰到好处的情绪状态才能做任何事','你最怕的不是一个人吃饭——是"被落下"的暗示。那比孤单更难咽']
+  ];
+
+  let evidenceHTML='<h3>📋 答案证据</h3><p>';
+  for(let i=0;i<5;i++){
+    const a=freeAnswers[i];
+    const descIdx=a==='A'?0:a==='B'?1:a==='C'?2:3;
+    evidenceHTML+=`<strong>Q${i+1}「${DATA.questions[i].scene.slice(0,18)}…」</strong>你选了${a}——${freeDesc[i][descIdx]}。<br><br>`;
+  }
+  evidenceHTML+=type.evidence_note+'</p>';
+
+  let modulesHTML='';
+  for(const m of type.modules){
+    modulesHTML+=`<div class="module"><h3>${m.title}</h3><p>${m.content}</p></div>`;
+  }
+
+  let adviceHTML='';
+  for(let i=0;i<type.advice.length;i++){
+    adviceHTML+=`<div class="advice-item"><span class="n">0${i+1}</span><span>${type.advice[i]}</span></div>`;
+  }
+
+  app.innerHTML=`
+    <div class="screen active result">
+      <div class="badge">你的进食人格</div>
+      <div class="type-name">${type.name}</div>
+      <div class="type-sub">${type.tag}</div>
+
+      <div style="font-size:15px;color:#d4b87a;margin-bottom:4px">${type.icon} ${type.score}</div>
+      <p style="font-size:15px;color:#b8b0a0;line-height:1.75;margin-bottom:20px">${type.conclusion}</p>
+
+      <div class="evidence-box">${evidenceHTML}</div>
+      ${modulesHTML}
+
+      <div class="summary-box">
+        <div class="q-mark">"</div>
+        <p>${type.quote}</p>
+      </div>
+
+      <div class="advice-box">
+        <h3>📅 未来30天建议</h3>
+        ${adviceHTML}
+      </div>
+
+      <div class="reminder-box">
+        <h3>⚠️ 关键提醒</h3>
+        <p>${type.reminder}</p>
+      </div>
+
+      <div style="font-size:13px;color:#6a6558;line-height:1.6;text-align:center;margin-bottom:24px">${DATA.disclaimer}</div>
+      <div class="footer">以上结果为自我探索参考 · 每个选择都是了解自己的线索</div>
+    </div>`;
+  window.scrollTo(0,0);
+}
+
+// start
+cover();
+</script>
+</body>
+</html>
