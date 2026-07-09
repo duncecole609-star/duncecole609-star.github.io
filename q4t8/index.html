@@ -1,0 +1,79 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>职场电话紧张报告</title>
+<style>
+*{box-sizing:border-box}body{margin:0;background:#11101d;color:#f7f0dc;font-family:-apple-system,BlinkMacSystemFont,'Microsoft YaHei',sans-serif;line-height:1.7}.wrap{max-width:760px;margin:0 auto;padding:32px 18px 80px}.hero{min-height:88vh;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center}.icon{font-size:54px;margin-bottom:24px}h1{font-size:36px;line-height:1.25;margin:0 0 20px;font-weight:900}.sub{color:#bdb59d;font-size:18px;margin:0 0 42px}button{border:0;border-radius:999px;background:#d7b66a;color:#14121c;font-size:20px;font-weight:800;padding:16px 44px}.hint{margin-top:24px;color:#817b70}.progress{height:6px;background:#252235;border-radius:999px;margin:20px 0 26px;overflow:hidden}.bar{height:100%;width:0;background:#d7b66a;transition:.25s}.meta{display:flex;justify-content:space-between;color:#908a7d;margin-bottom:16px}.q{font-size:31px;line-height:1.35;font-weight:900;margin:0 0 22px;color:#fff8dd}.opt{width:100%;text-align:left;border:1px solid #302b44;background:#19182a;color:#efe9db;border-radius:22px;margin:14px 0;padding:18px 18px;display:flex;gap:14px;align-items:flex-start}.letter{min-width:38px;height:38px;border-radius:50%;background:#302b36;color:#d7b66a;display:inline-flex;align-items:center;justify-content:center;font-weight:900}.text{font-size:18px}.gate,.card{background:#19182a;border:1px solid #343049;border-radius:24px;padding:24px;margin:22px 0}.gate{text-align:center}.result-head{text-align:center;padding:28px 0}.badge{display:inline-block;border:1px solid #574c35;color:#d7b66a;border-radius:999px;padding:6px 18px;margin-bottom:18px}.score{font-size:72px;font-weight:900;color:#d7b66a;line-height:1}.rtype{font-size:38px;font-weight:900;margin:16px 0 8px}.subtitle{font-size:20px;color:#d6cdb7}.section-title{font-size:22px;font-weight:900;color:#d7b66a;margin:0 0 10px}.body{font-size:18px;color:#eee6d2}.evidence{font-size:16px;color:#d4ccba}.quote{font-size:24px;line-height:1.55;text-align:center;color:#f5dda0}.advice{display:grid;gap:12px}.advice div{background:#12111f;border-radius:16px;padding:14px;color:#eee6d2}.disclaimer{font-size:14px;color:#817b70;text-align:center;margin-top:32px}.hidden{display:none}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <section id="home" class="hero">
+    <div class="icon">◈</div>
+    <h1>你接电话时突然变紧的声音，暴露了你在职场最怕谁</h1>
+    <p class="sub">前5题免费看倾向，完整12题看清：你变紧的不是声音，是你在某段关系里的防御</p>
+    <button onclick="start()">开始测试</button>
+    <div class="hint">凭第一反应选，不要把自己修饰得太合理</div>
+  </section>
+  <section id="quiz" class="hidden">
+    <div class="progress"><div id="bar" class="bar"></div></div>
+    <div class="meta"><span id="stage"></span><span id="count"></span></div>
+    <h2 id="q" class="q"></h2>
+    <div id="opts"></div>
+  </section>
+  <section id="result" class="hidden"></section>
+</div>
+<script id="data" type="application/json">{"title": "你接电话时突然变紧的声音，暴露了你在职场最怕谁", "product": "职场电话紧张报告", "coreGap": "你变紧的不是声音，是你在某段关系里的防御", "questions": [{"text": "老板电话突然打来，你第一秒最像哪种反应？", "options": {"A": "声音立刻变乖——先别让对方听出我不爽", "B": "心里先想是不是出事了——我已经开始预演被问责", "C": "先清嗓子再接——我需要把真实状态藏起来", "D": "看着来电响完——我不是不接，我是在给自己攒勇气"}}, {"text": "同事午休时打来，你最怕听到哪句？", "options": {"A": "你现在方便吗——这句话通常不方便拒绝", "B": "有个小事麻烦你——小事最后都会变成我的事", "C": "刚刚那个你跟一下——锅已经在路上了", "D": "我就问一下——其实是要我马上给答案"}}, {"text": "陌生号码响起时，你最真实的动作是？", "options": {"A": "先不接，等它自己停——未知比具体问题更累", "B": "接起来声音很客气——怕一开口就显得不好惹", "C": "快速搜索号码——先确认风险再决定态度", "D": "接了但不主动说话——让对方先暴露目的"}}, {"text": "你接客户/甲方电话，最容易哪里变形？", "options": {"A": "语速变快——怕沉默显得我不专业", "B": "声音变轻——怕一句话说错就被抓住", "C": "语气变稳——其实心里已经在骂", "D": "表情变空——身体在场，灵魂先退后一步"}}, {"text": "你最不喜欢哪种电话沟通？", "options": {"A": "临时改需求", "B": "追问进度", "C": "让你背锅", "D": "要求你立刻表态"}}, {"text": "如果你的声音能替你拒绝一次，它最想说什么？", "options": {"A": "这不是我的工作范围", "B": "我现在不方便接这个事", "C": "你先把需求说清楚", "D": "别用急来逼我答应"}}, {"text": "你什么时候开始不敢用原本的声音说话？", "options": {"A": "第一次被说态度不好以后", "B": "第一次拒绝被反问以后", "C": "第一次解释也没用以后", "D": "第一次发现忍一忍更省事以后"}}, {"text": "电话挂掉后，你最常做什么？", "options": {"A": "复盘自己刚刚有没有说错", "B": "马上补发文字确认", "C": "在心里骂很久但表面没事", "D": "坐一会儿才回到原本状态"}}, {"text": "谁的电话最容易让你提前紧张？", "options": {"A": "掌握评价权的人", "B": "总把事情丢给你的人", "C": "说话很绕的人", "D": "你很难拒绝的人"}}, {"text": "你在电话里最怕暴露什么？", "options": {"A": "我其实很烦", "B": "我其实不想接", "C": "我其实没准备好", "D": "我其实不想负责"}}, {"text": "如果电话可以改成文字，你最想避开什么？", "options": {"A": "现场被逼反应", "B": "被语气带着走", "C": "来不及整理边界", "D": "听见对方失望"}}, {"text": "你最需要练习的电话边界是？", "options": {"A": "不立刻答应", "B": "不替别人收尾", "C": "不把客气当服从", "D": "不把沉默当逃避"}}], "results": {"A": {"name": "讨好应答型", "subtitle": "你声音变乖，是怕一拒绝就被评价态度不好", "score": 85, "core": "你在电话里会自动调低自己：声音更软、话更圆、反应更快。你不是没脾气，是你太熟悉“态度不好”这顶帽子。", "evidence": "前5题里你多次选择了客气、变乖、怕语气出错的选项，说明你最紧张的是被评价，而不是电话本身。", "modules": [{"title": "你的紧张来源", "body": "你害怕对方不是来沟通，而是来给你打分。于是你先把自己调成安全模式。"}, {"title": "最容易被拿捏的场景", "body": "一句“你方便吗”就能让你把不方便吞回去。你怕拒绝以后，自己在别人眼里变得难相处。"}, {"title": "误判点", "body": "你会把好沟通理解成好说话。可真正的专业，不等于随时把自己的边界让出去。"}, {"title": "行动建议", "body": "接电话前先准备一句缓冲：我先看一下，十分钟后回复你。它能替你争回判断时间。"}, {"title": "完整报告继续给你的东西", "body": "会拆出你在哪类人面前最容易变乖，以及怎么把客气和服从分开。"}], "quote": "你的声音不需要一直好听，它也可以有边界。", "advice": ["【7天观察】记录一次你明明不方便却说方便的电话。", "【7天观察】练习用“我确认后回复”替代立刻答应。", "【30天练习】给三类电话设置固定回应句。", "【30天练习】每周练习一次温和但清楚的拒绝。"], "reminder": "你不是态度不好，你只是终于不把自己放在最后。"}, "B": {"name": "预演问责型", "subtitle": "电话还没接，你已经在脑子里开会了", "score": 88, "core": "你最累的不是通话那几分钟，而是电话响起前后那一整套预演。你会先想哪里出错、谁要追责、自己该怎么解释。", "evidence": "前5题里你倾向选择出事、问责、追进度、先搜索风险，说明你的紧张来自不确定和被审判感。", "modules": [{"title": "你的预警系统", "body": "别人还没开口，你已经把最坏结果跑了一遍。这让你显得谨慎，也让你长期处在高压待命里。"}, {"title": "真实职场场景", "body": "午休电话、临时会议、突然追问，都会触发你“是不是我没做好”的自动反应。"}, {"title": "误判点", "body": "你会把准备充分和过度预演混在一起。准备让你有底，预演却会消耗你的底气。"}, {"title": "行动建议", "body": "电话后只写三件事：对方要什么、我需要什么、下一步是谁负责。别写情绪判决书。"}, {"title": "完整报告继续给你的东西", "body": "会帮你识别哪类电话最触发问责恐惧，以及如何把预演变成可执行清单。"}], "quote": "你怕的不是电话，是电话背后那句“是不是你的问题”。", "advice": ["【7天观察】每次电话前写下你预演的最坏结果。", "【7天观察】电话后对照真实结果，看有多少是脑内加戏。", "【30天练习】建立三句事实回复，不先解释过多。", "【30天练习】遇到追责先确认事实，再回应情绪。"], "reminder": "你可以负责，但不必把所有不确定都先判成自己的错。"}, "C": {"name": "情绪伪装型", "subtitle": "你声音很稳，但真实的你已经退后半步", "score": 83, "core": "你很会把情绪藏在专业语气后面。越烦越礼貌，越不想接越镇定，像只要声音不抖，别人就不会发现你已经被冒犯。", "evidence": "前5题里你多次选到清嗓子、语气变稳、心里在骂的反应，说明你最常用的防御是把真实情绪伪装成可控。", "modules": [{"title": "你的伪装方式", "body": "你不是没有情绪，而是会快速把情绪折成一句“好的，我看一下”。这让你看起来可靠，也让你很难被看见。"}, {"title": "最容易爆的点", "body": "当别人把你的稳定当默认同意，你会突然失控。因为你忍的不是一通电话，是很多次没被尊重。"}, {"title": "误判点", "body": "你会以为自己只要表现冷静就安全，其实冷静不等于需求消失。"}, {"title": "行动建议", "body": "练习在电话里保留一句真实边界：这个我需要确认，不能现在承诺。"}, {"title": "完整报告继续给你的东西", "body": "会拆出你声音里藏的愤怒、委屈和不想负责，以及它们对应的职场关系。"}], "quote": "你越会稳住声音，越需要有人听见你真正想说什么。", "advice": ["【7天观察】记录一次你心里很烦但语气很好的通话。", "【7天观察】写下那通电话里你没说出口的一句话。", "【30天练习】每次电话至少保留一个“不立刻承诺”。", "【30天练习】把情绪从语气里拿出来，放进具体边界里。"], "reminder": "专业不是没有情绪，而是带着情绪也不牺牲自己。"}, "D": {"name": "延迟接听型", "subtitle": "你不是不接，你是在给自己找回控制权", "score": 80, "core": "你看着电话响完，并不一定是逃避。有时那几秒是你在确认：我能不能不要立刻被别人召唤走。", "evidence": "你的前5题偏向不接、等响完、先观察、怕立刻表态，说明你最需要的是反应时间和控制感。", "modules": [{"title": "你真正需要的", "body": "不是永远不接电话，而是不想被突然拉进别人的节奏里。你需要先把自己站稳。"}, {"title": "真实场景", "body": "临时需求、催命电话、陌生号码，会让你觉得自己的时间被直接掀开。"}, {"title": "误判点", "body": "别人会以为你拖延或不配合，但你真实的困难是来不及整理边界。"}, {"title": "行动建议", "body": "把“晚点回电”变成规则，而不是愧疚。先发文字说明：我现在不方便，几点前回你。"}, {"title": "完整报告继续给你的东西", "body": "会帮你找出哪些电话值得马上接，哪些需要先缓冲，以及怎么不因延迟而内耗。"}], "quote": "你不是逃避沟通，你是在争取用自己的节奏回应。", "advice": ["【7天观察】记录你最想不接的三类电话。", "【7天观察】给每类电话写一个回拨模板。", "【30天练习】练习先发文字缓冲，再回电话。", "【30天练习】把“我需要时间确认”说成常规句。"], "reminder": "你可以不被每一次铃声立刻带走。"}}}</script>
+<script>
+const data = JSON.parse(document.getElementById('data').textContent);
+let idx = 0; const answers = [];
+function start(){document.getElementById('home').classList.add('hidden');document.getElementById('quiz').classList.remove('hidden');renderQ();}
+function renderQ(){
+  const q = data.questions[idx];
+  document.getElementById('bar').style.width = ((idx)/12*100)+'%';
+  document.getElementById('stage').textContent = idx < 5 ? '免费测试 · 第 '+(idx+1)+' 题' : '深度解锁 · 第 '+(idx+1)+' 题';
+  document.getElementById('count').textContent = '第 '+(idx+1)+'/12 题';
+  document.getElementById('q').textContent = q.text;
+  const box = document.getElementById('opts'); box.innerHTML = '';
+  for (const k of ['A','B','C','D']) {
+    const b = document.createElement('button'); b.className='opt';
+    b.innerHTML = '<span class="letter">'+k+'</span><span class="text"></span>';
+    b.querySelector('.text').textContent = q.options[k];
+    b.onclick = () => choose(k);
+    box.appendChild(b);
+  }
+}
+function choose(k){
+  answers[idx]=k; idx++;
+  if(idx===5) showGate();
+  else if(idx>=12) showResult();
+  else renderQ();
+}
+function showGate(){
+  document.getElementById('bar').style.width = '41.6%';
+  document.getElementById('q').textContent = '前5题只是倾向，完整12题才能看清全貌';
+  document.getElementById('opts').innerHTML = '<div class="gate"><div class="section-title">继续完成12题 · 自动解锁完整报告</div><div class="body">后7题会继续拆解：你的触发场景、误判入口、真正需求和未来30天调整方向。</div><br><button onclick="renderQ()">继续测试</button></div>';
+}
+function showResult(){
+  document.getElementById('quiz').classList.add('hidden');
+  const counts = {A:0,B:0,C:0,D:0}; answers.forEach(a=>counts[a]++);
+  const top = Object.entries(counts).sort((a,b)=>b[1]-a[1] || 'ABCD'.indexOf(a[0])-'ABCD'.indexOf(b[0]))[0][0];
+  const r = data.results[top];
+  const ev = answers.slice(0,5).map((a,i)=>`Q${i+1} 你选了 ${a}：${data.questions[i].options[a]}`).join('<br>');
+  document.getElementById('result').classList.remove('hidden');
+  document.getElementById('result').innerHTML = `
+    <div class="result-head"><div class="badge">${data.product}</div><div class="rtype">${r.name}</div><div class="score">${r.score}</div><div class="subtitle">${r.subtitle}</div></div>
+    <div class="card"><div class="section-title">核心结论</div><div class="body">${r.core}</div></div>
+    <div class="card"><div class="section-title">答案证据</div><div class="evidence">${ev}</div><br><div class="body">${r.evidence}</div></div>
+    ${r.modules.map(m=>`<div class="card"><div class="section-title">${m.title}</div><div class="body">${m.body}</div></div>`).join('')}
+    <div class="card"><div class="section-title">可截图金句</div><div class="quote">“${r.quote}”</div></div>
+    <div class="card"><div class="section-title">未来30天建议</div><div class="advice">${r.advice.map(x=>`<div>${x}</div>`).join('')}</div></div>
+    <div class="card"><div class="section-title">关键提醒</div><div class="body">${r.reminder}</div></div>
+    <div class="disclaimer">本测试仅为自我探索参考，不构成心理诊断、医疗建议、财务建议或效果承诺。请结合自己的真实情况判断。</div>`;
+  window.scrollTo(0,0);
+}
+</script>
+</body>
+</html>

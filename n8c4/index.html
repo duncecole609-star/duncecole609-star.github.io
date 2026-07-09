@@ -1,0 +1,79 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>自我选择失灵报告</title>
+<style>
+*{box-sizing:border-box}body{margin:0;background:#11101d;color:#f7f0dc;font-family:-apple-system,BlinkMacSystemFont,'Microsoft YaHei',sans-serif;line-height:1.7}.wrap{max-width:760px;margin:0 auto;padding:32px 18px 80px}.hero{min-height:88vh;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center}.icon{font-size:54px;margin-bottom:24px}h1{font-size:36px;line-height:1.25;margin:0 0 20px;font-weight:900}.sub{color:#bdb59d;font-size:18px;margin:0 0 42px}button{border:0;border-radius:999px;background:#d7b66a;color:#14121c;font-size:20px;font-weight:800;padding:16px 44px}.hint{margin-top:24px;color:#817b70}.progress{height:6px;background:#252235;border-radius:999px;margin:20px 0 26px;overflow:hidden}.bar{height:100%;width:0;background:#d7b66a;transition:.25s}.meta{display:flex;justify-content:space-between;color:#908a7d;margin-bottom:16px}.q{font-size:31px;line-height:1.35;font-weight:900;margin:0 0 22px;color:#fff8dd}.opt{width:100%;text-align:left;border:1px solid #302b44;background:#19182a;color:#efe9db;border-radius:22px;margin:14px 0;padding:18px 18px;display:flex;gap:14px;align-items:flex-start}.letter{min-width:38px;height:38px;border-radius:50%;background:#302b36;color:#d7b66a;display:inline-flex;align-items:center;justify-content:center;font-weight:900}.text{font-size:18px}.gate,.card{background:#19182a;border:1px solid #343049;border-radius:24px;padding:24px;margin:22px 0}.gate{text-align:center}.result-head{text-align:center;padding:28px 0}.badge{display:inline-block;border:1px solid #574c35;color:#d7b66a;border-radius:999px;padding:6px 18px;margin-bottom:18px}.score{font-size:72px;font-weight:900;color:#d7b66a;line-height:1}.rtype{font-size:38px;font-weight:900;margin:16px 0 8px}.subtitle{font-size:20px;color:#d6cdb7}.section-title{font-size:22px;font-weight:900;color:#d7b66a;margin:0 0 10px}.body{font-size:18px;color:#eee6d2}.evidence{font-size:16px;color:#d4ccba}.quote{font-size:24px;line-height:1.55;text-align:center;color:#f5dda0}.advice{display:grid;gap:12px}.advice div{background:#12111f;border-radius:16px;padding:14px;color:#eee6d2}.disclaimer{font-size:14px;color:#817b70;text-align:center;margin-top:32px}.hidden{display:none}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <section id="home" class="hero">
+    <div class="icon">◈</div>
+    <h1>你帮别人挑东西很准，为什么给自己挑总差一点</h1>
+    <p class="sub">前5题免费看倾向，完整12题看清：你不是没眼光，是一到自己身上就多了太多审判</p>
+    <button onclick="start()">开始测试</button>
+    <div class="hint">凭第一反应选，不要把自己修饰得太合理</div>
+  </section>
+  <section id="quiz" class="hidden">
+    <div class="progress"><div id="bar" class="bar"></div></div>
+    <div class="meta"><span id="stage"></span><span id="count"></span></div>
+    <h2 id="q" class="q"></h2>
+    <div id="opts"></div>
+  </section>
+  <section id="result" class="hidden"></section>
+</div>
+<script id="data" type="application/json">{"title": "你帮别人挑东西很准，为什么给自己挑总差一点", "product": "自我选择失灵报告", "coreGap": "你不是没眼光，是一到自己身上就多了太多审判", "questions": [{"text": "朋友让你挑东西，你通常怎么判断？", "options": {"A": "一眼知道她适合什么——但轮到自己就开始怀疑", "B": "会先问她预算和场景——给自己却总想一步到位", "C": "能看出她真正喜欢什么——自己喜欢反而不敢承认", "D": "很会劝她别买错——自己却会被情绪带走"}}, {"text": "给自己买东西时，你最常卡在哪句？", "options": {"A": "我配吗", "B": "值不值", "C": "会不会太夸张", "D": "以后会不会后悔"}}, {"text": "你最羡慕朋友哪种买东西状态？", "options": {"A": "她知道自己喜欢什么", "B": "她买完不反复解释", "C": "她敢试不一样的", "D": "她不会把一次消费上升到人生判断"}}, {"text": "你帮别人挑得准，是因为你能看见什么？", "options": {"A": "她的整体气质", "B": "她真正的需求", "C": "她被忽略的优点", "D": "她不该被坑的地方"}}, {"text": "但轮到自己，你最容易看不见什么？", "options": {"A": "我其实也适合", "B": "我其实也值得", "C": "我其实也可以试", "D": "我其实不用完美才买"}}, {"text": "你最怕买错后的哪种感觉？", "options": {"A": "证明我眼光不行", "B": "证明我浪费钱", "C": "证明我不够了解自己", "D": "证明我太容易冲动"}}, {"text": "别人夸你挑得好，你心里最像哪句？", "options": {"A": "给别人我很清楚，给自己我就乱", "B": "我知道标准，但我不敢用在自己身上", "C": "我能看见别人，却看不见自己", "D": "我只要不是当事人就很理性"}}, {"text": "你给自己挑东西前最容易做什么？", "options": {"A": "问很多人意见", "B": "看很多测评", "C": "反复加购删除", "D": "等一个更合适的时机"}}, {"text": "你最容易在哪类选择上失灵？", "options": {"A": "衣服和风格", "B": "贵一点的东西", "C": "会被别人看到的东西", "D": "真正让自己开心的东西"}}, {"text": "如果把自己当朋友，你最想劝自己什么？", "options": {"A": "你不是不适合，是不敢选", "B": "别每次都先审判自己", "C": "喜欢本身就是理由", "D": "买错一次不会毁掉你"}}, {"text": "你最需要补回的选择能力是？", "options": {"A": "相信第一眼", "B": "承认自己值得", "C": "允许自己变化", "D": "承担小失误"}}, {"text": "完整报告最该帮你看清什么？", "options": {"A": "为什么别人身上你很准，自己身上就失焦", "B": "你在哪些场景最容易自我否定", "C": "你的真实喜好被谁的标准盖住了", "D": "怎么把眼光用回自己身上"}}], "results": {"A": {"name": "自我失焦型", "subtitle": "你能看见别人适合什么，却看不见自己也适合", "score": 86, "core": "你对别人很准，因为你能客观看见她的气质和需求。但轮到自己，你会突然多出一层怀疑：我真的适合吗，我是不是想太多。", "evidence": "前5题里你更常选到“别人一眼准、自己开始怀疑、我其实也适合”。说明你的眼光没有问题，只是一照到自己就失焦。", "modules": [{"title": "你的失焦来源", "body": "你太习惯站在旁观者位置做判断，一旦成为当事人，就开始把自己放到放大镜下审。"}, {"title": "真实场景", "body": "朋友穿某件你会立刻说买，但同样的东西放到自己身上，你会问十遍会不会怪。"}, {"title": "误判点", "body": "你会把自我怀疑当谨慎。谨慎会帮你筛选，自我怀疑只会让你错过。"}, {"title": "行动建议", "body": "每次选择前先写一句：如果这是朋友，我会怎么建议她？"}, {"title": "完整报告继续给你的东西", "body": "会帮你找到你在哪类选择最容易失焦，以及怎样把旁观者眼光用回自己身上。"}], "quote": "你给别人的肯定，也该轮到你自己。", "advice": ["【7天观察】记录一次你给朋友的建议，改成给自己的版本。", "【7天观察】买前先问“如果这是朋友，我会拦她吗？”", "【30天练习】每周做一次不问别人意见的小选择。", "【30天练习】保存三次“我选对了”的证据。"], "reminder": "你不是不懂自己，你只是还不习惯相信自己也值得被选择。"}, "B": {"name": "价值审判型", "subtitle": "你不是舍不得花，是每次都要证明这笔钱够值得", "score": 88, "core": "你给别人挑东西时能很清楚地判断需求，但给自己挑时会进入审判模式：值不值、配不配、会不会浪费。你买的不是物品，是一张自我许可。", "evidence": "前5题里你更靠近“预算、值不值、值得、一步到位”。这说明你的选择卡在价值审判，而不是眼光。", "modules": [{"title": "你的审判标准", "body": "别人买东西是满足需求，你给自己买东西却像要写一份报告：为什么必须买，为什么现在买，为什么我值得。"}, {"title": "真实场景", "body": "明明很喜欢，却要等打折、等理由、等别人也说值。最后不是买不到，是心里一直没批准。"}, {"title": "误判点", "body": "你会以为自己很理性，其实有时候是在用理性包装不敢对自己好。"}, {"title": "行动建议", "body": "给自己设置一个“小额无需证明预算”。在这个范围内，喜欢可以成为理由。"}, {"title": "完整报告继续给你的东西", "body": "会拆你最常在哪些消费上自我审判，以及如何把价值感从价格里拿出来。"}], "quote": "你不需要每一次对自己好，都拿出一份合理性证明。", "advice": ["【7天观察】记录三次你想买但立刻找理由否定的瞬间。", "【7天观察】给自己设一个无需解释的小额预算。", "【30天练习】每月买一次只为自己开心的小东西。", "【30天练习】买完不解释，练习让选择自然成立。"], "reminder": "对自己好不是浪费，它是你生活里需要被允许的一部分。"}, "C": {"name": "喜好压低型", "subtitle": "你知道自己喜欢什么，但不敢让它太明显", "score": 83, "core": "你帮别人挑得准，是因为你能看见她被忽略的亮点；但给自己时，你会把真正喜欢的东西压低，怕太夸张、太显眼、太不像平时的自己。", "evidence": "前5题里你偏向“敢试、喜欢不敢承认、自己也可以试”。说明你不是没喜好，而是不敢把喜好放到台面上。", "modules": [{"title": "你的真实喜好", "body": "你喜欢的东西可能比你表现出来的更鲜明、更有个性，只是你习惯先问别人会怎么看。"}, {"title": "真实场景", "body": "你会劝朋友试亮色、试新风格，但自己拿起来又放下，像喜欢本身需要被批准。"}, {"title": "误判点", "body": "你会把不敢尝试说成不适合。其实很多不适合，是你还没给它一次真实机会。"}, {"title": "行动建议", "body": "先从低风险尝试开始：一个配饰、一种颜色、一件可以退换的小单品。"}, {"title": "完整报告继续给你的东西", "body": "会帮你识别哪些喜好被压低，以及怎么安全地把它们放回生活里。"}], "quote": "你的喜欢不用一直站在角落里等别人同意。", "advice": ["【7天观察】截图三样你喜欢但没敢买/没敢穿的东西。", "【7天观察】写下你怕谁评价它。", "【30天练习】每周做一次低风险风格尝试。", "【30天练习】给自己的喜好建立一个不解释清单。"], "reminder": "喜欢不是冒犯别人，它只是你终于把自己放进选择里。"}, "D": {"name": "后悔预防型", "subtitle": "你不是选择差，是太怕一个选择变成错误证明", "score": 80, "core": "你给别人建议时很清楚，因为后果不在你身上。轮到自己，你会提前想后悔、想买错、想不完美，于是一个很小的选择也变得很重。", "evidence": "前5题里你更常选“会不会后悔、怕买错、反复加购删除”。说明你的选择困难来自后悔预防。", "modules": [{"title": "你的防错系统", "body": "你不是没有判断力，而是把每次选择都当成不能错的考试。"}, {"title": "真实场景", "body": "加购、删除、再加购，研究很多天，最后不是更清楚，而是更累。"}, {"title": "误判点", "body": "你会以为多比较就不会错。可很多生活选择本来就不是唯一正确答案。"}, {"title": "行动建议", "body": "把选择分级：小选择允许错，大选择设截止时间。不要让所有东西都变成大事。"}, {"title": "完整报告继续给你的东西", "body": "会拆你最怕承担哪类后悔，以及如何建立低成本试错机制。"}], "quote": "买错一次不会毁掉你，但永远不选会慢慢消耗你。", "advice": ["【7天观察】记录一次反复加购删除的过程，标出真正害怕的后果。", "【7天观察】给小选择设置15分钟截止。", "【30天练习】每月安排一次可退可换的小试错。", "【30天练习】复盘买错经验，只写下次规则，不写自我否定。"], "reminder": "你可以谨慎，但别让谨慎偷走你的体验。"}}}</script>
+<script>
+const data = JSON.parse(document.getElementById('data').textContent);
+let idx = 0; const answers = [];
+function start(){document.getElementById('home').classList.add('hidden');document.getElementById('quiz').classList.remove('hidden');renderQ();}
+function renderQ(){
+  const q = data.questions[idx];
+  document.getElementById('bar').style.width = ((idx)/12*100)+'%';
+  document.getElementById('stage').textContent = idx < 5 ? '免费测试 · 第 '+(idx+1)+' 题' : '深度解锁 · 第 '+(idx+1)+' 题';
+  document.getElementById('count').textContent = '第 '+(idx+1)+'/12 题';
+  document.getElementById('q').textContent = q.text;
+  const box = document.getElementById('opts'); box.innerHTML = '';
+  for (const k of ['A','B','C','D']) {
+    const b = document.createElement('button'); b.className='opt';
+    b.innerHTML = '<span class="letter">'+k+'</span><span class="text"></span>';
+    b.querySelector('.text').textContent = q.options[k];
+    b.onclick = () => choose(k);
+    box.appendChild(b);
+  }
+}
+function choose(k){
+  answers[idx]=k; idx++;
+  if(idx===5) showGate();
+  else if(idx>=12) showResult();
+  else renderQ();
+}
+function showGate(){
+  document.getElementById('bar').style.width = '41.6%';
+  document.getElementById('q').textContent = '前5题只是倾向，完整12题才能看清全貌';
+  document.getElementById('opts').innerHTML = '<div class="gate"><div class="section-title">继续完成12题 · 自动解锁完整报告</div><div class="body">后7题会继续拆解：你的触发场景、误判入口、真正需求和未来30天调整方向。</div><br><button onclick="renderQ()">继续测试</button></div>';
+}
+function showResult(){
+  document.getElementById('quiz').classList.add('hidden');
+  const counts = {A:0,B:0,C:0,D:0}; answers.forEach(a=>counts[a]++);
+  const top = Object.entries(counts).sort((a,b)=>b[1]-a[1] || 'ABCD'.indexOf(a[0])-'ABCD'.indexOf(b[0]))[0][0];
+  const r = data.results[top];
+  const ev = answers.slice(0,5).map((a,i)=>`Q${i+1} 你选了 ${a}：${data.questions[i].options[a]}`).join('<br>');
+  document.getElementById('result').classList.remove('hidden');
+  document.getElementById('result').innerHTML = `
+    <div class="result-head"><div class="badge">${data.product}</div><div class="rtype">${r.name}</div><div class="score">${r.score}</div><div class="subtitle">${r.subtitle}</div></div>
+    <div class="card"><div class="section-title">核心结论</div><div class="body">${r.core}</div></div>
+    <div class="card"><div class="section-title">答案证据</div><div class="evidence">${ev}</div><br><div class="body">${r.evidence}</div></div>
+    ${r.modules.map(m=>`<div class="card"><div class="section-title">${m.title}</div><div class="body">${m.body}</div></div>`).join('')}
+    <div class="card"><div class="section-title">可截图金句</div><div class="quote">“${r.quote}”</div></div>
+    <div class="card"><div class="section-title">未来30天建议</div><div class="advice">${r.advice.map(x=>`<div>${x}</div>`).join('')}</div></div>
+    <div class="card"><div class="section-title">关键提醒</div><div class="body">${r.reminder}</div></div>
+    <div class="disclaimer">本测试仅为自我探索参考，不构成心理诊断、医疗建议、财务建议或效果承诺。请结合自己的真实情况判断。</div>`;
+  window.scrollTo(0,0);
+}
+</script>
+</body>
+</html>

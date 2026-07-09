@@ -1,0 +1,79 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>好看差距识别报告</title>
+<style>
+*{box-sizing:border-box}body{margin:0;background:#11101d;color:#f7f0dc;font-family:-apple-system,BlinkMacSystemFont,'Microsoft YaHei',sans-serif;line-height:1.7}.wrap{max-width:760px;margin:0 auto;padding:32px 18px 80px}.hero{min-height:88vh;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center}.icon{font-size:54px;margin-bottom:24px}h1{font-size:36px;line-height:1.25;margin:0 0 20px;font-weight:900}.sub{color:#bdb59d;font-size:18px;margin:0 0 42px}button{border:0;border-radius:999px;background:#d7b66a;color:#14121c;font-size:20px;font-weight:800;padding:16px 44px}.hint{margin-top:24px;color:#817b70}.progress{height:6px;background:#252235;border-radius:999px;margin:20px 0 26px;overflow:hidden}.bar{height:100%;width:0;background:#d7b66a;transition:.25s}.meta{display:flex;justify-content:space-between;color:#908a7d;margin-bottom:16px}.q{font-size:31px;line-height:1.35;font-weight:900;margin:0 0 22px;color:#fff8dd}.opt{width:100%;text-align:left;border:1px solid #302b44;background:#19182a;color:#efe9db;border-radius:22px;margin:14px 0;padding:18px 18px;display:flex;gap:14px;align-items:flex-start}.letter{min-width:38px;height:38px;border-radius:50%;background:#302b36;color:#d7b66a;display:inline-flex;align-items:center;justify-content:center;font-weight:900}.text{font-size:18px}.gate,.card{background:#19182a;border:1px solid #343049;border-radius:24px;padding:24px;margin:22px 0}.gate{text-align:center}.result-head{text-align:center;padding:28px 0}.badge{display:inline-block;border:1px solid #574c35;color:#d7b66a;border-radius:999px;padding:6px 18px;margin-bottom:18px}.score{font-size:72px;font-weight:900;color:#d7b66a;line-height:1}.rtype{font-size:38px;font-weight:900;margin:16px 0 8px}.subtitle{font-size:20px;color:#d6cdb7}.section-title{font-size:22px;font-weight:900;color:#d7b66a;margin:0 0 10px}.body{font-size:18px;color:#eee6d2}.evidence{font-size:16px;color:#d4ccba}.quote{font-size:24px;line-height:1.55;text-align:center;color:#f5dda0}.advice{display:grid;gap:12px}.advice div{background:#12111f;border-radius:16px;padding:14px;color:#eee6d2}.disclaimer{font-size:14px;color:#817b70;text-align:center;margin-top:32px}.hidden{display:none}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <section id="home" class="hero">
+    <div class="icon">◈</div>
+    <h1>你和好看之间，差的不是钱也不是长相</h1>
+    <p class="sub">前5题免费看倾向，完整12题看清：你不是不够好看，是某个细节一直在破坏整体感</p>
+    <button onclick="start()">开始测试</button>
+    <div class="hint">凭第一反应选，不要把自己修饰得太合理</div>
+  </section>
+  <section id="quiz" class="hidden">
+    <div class="progress"><div id="bar" class="bar"></div></div>
+    <div class="meta"><span id="stage"></span><span id="count"></span></div>
+    <h2 id="q" class="q"></h2>
+    <div id="opts"></div>
+  </section>
+  <section id="result" class="hidden"></section>
+</div>
+<script id="data" type="application/json">{"title": "你和好看之间，差的不是钱也不是长相", "product": "好看差距识别报告", "coreGap": "你不是不够好看，是某个细节一直在破坏整体感", "questions": [{"text": "出门前照镜子，你最常卡在哪个瞬间？", "options": {"A": "单看每件都好看，放一起就怪", "B": "妆发衣服都做了，但像在用力证明自己", "C": "照片里还行，动起来就不对劲", "D": "别人穿很松弛，我穿同款像借来的"}}, {"text": "你买衣服最容易踩哪个坑？", "options": {"A": "照着博主买，颜色一换就不成立", "B": "一着急就买很显眼的款，穿一次就闲置", "C": "买了很多基础款，但怎么搭都像没完成", "D": "店里试很美，回到生活里突然不适合"}}, {"text": "别人夸你时，你最不敢相信哪句？", "options": {"A": "你今天很有风格", "B": "你看起来很自然", "C": "这个很适合你", "D": "你整个人很有质感"}}, {"text": "你最想修正的不是脸，而是什么？", "options": {"A": "衣服之间的关系", "B": "用力感", "C": "走路和姿态", "D": "生活里的凌乱感"}}, {"text": "拍照前你最容易做什么？", "options": {"A": "不断换角度", "B": "反复检查妆发", "C": "找道具挡一下", "D": "让别人先拍我看看"}}, {"text": "你最怕别人看出什么？", "options": {"A": "我其实不太会搭", "B": "我很努力在变好看", "C": "我站在那里不够自然", "D": "我生活里没有那么精致"}}, {"text": "你觉得自己最好看的时候通常是？", "options": {"A": "偶然搭对了", "B": "刚做完造型", "C": "被别人抓拍", "D": "状态松下来以后"}}, {"text": "你最容易忽略哪个细节？", "options": {"A": "颜色比例", "B": "材质质感", "C": "鞋包和发型", "D": "衣服和场景"}}, {"text": "如果好看差一点，最像差在哪里？", "options": {"A": "差一条清晰主线", "B": "差一点收住用力", "C": "差身体状态参与", "D": "差生活感支撑"}}, {"text": "你看到别人很有氛围，最羡慕什么？", "options": {"A": "她知道自己适合什么", "B": "她不需要证明", "C": "她怎么动都成立", "D": "她连随便都好看"}}, {"text": "你最适合先调整什么？", "options": {"A": "减少颜色和风格数量", "B": "把夸张单品降频", "C": "练姿态和表情", "D": "整理日常背景和细节"}}, {"text": "你真正想要的好看是？", "options": {"A": "稳定成立", "B": "不费力", "C": "自然可信", "D": "生活里也能落地"}}], "results": {"A": {"name": "主线断开型", "subtitle": "你不是没单品，是单品之间没有互相认识", "score": 84, "core": "你买到过很多好看的东西，但它们放在一起总差一点。问题不是钱不够，而是你的风格缺一条能把颜色、版型、场景串起来的主线。", "evidence": "前5题里你反复选择“单看好看、放一起怪、颜色一换不成立”。这说明你的差距在整体组织，而不是单件购买能力。", "modules": [{"title": "你的好看卡点", "body": "你会被单品吸引，却很少判断它和你已有的东西能不能说同一种语言。"}, {"title": "真实场景", "body": "一件上衣很好看，一条裙子也好看，但穿上后像临时拼在一起，没有人物感。"}, {"title": "误判点", "body": "你会以为继续买更好看的单品就能解决，其实你需要先减少风格分叉。"}, {"title": "行动建议", "body": "先定三个稳定关键词，比如清爽、利落、柔和。买东西前看它是否至少符合两个。"}, {"title": "完整报告继续给你的东西", "body": "会拆出你最容易断开的颜色、版型和场景，并给你一套30天稳定主线练习。"}], "quote": "真正的好看不是单品赢，是整个人说同一种话。", "advice": ["【7天观察】整理最近10件常穿单品，给每件标一个风格词。", "【7天观察】找出最不合群的3件，暂停围绕它们搭配。", "【30天练习】建立3色以内的出门公式。", "【30天练习】每周只新增一个风格变量。"], "reminder": "你不用买更多，先让已有的东西彼此配合。"}, "B": {"name": "用力外露型", "subtitle": "你越想证明自己好看，越容易让好看变紧", "score": 87, "core": "你不是不好看，而是很容易把“我要变好看”写在脸上：妆发太满、单品太响、每个细节都在用力，最后反而少了松弛。", "evidence": "前5题里你更像选择“用力、显眼、反复检查、怕别人看出努力”。这说明你的美感不是缺少，而是需要收住。", "modules": [{"title": "你的用力来自哪里", "body": "你怕别人看不见你的改变，所以每一处都想做得明显。可是明显不等于成立。"}, {"title": "真实场景", "body": "明明今天花了很多心思，最后却像要去一个不存在的场合，生活里显得不贴地。"}, {"title": "误判点", "body": "你会把精致理解成满。真正有质感的人，往往敢留白。"}, {"title": "行动建议", "body": "出门前做减法：妆、发、衣服、配饰里只保留一个主重点。"}, {"title": "完整报告继续给你的东西", "body": "会帮你找出哪一类用力最容易暴露紧张，并给出适合你的减法顺序。"}], "quote": "好看不是把自己推到最亮，而是让别人愿意多看一眼。", "advice": ["【7天观察】每天出门前拿掉一个不必要的重点。", "【7天观察】拍一张减法前后对比，观察哪张更像你。", "【30天练习】固定一个妆发重点，其余保持干净。", "【30天练习】练习“今天只让一个地方赢”。"], "reminder": "你已经够有存在感了，现在需要的是让存在感更舒服。"}, "C": {"name": "动态失焦型", "subtitle": "你拍照好看，但生活里一动就容易散", "score": 81, "core": "你可能很会找角度，也知道自己哪里上镜。但一到走路、说话、坐下、拿东西，整体感就容易掉。你的差距在动态状态，不在静态颜值。", "evidence": "前5题里你选择了照片、姿态、动起来不对劲、找道具挡。说明你的好看需要从镜头里走出来。", "modules": [{"title": "你的动态卡点", "body": "你太依赖角度和静止画面，一旦进入真实生活，身体状态就没有参与美感。"}, {"title": "真实场景", "body": "照片里很有氛围，见面时却显得拘谨、肩颈紧、手不知道放哪里。"}, {"title": "误判点", "body": "你会以为自己不上镜或不够瘦，其实是姿态、节奏和表情没有形成自己的稳定状态。"}, {"title": "行动建议", "body": "先练三件小事：站直、放慢、眼神别急着躲。它们比买新衣服更快改变质感。"}, {"title": "完整报告继续给你的东西", "body": "会拆你最容易掉线的动态细节，并给你一套可执行的姿态练习。"}], "quote": "真正的氛围感，不是拍出来的一秒，是你动起来也像自己。", "advice": ["【7天观察】录一段10秒走路视频，只看肩颈和手。", "【7天观察】练习说话前停半秒，不急着笑。", "【30天练习】每天3分钟靠墙站立。", "【30天练习】固定一个自然的小动作，替代拍照时的僵硬。"], "reminder": "镜头里的你很好，生活里的你也值得被训练出来。"}, "D": {"name": "生活断层型", "subtitle": "你不是不精致，是精致没有落到日常里", "score": 79, "core": "你会在特殊场合很好看，但回到日常就容易失去质感。不是你没审美，而是衣服、包、发型、背景和生活节奏之间有断层。", "evidence": "前5题里你偏向选择生活感、同款像借来、店里美回家不适合。说明你的问题在落地，不在审美上限。", "modules": [{"title": "你的断层在哪里", "body": "你知道什么好看，但还没建立“每天也能成立”的版本。于是精致只在特定场合出现。"}, {"title": "真实场景", "body": "试衣间灯光里很美，通勤路上却显得不方便、不贴合，像造型没有长在生活里。"}, {"title": "误判点", "body": "你会以为自己需要更贵的东西，其实你需要更适合自己真实生活半径的选择。"}, {"title": "行动建议", "body": "把“我会在哪里穿、配什么鞋、背什么包”写在购买前，而不是买完再硬凑。"}, {"title": "完整报告继续给你的东西", "body": "会帮你识别哪些审美只适合收藏，哪些能真正进入你的日常。"}], "quote": "能落到生活里的好看，才会变成你自己的气质。", "advice": ["【7天观察】记录三套穿了但不舒服的搭配，找出场景断点。", "【7天观察】买前先写穿着场景，不写不买。", "【30天练习】建立一套通勤/约会/休闲三场景公式。", "【30天练习】每周只优化一个日常细节。"], "reminder": "别只追求上镜，先让你的好看能陪你过一天。"}}}</script>
+<script>
+const data = JSON.parse(document.getElementById('data').textContent);
+let idx = 0; const answers = [];
+function start(){document.getElementById('home').classList.add('hidden');document.getElementById('quiz').classList.remove('hidden');renderQ();}
+function renderQ(){
+  const q = data.questions[idx];
+  document.getElementById('bar').style.width = ((idx)/12*100)+'%';
+  document.getElementById('stage').textContent = idx < 5 ? '免费测试 · 第 '+(idx+1)+' 题' : '深度解锁 · 第 '+(idx+1)+' 题';
+  document.getElementById('count').textContent = '第 '+(idx+1)+'/12 题';
+  document.getElementById('q').textContent = q.text;
+  const box = document.getElementById('opts'); box.innerHTML = '';
+  for (const k of ['A','B','C','D']) {
+    const b = document.createElement('button'); b.className='opt';
+    b.innerHTML = '<span class="letter">'+k+'</span><span class="text"></span>';
+    b.querySelector('.text').textContent = q.options[k];
+    b.onclick = () => choose(k);
+    box.appendChild(b);
+  }
+}
+function choose(k){
+  answers[idx]=k; idx++;
+  if(idx===5) showGate();
+  else if(idx>=12) showResult();
+  else renderQ();
+}
+function showGate(){
+  document.getElementById('bar').style.width = '41.6%';
+  document.getElementById('q').textContent = '前5题只是倾向，完整12题才能看清全貌';
+  document.getElementById('opts').innerHTML = '<div class="gate"><div class="section-title">继续完成12题 · 自动解锁完整报告</div><div class="body">后7题会继续拆解：你的触发场景、误判入口、真正需求和未来30天调整方向。</div><br><button onclick="renderQ()">继续测试</button></div>';
+}
+function showResult(){
+  document.getElementById('quiz').classList.add('hidden');
+  const counts = {A:0,B:0,C:0,D:0}; answers.forEach(a=>counts[a]++);
+  const top = Object.entries(counts).sort((a,b)=>b[1]-a[1] || 'ABCD'.indexOf(a[0])-'ABCD'.indexOf(b[0]))[0][0];
+  const r = data.results[top];
+  const ev = answers.slice(0,5).map((a,i)=>`Q${i+1} 你选了 ${a}：${data.questions[i].options[a]}`).join('<br>');
+  document.getElementById('result').classList.remove('hidden');
+  document.getElementById('result').innerHTML = `
+    <div class="result-head"><div class="badge">${data.product}</div><div class="rtype">${r.name}</div><div class="score">${r.score}</div><div class="subtitle">${r.subtitle}</div></div>
+    <div class="card"><div class="section-title">核心结论</div><div class="body">${r.core}</div></div>
+    <div class="card"><div class="section-title">答案证据</div><div class="evidence">${ev}</div><br><div class="body">${r.evidence}</div></div>
+    ${r.modules.map(m=>`<div class="card"><div class="section-title">${m.title}</div><div class="body">${m.body}</div></div>`).join('')}
+    <div class="card"><div class="section-title">可截图金句</div><div class="quote">“${r.quote}”</div></div>
+    <div class="card"><div class="section-title">未来30天建议</div><div class="advice">${r.advice.map(x=>`<div>${x}</div>`).join('')}</div></div>
+    <div class="card"><div class="section-title">关键提醒</div><div class="body">${r.reminder}</div></div>
+    <div class="disclaimer">本测试仅为自我探索参考，不构成心理诊断、医疗建议、财务建议或效果承诺。请结合自己的真实情况判断。</div>`;
+  window.scrollTo(0,0);
+}
+</script>
+</body>
+</html>

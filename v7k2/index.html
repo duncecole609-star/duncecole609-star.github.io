@@ -1,0 +1,79 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>删除后悔心理报告</title>
+<style>
+*{box-sizing:border-box}body{margin:0;background:#11101d;color:#f7f0dc;font-family:-apple-system,BlinkMacSystemFont,'Microsoft YaHei',sans-serif;line-height:1.7}.wrap{max-width:760px;margin:0 auto;padding:32px 18px 80px}.hero{min-height:88vh;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center}.icon{font-size:54px;margin-bottom:24px}h1{font-size:36px;line-height:1.25;margin:0 0 20px;font-weight:900}.sub{color:#bdb59d;font-size:18px;margin:0 0 42px}button{border:0;border-radius:999px;background:#d7b66a;color:#14121c;font-size:20px;font-weight:800;padding:16px 44px}.hint{margin-top:24px;color:#817b70}.progress{height:6px;background:#252235;border-radius:999px;margin:20px 0 26px;overflow:hidden}.bar{height:100%;width:0;background:#d7b66a;transition:.25s}.meta{display:flex;justify-content:space-between;color:#908a7d;margin-bottom:16px}.q{font-size:31px;line-height:1.35;font-weight:900;margin:0 0 22px;color:#fff8dd}.opt{width:100%;text-align:left;border:1px solid #302b44;background:#19182a;color:#efe9db;border-radius:22px;margin:14px 0;padding:18px 18px;display:flex;gap:14px;align-items:flex-start}.letter{min-width:38px;height:38px;border-radius:50%;background:#302b36;color:#d7b66a;display:inline-flex;align-items:center;justify-content:center;font-weight:900}.text{font-size:18px}.gate,.card{background:#19182a;border:1px solid #343049;border-radius:24px;padding:24px;margin:22px 0}.gate{text-align:center}.result-head{text-align:center;padding:28px 0}.badge{display:inline-block;border:1px solid #574c35;color:#d7b66a;border-radius:999px;padding:6px 18px;margin-bottom:18px}.score{font-size:72px;font-weight:900;color:#d7b66a;line-height:1}.rtype{font-size:38px;font-weight:900;margin:16px 0 8px}.subtitle{font-size:20px;color:#d6cdb7}.section-title{font-size:22px;font-weight:900;color:#d7b66a;margin:0 0 10px}.body{font-size:18px;color:#eee6d2}.evidence{font-size:16px;color:#d4ccba}.quote{font-size:24px;line-height:1.55;text-align:center;color:#f5dda0}.advice{display:grid;gap:12px}.advice div{background:#12111f;border-radius:16px;padding:14px;color:#eee6d2}.disclaimer{font-size:14px;color:#817b70;text-align:center;margin-top:32px}.hidden{display:none}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <section id="home" class="hero">
+    <div class="icon">◈</div>
+    <h1>你删完又想找回来的东西，暴露了你一直在逃避什么</h1>
+    <p class="sub">前5题免费看倾向，完整12题看清：你删掉的不是文件，是一个不敢继续承认的自己</p>
+    <button onclick="start()">开始测试</button>
+    <div class="hint">凭第一反应选，不要把自己修饰得太合理</div>
+  </section>
+  <section id="quiz" class="hidden">
+    <div class="progress"><div id="bar" class="bar"></div></div>
+    <div class="meta"><span id="stage"></span><span id="count"></span></div>
+    <h2 id="q" class="q"></h2>
+    <div id="opts"></div>
+  </section>
+  <section id="result" class="hidden"></section>
+</div>
+<script id="data" type="application/json">{"title": "你删完又想找回来的东西，暴露了你一直在逃避什么", "product": "删除后悔心理报告", "coreGap": "你删掉的不是文件，是一个不敢继续承认的自己", "questions": [{"text": "你删完又想找回来时，第一反应最像哪句？", "options": {"A": "完了，我刚才是不是太冲动了——删除只是想让自己看起来干脆", "B": "算了，留着也没用——但手已经开始翻回收站", "C": "别让别人看到就好——删掉是为了先把证据藏起来", "D": "如果还能恢复就好了——我只是想确认它真的还在"}}, {"text": "看到聊天记录被清空，你心里最真实的声音是？", "options": {"A": "终于不用再反复看了——可空白比内容更刺眼", "B": "我只是整理一下——其实是不想承认自己还在等", "C": "万一哪天需要证明呢——删完才发现自己没了底气", "D": "没关系，我记得就行——但越说没关系越想找回"}}, {"text": "删掉一张照片后，你最怕发生什么？", "options": {"A": "怕自己后悔得太快——像承认我根本没放下", "B": "怕以后想不起那天的样子——好像那段时间白过了", "C": "怕别人问起时我拿不出证据——我曾经真的被重视过", "D": "怕手机变干净以后，我心里更空"}}, {"text": "你最容易删掉哪一种内容？", "options": {"A": "刚发出去又觉得不合适的动态——怕暴露太多需求感", "B": "截图和备忘录——怕自己显得太认真", "C": "聊天记录——怕被翻到，也怕自己翻到", "D": "旧照片和收藏——怕留着像舍不得"}}, {"text": "删之前你通常会停在哪个瞬间？", "options": {"A": "手指停在确认键上——希望系统替我多问一句", "B": "先看最后一遍——像给自己找一个合理理由", "C": "先转存到别处——我嘴上说不要，身体很诚实", "D": "不停地选中又取消——像在和过去拉扯"}}, {"text": "如果那个被删掉的东西会说话，它最可能问你什么？", "options": {"A": "你是真的不要我，还是只想证明你很洒脱？", "B": "你是不是怕留下我，就显得你还在乎？", "C": "你删掉我，是怕别人看见，还是怕自己看见？", "D": "你是不是一直等我自己消失，这样就不用你负责了？"}}, {"text": "你删东西最常出现在什么时候？", "options": {"A": "情绪上头之后——越难受越想让手机变干净", "B": "睡前——越安静越想把某些痕迹清掉", "C": "被别人提醒之后——怕自己的在意显得太明显", "D": "换季或换状态时——像给自己做一次假重启"}}, {"text": "恢复失败时，你最容易冒出的念头是？", "options": {"A": "算了，这可能就是提醒我别回头", "B": "早知道不删了——我根本没准备好失去", "C": "我怎么连一个备份都没有——心里突然没了凭证", "D": "没了也好——但那一下空得很明显"}}, {"text": "你删掉又后悔的东西，通常代表什么？", "options": {"A": "一段情绪的证据", "B": "一个想重新开始的冲动", "C": "一份曾经被爱过的证明", "D": "一个你还没有说完的自己"}}, {"text": "你最怕别人评价你的删除行为是哪句？", "options": {"A": "你怎么这么矫情", "B": "你明明还在乎", "C": "你是不是心虚", "D": "你就是舍不得"}}, {"text": "如果只能恢复一样，你会先恢复什么？", "options": {"A": "那句没来得及回的话", "B": "那张当时没觉得重要的照片", "C": "那个证明我不是乱想的截图", "D": "那个让我觉得自己还被记得的东西"}}, {"text": "删完以后，你最需要学会的是？", "options": {"A": "不要用干脆掩盖受伤", "B": "不要用清空假装重启", "C": "不要把证据当安全感", "D": "不要用失去证明自己能放下"}}], "results": {"A": {"name": "冲动清空型", "subtitle": "你删得很快，是因为你不想让情绪显得有痕迹", "score": 86, "core": "你不是不在乎，而是太怕自己看起来还在乎。删除对你来说像一次临时止痛：屏幕干净了，心里却会开始反问自己是不是太狠。", "evidence": "你在前5题里反复选择了“上头、干脆、怕暴露需求”的反应，说明你最想逃开的不是内容本身，而是那一刻太明显的情绪。", "modules": [{"title": "你真正删掉的东西", "body": "不是照片或记录，而是你允许自己难过的证据。你习惯把反应处理得很快，像只要动作够利落，就没人看见你其实被碰到了。"}, {"title": "最容易误判自己的地方", "body": "你会把“删掉了”误判成“放下了”。可如果删完后反复想找回，说明你只是把情绪从手机里转移到了脑子里。"}, {"title": "最该被看见的瞬间", "body": "确认删除前那一秒最重要。那不是犹豫，是你内心还在问：我真的不要了吗，还是我只是想不那么狼狈？"}, {"title": "适合你的处理方式", "body": "先写一句“我为什么想删”，再等十分钟。十分钟后还想删，再删；如果不想删，就把它收进一个不常打开的文件夹。"}, {"title": "完整报告继续给你的东西", "body": "会拆出你删东西背后的情绪入口、最容易后悔的场景，以及怎样把“清空冲动”变成真正的告别。"}], "quote": "你删得越快，越说明那一刻你很想保住自己的体面。", "advice": ["【7天观察】记录一次你想立刻删除的内容，写下当时最强的情绪。", "【7天观察】不要马上清空，先把它移到临时文件夹。", "【30天练习】给自己设一个“24小时后再删”的规则。", "【30天练习】每周只处理一次旧记录，不在情绪高点处理。"], "reminder": "真正的放下不是把痕迹删掉，而是看见痕迹时不再急着证明自己没事。"}, "B": {"name": "假装重启型", "subtitle": "你不是想删除过去，你是想跳过整理过去的过程", "score": 82, "core": "你很容易在生活里给自己做“重启仪式”：删记录、清相册、换头像、整理桌面。可真正卡住你的不是东西太多，而是有些感受还没被你慢慢放好。", "evidence": "前5题里你更像在选择“整理一下、看最后一遍、留着也没用”。这说明你删除时不只是处理文件，而是在试图让自己进入一个新状态。", "modules": [{"title": "你的重启感来自哪里", "body": "你希望一个动作能把混乱切开：删了就不想，清了就轻松。但人的情绪不会按删除键，它只会换个地方出现。"}, {"title": "最容易下单的情绪入口", "body": "你会在“我想重新开始”时冲动行动。完整报告会帮你分清：这是新开始，还是逃离未处理的旧感受。"}, {"title": "别人看不见的消耗", "body": "你看起来很会整理，其实每次整理都在重新审判自己：为什么我又这样，为什么我还没好。"}, {"title": "更适合你的行动方式", "body": "给旧东西设置“归档”而不是“删除”。归档允许它存在，也允许你暂时不面对。"}, {"title": "完整报告继续给你的东西", "body": "会指出你最常用的重启动作、重启失败后的反噬，以及未来30天怎么真正把状态接回来。"}], "quote": "你想删掉的不是过去，是过去还在影响现在的感觉。", "advice": ["【7天观察】记录你最想“重新开始”的三个瞬间。", "【7天观察】每次整理前问自己：我是想变轻，还是想逃开？", "【30天练习】建立一个“旧事归档区”，不急着做最终决定。", "【30天练习】每周只做一次重启动作，其他时间练习带着混乱生活。"], "reminder": "不要把每一次难受都处理成一次重启，你也可以慢慢过渡。"}, "C": {"name": "证据藏匿型", "subtitle": "你删掉东西，是怕它证明你曾经那么在乎", "score": 89, "core": "你对痕迹很敏感。你不是单纯怕别人翻到，更怕那些记录把你的在意、委屈、期待都摆出来，让你无法继续说“我没关系”。", "evidence": "你的前5题更靠近“证据、截图、怕被看到、怕证明不了”。这类答案说明你在关系里很需要凭证，也很怕凭证反过来暴露你。", "modules": [{"title": "你最在意的凭证", "body": "聊天截图、转账记录、照片细节、备忘录，都是你给自己留的“我没有乱想”的证据。"}, {"title": "最容易误判的地方", "body": "你会以为自己需要更多证据才安心，其实你真正需要的是有人承认你的感受不是小题大做。"}, {"title": "真实生活场景", "body": "别人一句轻飘飘的解释，会让你立刻想翻记录。不是你记仇，是你怕自己的感受再一次被说成误会。"}, {"title": "更适合你的处理方式", "body": "重要证据可以保留，但不要每天反复看。给它一个固定位置，减少它对你日常情绪的占用。"}, {"title": "完整报告继续给你的东西", "body": "会拆出你最依赖哪类证据、为什么你总怕自己没有底气，以及怎样不再靠截图维持安全感。"}], "quote": "你不是心虚，你是在给自己保存被认真对待的权利。", "advice": ["【7天观察】记录一次你想找证据的瞬间，写下你想证明什么。", "【7天观察】把证据和情绪分开保存，不把截图当情绪出口。", "【30天练习】练习先说感受，再决定是否拿出证据。", "【30天练习】建立“我不需要证明也可以相信自己”的小清单。"], "reminder": "证据可以保护你，但别让它替你活在每一段关系里。"}, "D": {"name": "空白害怕型", "subtitle": "你最怕的不是删错，是删完以后真的什么都没有", "score": 84, "core": "你留住很多东西，不是因为每一样都重要，而是它们一起撑住了某种存在感。删完又想找回来，是因为空白会让你突然意识到：有些阶段真的过去了。", "evidence": "前5题里你更常选择“找回来、还在、怕空、怕想不起”。这说明你删东西时面对的是失去感，不只是整理习惯。", "modules": [{"title": "你最害怕的空白", "body": "不是手机空间变大，而是那些痕迹不见后，你找不到一个东西证明自己曾经热烈、认真、被需要过。"}, {"title": "最容易被戳中的场景", "body": "相册干净、聊天框空白、收藏夹归零，这些都会让你有一种“我是不是也被清掉了”的感觉。"}, {"title": "误判点", "body": "你会以为自己舍不得的是某个人或某段时间，其实你舍不得的是那时候更有期待的自己。"}, {"title": "行动建议", "body": "别逼自己一次性清空。先保留三样真正有重量的，其余慢慢降频查看。"}, {"title": "完整报告继续给你的东西", "body": "会给你一个“保留/归档/告别”的顺序，让你不再用突然清空来对抗空白。"}], "quote": "你不是放不下旧东西，你是在学着和空白共处。", "advice": ["【7天观察】选三样最舍不得删的东西，写下它们代表的不是谁，而是什么感觉。", "【7天观察】把“想找回”改成“我想确认什么还在”。", "【30天练习】每周只归档一类旧内容，不做大扫除式清空。", "【30天练习】为现在的生活新增一个可保存的小证据。"], "reminder": "空白不是惩罚，它只是提醒你：接下来可以重新放进真正属于你的东西。"}}}</script>
+<script>
+const data = JSON.parse(document.getElementById('data').textContent);
+let idx = 0; const answers = [];
+function start(){document.getElementById('home').classList.add('hidden');document.getElementById('quiz').classList.remove('hidden');renderQ();}
+function renderQ(){
+  const q = data.questions[idx];
+  document.getElementById('bar').style.width = ((idx)/12*100)+'%';
+  document.getElementById('stage').textContent = idx < 5 ? '免费测试 · 第 '+(idx+1)+' 题' : '深度解锁 · 第 '+(idx+1)+' 题';
+  document.getElementById('count').textContent = '第 '+(idx+1)+'/12 题';
+  document.getElementById('q').textContent = q.text;
+  const box = document.getElementById('opts'); box.innerHTML = '';
+  for (const k of ['A','B','C','D']) {
+    const b = document.createElement('button'); b.className='opt';
+    b.innerHTML = '<span class="letter">'+k+'</span><span class="text"></span>';
+    b.querySelector('.text').textContent = q.options[k];
+    b.onclick = () => choose(k);
+    box.appendChild(b);
+  }
+}
+function choose(k){
+  answers[idx]=k; idx++;
+  if(idx===5) showGate();
+  else if(idx>=12) showResult();
+  else renderQ();
+}
+function showGate(){
+  document.getElementById('bar').style.width = '41.6%';
+  document.getElementById('q').textContent = '前5题只是倾向，完整12题才能看清全貌';
+  document.getElementById('opts').innerHTML = '<div class="gate"><div class="section-title">继续完成12题 · 自动解锁完整报告</div><div class="body">后7题会继续拆解：你的触发场景、误判入口、真正需求和未来30天调整方向。</div><br><button onclick="renderQ()">继续测试</button></div>';
+}
+function showResult(){
+  document.getElementById('quiz').classList.add('hidden');
+  const counts = {A:0,B:0,C:0,D:0}; answers.forEach(a=>counts[a]++);
+  const top = Object.entries(counts).sort((a,b)=>b[1]-a[1] || 'ABCD'.indexOf(a[0])-'ABCD'.indexOf(b[0]))[0][0];
+  const r = data.results[top];
+  const ev = answers.slice(0,5).map((a,i)=>`Q${i+1} 你选了 ${a}：${data.questions[i].options[a]}`).join('<br>');
+  document.getElementById('result').classList.remove('hidden');
+  document.getElementById('result').innerHTML = `
+    <div class="result-head"><div class="badge">${data.product}</div><div class="rtype">${r.name}</div><div class="score">${r.score}</div><div class="subtitle">${r.subtitle}</div></div>
+    <div class="card"><div class="section-title">核心结论</div><div class="body">${r.core}</div></div>
+    <div class="card"><div class="section-title">答案证据</div><div class="evidence">${ev}</div><br><div class="body">${r.evidence}</div></div>
+    ${r.modules.map(m=>`<div class="card"><div class="section-title">${m.title}</div><div class="body">${m.body}</div></div>`).join('')}
+    <div class="card"><div class="section-title">可截图金句</div><div class="quote">“${r.quote}”</div></div>
+    <div class="card"><div class="section-title">未来30天建议</div><div class="advice">${r.advice.map(x=>`<div>${x}</div>`).join('')}</div></div>
+    <div class="card"><div class="section-title">关键提醒</div><div class="body">${r.reminder}</div></div>
+    <div class="disclaimer">本测试仅为自我探索参考，不构成心理诊断、医疗建议、财务建议或效果承诺。请结合自己的真实情况判断。</div>`;
+  window.scrollTo(0,0);
+}
+</script>
+</body>
+</html>
